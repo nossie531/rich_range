@@ -1,0 +1,22 @@
+[package]
+name = "rich_range"
+version = "0.1.0"
+authors = ["Nossie531"]
+edition = "2024"
+description = "Range calculation helper."
+repository = "https://github.com/nossie531/rich_range"
+license = "MIT"
+keywords = ["range"]
+categories = ["no-std"]
+
+[package.metadata.docs.rs]
+features = ["doc_on"]
+
+[dependencies]
+rustdoc_copy = { version = "0.2", default-features = false }
+
+[dev-dependencies]
+test_panic = "0.8.0"
+
+[features]
+doc_on = ["rustdoc_copy/doc_on"]
