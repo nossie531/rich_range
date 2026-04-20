@@ -267,7 +267,7 @@ See [CHANGELOG](CHANGELOG.md).
 [RangeWrapper#main_bitxor_assign]: https://docs.rs/rich_range/0.1.0/rich_range/struct.RangeWrapper.html#main_bitxor_assign
 [RangeBounds]: https://doc.rust-lang.org/std/ops/trait.RangeBounds.html
 [RangeBounds::contains]: https://doc.rust-lang.org/std/ops/trait.RangeBounds.html#method.contains
-[RichRangeBounds]: https://docs.rs/rich_range/0.1.0/rich_range/trait.RichRangeGounds.html
+[RichRangeBounds]: https://docs.rs/rich_range/0.1.0/rich_range/trait.RichRangeBounds.html
 [RichRangeBounds::is_empty]: https://docs.rs/rich_range/0.1.0/rich_range/trait.RichRangeBounds.html#method.is_empty
 [RichRangeBounds::is_broken]: https://docs.rs/rich_range/0.1.0/rich_range/trait.RichRangeBounds.html#method.is_broken
 [RichRangeBounds::is_cursor]: https://docs.rs/rich_range/0.1.0/rich_range/trait.RichRangeBounds.html#method.is_cursor
