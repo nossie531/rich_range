@@ -131,7 +131,8 @@ Following is a rough list of range operations.
   [`checked_calc_end`][RichRangeBounds::checked_calc_end],
   [`checked_align_start`][RichRangeBounds::checked_align_start],
   [`checked_align_end`][RichRangeBounds::checked_align_end],
-  [`cut`][RichRangeBounds::cut]
+  [`cut`][RichRangeBounds::cut],
+  [`cut_adv`][RichRangeBounds::cut_adv]
 
   [`RangeUniv`][RangeUniv] ⋯
   [`<<`][RangeUniv#main_shl],
@@ -311,6 +312,7 @@ See [CHANGELOG](CHANGELOG.md).
 [RichRangeBounds::checked_align_start]: https://docs.rs/rich_range/0.1.0/rich_range/trait.RichRangeBounds.html#method.checked_align_start
 [RichRangeBounds::checked_align_end]: https://docs.rs/rich_range/0.1.0/rich_range/trait.RichRangeBounds.html#method.checked_align_end
 [RichRangeBounds::cut]: https://docs.rs/rich_range/0.1.0/rich_range/trait.RichRangeBounds.html#method.cut
+[RichRangeBounds::cut_adv]: https://docs.rs/rich_range/0.1.0/rich_range/trait.RichRangeBounds.html#method.cut_adv
 [RichRangeBounds::as_ref]: https://docs.rs/rich_range/0.1.0/rich_range/trait.RichRangeBounds.html#method.as_ref
 [RichRangeBounds::cast]: https://docs.rs/rich_range/0.1.0/rich_range/trait.RichRangeBounds.html#method.cast
 [RichRangeBounds::try_cast]: https://docs.rs/rich_range/0.1.0/rich_range/trait.RichRangeBounds.html#method.try_cast

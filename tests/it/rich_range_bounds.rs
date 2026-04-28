@@ -729,9 +729,21 @@ fn align_start() {
     }
 
     fn with_buggy_range() {
-        let range = BuggyRange::new(30, 60);
-        let result = test_panic(|| range.align_start(40));
-        assert!(result.is_panic());
+        let datas = [
+            // Various bounds.
+            (BuggyRange::<i8>::new(In(30), Ex(60)), 40),
+            (BuggyRange::<i8>::new(In(30), Ub), 40),
+            (BuggyRange::<i8>::new(Ub, Ex(60)), 40),
+            // Small offset and big width.
+            (BuggyRange::<i8>::new(In(-110), Ex(100)), -100),            
+            // Big offset and small width.
+            (BuggyRange::<i8>::new(In(-120), Ex(-110)), 110),
+        ];
+
+        for (range, value) in datas {
+            let result = test_panic(|| range.align_start(value));
+            assert!(result.is_panic());
+        }
     }
 }
 
@@ -813,9 +825,21 @@ fn align_end() {
     }
 
     fn with_buggy_range() {
-        let range = BuggyRange::new(30, 60);
-        let result = test_panic(|| range.align_end(70));
-        assert!(result.is_panic());
+        let datas = [
+            // Various bounds.
+            (BuggyRange::<i8>::new(In(30), Ex(60)), 40),
+            (BuggyRange::<i8>::new(In(30), Ub), 40),
+            (BuggyRange::<i8>::new(Ub, Ex(60)), 40),
+            // Small offset and big width.
+            (BuggyRange::<i8>::new(In(-110), Ex(110)), 100),            
+            // Big offset and small width.
+            (BuggyRange::<i8>::new(In(-120), Ex(-110)), 110),
+        ];
+
+        for (range, value) in datas {
+            let result = test_panic(|| range.align_end(value));
+            assert!(result.is_panic());
+        }
     }
 }
 
@@ -1462,27 +1486,75 @@ fn rel() {
 }
 
 #[test]
-fn cut() {
-    #[rustfmt::skip]
-    let datas = [
-        // Broken empty.
-        (r!(=60, ?30), 40, CutMode::Standard, [ro!(--------), ro!(--------)]),
-        // Nromal case.
-        (r!(=30, ?60), 40, CutMode::Standard, [ro!(=30, ?40), ro!(=40, ?60)]),
-        (r!(=30, ?60), 40, CutMode::Backward, [ro!(=30, =40), ro!(?40, ?60)]),
-        (r!(=30, ?60), 40, CutMode::Included, [ro!(=30, =40), ro!(=40, ?60)]),
-        (r!(=30, ?60), 40, CutMode::Excluded, [ro!(=30, ?40), ro!(?40, ?60)]),
-        // Position is at range edge.
-        (r!(=30, ?60), 30, CutMode::Standard, [ro!(--------), ro!(=30, ?60)]),
-        (r!(=30, ?60), 60, CutMode::Standard, [ro!(=30, ?60), ro!(--------)]),
-        // Position is out of range.
-        (r!(=30, ?60), 20, CutMode::Standard, [ro!(--------), ro!(=30, ?60)]),
-        (r!(=30, ?60), 70, CutMode::Standard, [ro!(=30, ?60), ro!(--------)]),
-    ];
+fn cut_xxx() {
+    with_normal();
+    with_cut_mode();
 
-    for (target, pos, mode, tobe) in datas {
-        let asis = target.cut(&pos, mode);
-        assert_eq!(asis, tobe);
+    fn with_normal() {
+        let datas = [
+            // Broken empty.
+            (r!(=60, ?30), 40, [ro!(--------), ro!(--------)]),
+            // Cut at a position inside the range.
+            (r!(=30, ?60), 40, [ro!(=30, ?40), ro!(=40, ?60)]),
+            // Cut at a position outside the range.
+            (r!(=30, ?60), 20, [ro!(--------), ro!(=30, ?60)]),
+            (r!(=30, ?60), 70, [ro!(=30, ?60), ro!(--------)]),
+            // Cut at the edge of range.
+            (r!(=30, ?60), 30, [ro!(--------), ro!(=30, ?60)]),
+            (r!(=30, ?60), 60, [ro!(=30, ?60), ro!(--------)]),
+        ];
+
+        for (target, pos, tobe) in datas {
+            let asis1 = target.cut(&pos);
+            let asis2 = target.cut_adv(&pos, CutMode::FallbackFw);
+            assert_eq!(asis1, tobe);
+            assert_eq!(asis2, tobe);
+        }
+    }
+
+    fn with_cut_mode() {
+        #[rustfmt::skip]
+        let datas = [
+            // Cut at a position inside the range.
+            (r!(---, ---), 40, CutMode::FallbackFw, [ro!(---, ?40), ro!(=40, ---)]),
+            (r!(---, ---), 40, CutMode::FallbackBw, [ro!(---, =40), ro!(?40, ---)]),
+            (r!(---, ---), 40, CutMode::FallbackIn, [ro!(---, =40), ro!(=40, ---)]),
+            (r!(---, ---), 40, CutMode::FallbackEx, [ro!(---, ?40), ro!(?40, ---)]),
+            (r!(---, ---), 40, CutMode::AlwaysFw,   [ro!(---, ?40), ro!(=40, ---)]),
+            (r!(---, ---), 40, CutMode::AlwaysBw,   [ro!(---, =40), ro!(?40, ---)]),
+            (r!(---, ---), 40, CutMode::AlwaysIn,   [ro!(---, =40), ro!(=40, ---)]),
+            (r!(---, ---), 40, CutMode::AlwaysEx,   [ro!(---, ?40), ro!(?40, ---)]),
+            (r!(=30, ?60), 40, CutMode::FallbackFw, [ro!(=30, ?40), ro!(=40, ?60)]),
+            (r!(=30, ?60), 40, CutMode::FallbackBw, [ro!(=30, ?40), ro!(=40, ?60)]),
+            (r!(=30, ?60), 40, CutMode::FallbackIn, [ro!(=30, ?40), ro!(=40, ?60)]),
+            (r!(=30, ?60), 40, CutMode::FallbackEx, [ro!(=30, ?40), ro!(=40, ?60)]),
+            (r!(=30, ?60), 40, CutMode::AlwaysFw,   [ro!(=30, ?40), ro!(=40, ?60)]),
+            (r!(=30, ?60), 40, CutMode::AlwaysBw,   [ro!(=30, =40), ro!(?40, ?60)]),
+            (r!(=30, ?60), 40, CutMode::AlwaysIn,   [ro!(=30, =40), ro!(=40, ?60)]),
+            (r!(=30, ?60), 40, CutMode::AlwaysEx,   [ro!(=30, ?40), ro!(?40, ?60)]),
+            // Cut at the edge of range.
+            (r!(=30, ?60), 30, CutMode::FallbackFw, [ro!(--------), ro!(=30, ?60)]),
+            (r!(=30, ?60), 30, CutMode::FallbackBw, [ro!(--------), ro!(=30, ?60)]),
+            (r!(=30, ?60), 30, CutMode::FallbackIn, [ro!(--------), ro!(=30, ?60)]),
+            (r!(=30, ?60), 30, CutMode::FallbackBw, [ro!(--------), ro!(=30, ?60)]),
+            (r!(=30, ?60), 30, CutMode::AlwaysFw,   [ro!(--------), ro!(=30, ?60)]),
+            (r!(=30, ?60), 30, CutMode::AlwaysBw,   [ro!(--------), ro!(=30, ?60)]),
+            (r!(=30, ?60), 30, CutMode::AlwaysIn,   [ro!(--------), ro!(=30, ?60)]),
+            (r!(=30, ?60), 30, CutMode::AlwaysEx,   [ro!(--------), ro!(=30, ?60)]),
+            (r!(=30, ?60), 60, CutMode::FallbackFw, [ro!(=30, ?60), ro!(--------)]),
+            (r!(=30, ?60), 60, CutMode::FallbackBw, [ro!(=30, ?60), ro!(--------)]),
+            (r!(=30, ?60), 60, CutMode::FallbackIn, [ro!(=30, ?60), ro!(--------)]),
+            (r!(=30, ?60), 60, CutMode::FallbackEx, [ro!(=30, ?60), ro!(--------)]),
+            (r!(=30, ?60), 60, CutMode::AlwaysFw,   [ro!(=30, ?60), ro!(--------)]),
+            (r!(=30, ?60), 60, CutMode::AlwaysBw,   [ro!(=30, ?60), ro!(--------)]),
+            (r!(=30, ?60), 60, CutMode::AlwaysIn,   [ro!(=30, ?60), ro!(--------)]),
+            (r!(=30, ?60), 60, CutMode::AlwaysEx,   [ro!(=30, ?60), ro!(--------)]),
+        ];
+
+        for (target, pos, mode, tobe) in datas {
+            let asis2 = target.cut_adv(&pos, mode);
+            assert_eq!(asis2, tobe);
+        }
     }
 }
 

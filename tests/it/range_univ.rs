@@ -530,7 +530,15 @@ fn rel() {
 #[test]
 fn cut() {
     let r = ru::new(30..60);
-    let [fst, snd] = r.cut(&40, CutMode::Standard);
+    let [fst, snd] = r.cut(&40);
+    assert_eq!(fst, Some(ru::new(30..40)));
+    assert_eq!(snd, Some(ru::new(40..60)));
+}
+
+#[test]
+fn cut_adv() {
+    let r = ru::new(30..60);
+    let [fst, snd] = r.cut_adv(&40, CutMode::FallbackFw);
     assert_eq!(fst, Some(ru::new(30..40)));
     assert_eq!(snd, Some(ru::new(40..60)));
 }

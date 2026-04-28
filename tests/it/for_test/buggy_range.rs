@@ -1,22 +1,22 @@
 use rich_range::conv::*;
 use rich_range::*;
-use std::ops::{Bound, Range, RangeBounds};
+use std::ops::{Bound, RangeBounds};
 
-pub struct BuggyRange<T>(Range<T>);
+pub struct BuggyRange<T>(Bound<T>, Bound<T>);
 
 impl<T> BuggyRange<T> {
-    pub fn new(start: T, end: T) -> Self {
-        Self(start..end)
+    pub fn new(start: Bound<T>, end: Bound<T>) -> Self {
+        Self(start, end)
     }
 }
 
 impl<T> RangeBounds<T> for BuggyRange<T> {
     fn start_bound(&self) -> std::ops::Bound<&T> {
-        self.0.start_bound()
+        self.0.as_ref()
     }
 
     fn end_bound(&self) -> std::ops::Bound<&T> {
-        self.0.end_bound()
+        self.1.as_ref()
     }
 }
 

@@ -113,7 +113,7 @@ impl<T> BoundWrapper<T> {
         }
     }
 
-    /// Returns new instance with mapped position by given function.
+    /// Returns mapped position by given function.
     pub fn map<F, U>(self, f: F) -> Bound<U>
     where
         F: FnOnce(T) -> U,
@@ -121,15 +121,27 @@ impl<T> BoundWrapper<T> {
         self.0.map(f)
     }
 
-    /// Retruns new instance with mapped position by given tolerant function.
+    /// Returns unbounded bound or mapped position by given function.
+    pub fn map_pos<F, U>(self, for_ub: F, pos: U) -> Bound<U>
+    where 
+        F: Fn(U) -> Bound<U>
+    {
+        match self.0 {
+            Ub => for_ub(pos),
+            In(_) => In(pos),
+            Ex(_) => Ex(pos),
+        }
+    }
+
+    /// Retruns mapped position by given tolerant function.
     pub fn try_map<F, U>(self, f: F) -> Option<Bound<U>>
     where
         F: FnOnce(T) -> Option<U>,
     {
         match self.0 {
+            Ub => Some(Ub),
             In(x) => Some(In(f(x)?)),
             Ex(x) => Some(Ex(f(x)?)),
-            Ub => Some(Ub),
         }
     }
 }

@@ -1465,15 +1465,37 @@ where
     /// use rich_range::*;
     ///
     /// let r = rv::new(&(30..60));
-    /// let [fst, snd] = r.cut(&40, CutMode::Standard);
+    /// let [fst, snd] = r.cut(&40);
     /// assert_eq!(fst, Some(ru::new(30..40)));
     /// assert_eq!(snd, Some(ru::new(40..60)));
     /// ```
-    pub fn cut(&self, pos: &T, mode: CutMode) -> [Option<RangeUniv<T>>; 2]
+    pub fn cut(&self, pos: &T) -> [Option<RangeUniv<T>>; 2]
     where
         T: Clone + PartialOrd,
     {
-        RichRangeBounds::cut(self, pos, mode)
+        RichRangeBounds::cut(self, pos)
+    }
+
+    #[inline]
+    #[must_use]
+    #[doc_on_only]
+    #[doc = doc_rrb::side::cut::top!()]
+    #[doc = doc_rrb::side::cut::sub::notes::all!()]
+    #[doc = doc_rrb::side::cut::sub::examples::head!()]
+    /// ```
+    /// use rich_range::prelude::*;
+    /// use rich_range::*;
+    ///
+    /// let r = rv::new(&(30..60));
+    /// let [fst, snd] = r.cut_adv(&40, CutMode::FallbackFw);
+    /// assert_eq!(fst, Some(ru::new(30..40)));
+    /// assert_eq!(snd, Some(ru::new(40..60)));
+    /// ```
+    pub fn cut_adv(&self, pos: &T, mode: CutMode) -> [Option<RangeUniv<T>>; 2]
+    where
+        T: Clone + PartialOrd,
+    {
+        RichRangeBounds::cut_adv(self, pos, mode)
     }
 
     #[inline]

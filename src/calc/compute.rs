@@ -8,7 +8,6 @@ use crate::shorthands::*;
 use crate::util::*;
 use crate::*;
 use core::borrow::Borrow;
-use core::cmp::Ordering;
 use core::ops::{Add, RangeBounds, Sub};
 
 /// Returns two ranges by flipping given range.
@@ -524,8 +523,8 @@ where
     }
 
     let fst_stt = range.start_bound().cloned();
-    let fst_end = mode.for_end(pos.clone());
-    let snd_stt = mode.for_start(pos.clone());
+    let fst_end = mode.for_end(range, pos.clone());
+    let snd_stt = mode.for_start(range, pos.clone());
     let snd_end = range.end_bound().cloned();
     let fst = RangeUniv::new(fst_stt, fst_end);
     let snd = RangeUniv::new(snd_stt, snd_end);
@@ -733,12 +732,10 @@ where
 
     // Pattern for no intersection.
     if !rx.intersects(ry) || mode == CursorMode::Off && ry.is_cursor() {
-        return match calc::cmp(rx, ry) {
-            None => [Some(rx.to_univ()), None],
-            Some(Ordering::Equal) => [Some(rx.to_univ()), None],
-            Some(Ordering::Less) => [Some(rx.to_univ()), None],
-            Some(Ordering::Greater) => [None, Some(rx.to_univ())],
-        };
+        let fwd = calc::cmp(rx, ry).is_none_or(|x| x.is_le());
+        let fst = if fwd { Some(rx.to_univ()) } else { None };
+        let snd = if fwd { None } else { Some(rx.to_univ()) };
+        return [fst, snd];
     }
 
     // Calculate return range.

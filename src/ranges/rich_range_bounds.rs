@@ -1943,7 +1943,37 @@ where
         calc::rel(self, other, ps)
     }
 
-    /// Return two ranges by cutting this range at given position.
+    /// Return two ranges by cutting self at given position.
+    ///
+    /// This is equivalent to [`cut_adv`](Self::cut_adv) with [CutMode::FallbackFw].
+    /// 
+    /// # Notes
+    ///
+    /// - If this range is broken empty, returns two [`None`].
+    /// - Returned 1st range is less or equal than the given position.
+    /// - Returned 2nd range is greater or equal than the given position.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rich_range::prelude::*;
+    /// use rich_range::*;
+    ///
+    /// let target = ru::new(30..60);
+    /// let [fst, snd] = RichRangeBounds::cut(&target, &40);
+    /// assert_eq!(fst, Some(ru::new(30..40)));
+    /// assert_eq!(snd, Some(ru::new(40..60)));
+    /// ```
+    #[must_use]
+    #[doc_on_only]
+    fn cut(&self, pos: &T) -> [Option<RangeUniv<T>>; 2]
+    where
+        T: Clone + PartialOrd,
+    {
+        calc::cut(self, pos, CutMode::FallbackFw)
+    }
+
+    /// Return two ranges by cutting self at given position with advanced parameter.
     ///
     /// # Notes
     ///
@@ -1958,13 +1988,13 @@ where
     /// use rich_range::*;
     ///
     /// let target = ru::new(30..60);
-    /// let [fst, snd] = RichRangeBounds::cut(&target, &40, CutMode::Standard);
+    /// let [fst, snd] = RichRangeBounds::cut_adv(&target, &40, CutMode::FallbackFw);
     /// assert_eq!(fst, Some(ru::new(30..40)));
     /// assert_eq!(snd, Some(ru::new(40..60)));
     /// ```
     #[must_use]
     #[doc_on_only]
-    fn cut(&self, pos: &T, mode: CutMode) -> [Option<RangeUniv<T>>; 2]
+    fn cut_adv(&self, pos: &T, mode: CutMode) -> [Option<RangeUniv<T>>; 2]
     where
         T: Clone + PartialOrd,
     {

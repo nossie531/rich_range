@@ -1,50 +1,86 @@
 //! Provider of [`CutMode`].
 
-use crate::shorthands::aliases::*;
-use core::ops::Bound;
+use crate::{parts::bound, shorthands::aliases::*};
+use core::ops::{Bound, RangeBounds};
 
 /// Cut mode.
 ///
-/// This value is used by the [`RichRangeBounds::cut`] method and
-/// its family. In the methods, this value specifies how to handle
-/// the bound variants of range cut ends.
+/// This value is used by the [`RichRangeBounds::cut_adv`] method.
+/// In the methods, this value specifies how to handle the bound
+/// variants of range cut ends.
 ///
-/// [`RichRangeBounds::cut`]: crate::RichRangeBounds::cut
+/// [`RichRangeBounds::cut_adv`]: crate::RichRangeBounds::cut_adv
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
 pub enum CutMode {
-    /// Start bound is Included, End bound is Excluded.
-    Standard,
+    /// Target range bounds first, forward rule fallback.
+    /// 
+    /// Follows target range bounds variants; if they are unbounded,
+    /// start bound is included, end bound is excluded.
+    FallbackFw,
 
-    /// Start bound is Excluded, End bound is Included.
-    Backward,
+    /// Target range bounds first, forward rule fallback.
+    /// 
+    /// Follows target range bounds variants; if they are unbounded,
+    /// start bound is excluded, end bound is included.
+    FallbackBw,
 
-    /// Start and end bound is both Included.
-    Included,
+    /// Target range bounds first, forward rule fallback.
+    /// 
+    /// Follows target range bounds variants; if they are unbounded,
+    /// start bound and end bound are both included.
+    FallbackIn,
 
-    /// Start and end bound is both Excluded.
-    Excluded,
+    /// Target range bounds first, forward rule fallback.
+    /// 
+    /// Follows target range bounds variants; if they are unbounded,
+    /// start bound and end bound are both excluded.
+    FallbackEx,
+
+    /// Start bound is included, end bound is excluded.
+    AlwaysFw,
+
+    /// Start bound is excluded, end bound is included.
+    AlwaysBw,
+
+    /// Start bound and end bound are both included.
+    AlwaysIn,
+
+    /// Start bound and end bound are both excluded.
+    AlwaysEx,
 }
 
 impl CutMode {
     /// Returns bound for start side.
-    #[must_use]
-    pub fn for_start<T>(&self, pos: T) -> Bound<T> {
+    pub(crate) fn for_start<R, T>(&self, target: &R, pos: T) -> Bound<T>
+    where
+        R: RangeBounds<T>,
+    {
         match self {
-            CutMode::Standard => In(pos),
-            CutMode::Backward => Ex(pos),
-            CutMode::Included => In(pos),
-            CutMode::Excluded => Ex(pos),
+            CutMode::FallbackFw => bound(target.start_bound()).map_pos(In, pos),
+            CutMode::FallbackBw => bound(target.start_bound()).map_pos(Ex, pos),
+            CutMode::FallbackIn => bound(target.start_bound()).map_pos(In, pos),
+            CutMode::FallbackEx => bound(target.start_bound()).map_pos(Ex, pos),
+            CutMode::AlwaysFw => In(pos),
+            CutMode::AlwaysBw => Ex(pos),
+            CutMode::AlwaysIn => In(pos),
+            CutMode::AlwaysEx => Ex(pos),
         }
     }
 
     /// Returns bound for end side.
-    #[must_use]
-    pub fn for_end<T>(&self, pos: T) -> Bound<T> {
+    pub(crate) fn for_end<R, T>(&self, target: &R, pos: T) -> Bound<T>
+    where
+        R: RangeBounds<T>,
+    {
         match self {
-            CutMode::Standard => Ex(pos),
-            CutMode::Backward => In(pos),
-            CutMode::Included => In(pos),
-            CutMode::Excluded => Ex(pos),
+            CutMode::FallbackFw => bound(target.end_bound()).map_pos(Ex, pos),
+            CutMode::FallbackBw => bound(target.end_bound()).map_pos(In, pos),
+            CutMode::FallbackIn => bound(target.end_bound()).map_pos(In, pos),
+            CutMode::FallbackEx => bound(target.end_bound()).map_pos(Ex, pos),
+            CutMode::AlwaysFw => Ex(pos),
+            CutMode::AlwaysBw => In(pos),
+            CutMode::AlwaysIn => In(pos),
+            CutMode::AlwaysEx => Ex(pos),
         }
     }
 }
