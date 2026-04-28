@@ -8,6 +8,7 @@ use crate::shorthands::*;
 use crate::util::*;
 use crate::*;
 use core::borrow::Borrow;
+use core::cmp::Ordering;
 use core::ops::{Add, RangeBounds, Sub};
 
 /// Returns two ranges by flipping given range.
@@ -715,41 +716,41 @@ where
     let (rx, ry) = (&rv::new(rx), &rv::new(ry));
     let (ex, ey) = (rx.edges(), ry.edges());
 
-    // Guard for cursor.
-    if mode == CursorMode::Off && ry.is_cursor() {
-        return [Some(rx.to_univ()), None];
-    }
-
-    // Guard for no intersection.
-    if !rx.intersects(ry) {
-        return [Some(rx.to_univ()), None];
-    }
-
-    // Guard for same position cursors.
-    if rx.cursor().is_some() && rx.cursor() == ry.cursor() {
+    // Pattern for same position cursors.
+    if matches!((rx.cursor(), ry.cursor()), (Some(x), Some(y)) if x == y) {
         return [None, None];
     }
 
-    // Guard for 2nd argument cursor on 1st argument edge.
-    if ry.cursor().is_some_and(|x| rx.at_edge(x)) {
+    // Pattern for 1st argument start edge is 2nd argument cursor.
+    if matches!((ex.0.pos(), ry.cursor()), (Some(x), Some(y)) if x == y) {
+        return [None, Some(rx.to_univ())];
+    }
+
+    // Pattern for 1st argument end edge is 2nd argument cursor.
+    if matches!((ex.1.pos(), ry.cursor()), (Some(x), Some(y)) if x == y) {
         return [Some(rx.to_univ()), None];
     }
 
+    // Pattern for no intersection.
+    if !rx.intersects(ry) || mode == CursorMode::Off && ry.is_cursor() {
+        return match calc::cmp(rx, ry) {
+            None => [Some(rx.to_univ()), None],
+            Some(Ordering::Equal) => [Some(rx.to_univ()), None],
+            Some(Ordering::Less) => [Some(rx.to_univ()), None],
+            Some(Ordering::Greater) => [None, Some(rx.to_univ())],
+        };
+    }
+
     // Calculate return range.
-    let has_fst = !ex.0.is_contained(&ry.bounds());
-    let has_snd = !ex.1.is_contained(&ry.bounds());
+    let fst_exists = !ex.0.is_contained(&ry.bounds());
+    let snd_exists = !ex.1.is_contained(&ry.bounds());
     let fst_end = MixMode::Diff.min_bound(ex.1, ey.0);
     let snd_stt = MixMode::Diff.max_bound(ex.0, ey.1);
     let fst = RangeUniv::new(rx.start_bound().cloned(), fst_end.cloned());
     let snd = RangeUniv::new(snd_stt.cloned(), rx.end_bound().cloned());
-    let fst = (has_fst && !rv::new(&fst).is_broken()).then_some(fst);
-    let snd = (has_snd && !rv::new(&snd).is_broken()).then_some(snd);
-    match (&fst, &snd) {
-        (None, None) => [None, None],
-        (Some(_), None) => [fst, None],
-        (None, Some(_)) => [snd, None],
-        (Some(_), Some(_)) => [fst, snd],
-    }
+    let fst = (fst_exists && !rv::new(&fst).is_broken()).then_some(fst);
+    let snd = (snd_exists && !rv::new(&snd).is_broken()).then_some(snd);
+    [fst, snd]
 }
 
 /// Closed version of [`prod`].

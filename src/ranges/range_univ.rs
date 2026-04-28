@@ -1639,7 +1639,6 @@ impl<T> RangeUniv<T> {
     #[must_use]
     #[doc_on_only]
     #[doc = doc_rrb::side::diff::top!()]
-    #[doc = doc_rrb::side::diff::sub::notes::all!()]
     #[doc = doc_rrb::side::diff::sub::panics::all!()]
     #[doc = doc_rrb::side::diff::sub::examples::head!()]
     /// ```
@@ -1664,7 +1663,6 @@ impl<T> RangeUniv<T> {
     #[must_use]
     #[doc_on_only]
     #[doc = doc_rrb::side::diff_adv::top!()]
-    #[doc = doc_rrb::side::diff_adv::sub::notes::all!()]
     #[doc = doc_rrb::side::diff_adv::sub::panics::all!()]
     #[doc = doc_rrb::side::diff_adv::sub::examples::head!()]
     /// ```

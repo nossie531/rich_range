@@ -2148,13 +2148,6 @@ where
 
     /// Returns the difference of two ranges.
     ///
-    /// # Notes
-    ///
-    /// - If two ranges have no intersection, returns first range only.
-    /// - If second ranges is empty, returns first range only.
-    ///
-    /// [eh]: doc_share::Self#empty-handling
-    ///
     /// # Panics
     ///
     /// Panics if ranges have unordered position like NaN.
@@ -2184,11 +2177,6 @@ where
     }
 
     /// Returns the difference of two ranges with advanced parameters.
-    ///
-    /// # Notes
-    ///
-    /// - If two ranges have no intersection, returns first range only.
-    /// - If second ranges is [cursor empty][eh], result depends `mode` value.
     ///
     /// [eh]: doc_share::Self#empty-handling
     ///
@@ -2221,28 +2209,4 @@ where
         assert!(calc::is_mixable(self, other), "{}", msg::BOUNDS_ORDERED);
         calc::diff_adv(self, other, mode)
     }
-}
-
-/// Private part of [`RichRangeBounds`].
-pub(crate) trait RichRangeBoundsPv<T>: RichRangeBounds<T>
-where
-    T: ?Sized,
-{
-    /// Returns `true` if given position is at range edges.
-    fn at_edge(&self, pos: &T) -> bool
-    where
-        T: PartialEq,
-    {
-        let stt = bound(self.start_bound()).pos();
-        let end = bound(self.end_bound()).pos();
-        Some(pos) == stt || Some(pos) == end
-    }
-}
-
-impl<T, U> RichRangeBoundsPv<U> for T
-where
-    T: ?Sized + RichRangeBounds<U>,
-    U: ?Sized,
-{
-    // nop.
 }
