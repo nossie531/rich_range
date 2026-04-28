@@ -5,7 +5,7 @@
 
 #![cfg_attr(feature = "doc_on", doc = doc::sub::examples::all!())]
 #![cfg_attr(feature = "doc_on", doc = doc::sub::core_items::all!())]
-#![cfg_attr(feature = "doc_on", doc = doc::sub::cheat_sheet::all!())]
+#![cfg_attr(feature = "doc_on", doc = doc::sub::range_operations::all!())]
 #![cfg_attr(not(test), no_std)]
 #![warn(missing_docs)]
 #![warn(clippy::missing_docs_in_private_items)]

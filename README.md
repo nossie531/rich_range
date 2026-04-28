@@ -39,9 +39,9 @@ This crate is designed with the following focus.
 - [`RangeWrapper<R, T>`][RangeWrapper] -
   For type keeping calculation (from [`rw::new`][shorthands::rw::new])
 
-## Cheat sheet
+## Range operations
 
-Following is a rough list of items.
+Following is a rough list of range operations.
 
 - **Value(s) -> Range**
 
