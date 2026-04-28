@@ -1,6 +1,5 @@
 //! Provider of [`RangeView`].
 
-use rustdoc_copy::prelude::*;
 use crate::conv::*;
 use crate::parts::*;
 use crate::*;
@@ -8,6 +7,7 @@ use core::borrow::Borrow;
 use core::cmp::Ordering;
 use core::marker::PhantomData;
 use core::ops::{Add, Bound, Range, RangeBounds, Sub};
+use rustdoc_copy::prelude::*;
 
 /// Range viewer for abstraction.
 ///
@@ -683,13 +683,13 @@ where
     /// let r3 = rv::new(&(..60)).flip();
     /// let r4 = rv::new(&(30..60)).flip();
     /// let r5 = rv::new(&(30..30)).flip();
-    /// assert_eq!(r1, (None, None));
-    /// assert_eq!(r2, (Some(ru::new(..30)), None));
-    /// assert_eq!(r3, (Some(ru::new(60..)), None));
-    /// assert_eq!(r4, (Some(ru::new(..30)), Some(ru::new(60..))));
-    /// assert_eq!(r5, (Some(ru::new(..)), None));
+    /// assert_eq!(r1, [None, None]);
+    /// assert_eq!(r2, [Some(ru::new(..30)), None]);
+    /// assert_eq!(r3, [Some(ru::new(60..)), None]);
+    /// assert_eq!(r4, [Some(ru::new(..30)), Some(ru::new(60..))]);
+    /// assert_eq!(r5, [Some(ru::new(..)), None]);
     /// ```
-    pub fn flip(&self) -> (Option<RangeUniv<T>>, Option<RangeUniv<T>>)
+    pub fn flip(&self) -> [Option<RangeUniv<T>>; 2]
     where
         T: Clone + PartialOrd,
     {
@@ -712,14 +712,14 @@ where
     /// let r4 = rv::new(&(30..60)).flip_adv(CursorMode::Off);
     /// let r5 = rv::new(&(30..30)).flip_adv(CursorMode::Off);
     /// let r6 = rv::new(&(30..30)).flip_adv(CursorMode::On);
-    /// assert_eq!(r1, (None, None));
-    /// assert_eq!(r2, (Some(ru::new(..30)), None));
-    /// assert_eq!(r3, (Some(ru::new(60..)), None));
-    /// assert_eq!(r4, (Some(ru::new(..30)), Some(ru::new(60..))));
-    /// assert_eq!(r5, (Some(ru::new(..)), None));
-    /// assert_eq!(r6, (Some(ru::new(..30)), Some(ru::new(30..))));
+    /// assert_eq!(r1, [None, None]);
+    /// assert_eq!(r2, [Some(ru::new(..30)), None]);
+    /// assert_eq!(r3, [Some(ru::new(60..)), None]);
+    /// assert_eq!(r4, [Some(ru::new(..30)), Some(ru::new(60..))]);
+    /// assert_eq!(r5, [Some(ru::new(..)), None]);
+    /// assert_eq!(r6, [Some(ru::new(..30)), Some(ru::new(30..))]);
     /// ```
-    pub fn flip_adv(&self, mode: CursorMode) -> (Option<RangeUniv<T>>, Option<RangeUniv<T>>)
+    pub fn flip_adv(&self, mode: CursorMode) -> [Option<RangeUniv<T>>; 2]
     where
         T: Clone + PartialOrd,
     {
@@ -1173,7 +1173,10 @@ where
     /// assert_eq!(result1, Some(ru::new(40..70)));
     /// assert_eq!(result2, None);
     /// ```
-    pub fn checked_align_start(&self, value: impl Borrow<T>) -> Option<<Self as RangeSrc<T>>::Range<T>>
+    pub fn checked_align_start(
+        &self,
+        value: impl Borrow<T>,
+    ) -> Option<<Self as RangeSrc<T>>::Range<T>>
     where
         T: Clone + PartialOrd,
         Self: RangeSrc<T>,
@@ -1198,7 +1201,10 @@ where
     /// assert_eq!(result1, Some(ru::new(40..70)));
     /// assert_eq!(result2, None);
     /// ```
-    pub fn checked_align_end(&self, value: impl Borrow<T>) -> Option<<Self as RangeSrc<T>>::Range<T>>
+    pub fn checked_align_end(
+        &self,
+        value: impl Borrow<T>,
+    ) -> Option<<Self as RangeSrc<T>>::Range<T>>
     where
         T: Clone + PartialOrd,
         Self: RangeSrc<T>,
@@ -1459,11 +1465,11 @@ where
     /// use rich_range::*;
     ///
     /// let r = rv::new(&(30..60));
-    /// let (fst, snd) = r.cut(&40, CutMode::Standard);
+    /// let [fst, snd] = r.cut(&40, CutMode::Standard);
     /// assert_eq!(fst, Some(ru::new(30..40)));
     /// assert_eq!(snd, Some(ru::new(40..60)));
     /// ```
-    pub fn cut(&self, pos: &T, mode: CutMode) -> (Option<RangeUniv<T>>, Option<RangeUniv<T>>)
+    pub fn cut(&self, pos: &T, mode: CutMode) -> [Option<RangeUniv<T>>; 2]
     where
         T: Clone + PartialOrd,
     {
@@ -1598,11 +1604,11 @@ where
     /// let r1 = rv::new(&(30..60)).diff(&(50..70));
     /// let r2 = rv::new(&(30..60)).diff(&(40..50));
     /// let r3 = rv::new(&(30..60)).diff(&(40..40));
-    /// assert_eq!(r1, (Some(ru::new(30..50)), None));
-    /// assert_eq!(r2, (Some(ru::new(30..40)), Some(ru::new(50..60))));
-    /// assert_eq!(r3, (Some(ru::new(30..60)), None));
+    /// assert_eq!(r1, [Some(ru::new(30..50)), None]);
+    /// assert_eq!(r2, [Some(ru::new(30..40)), Some(ru::new(50..60))]);
+    /// assert_eq!(r3, [Some(ru::new(30..60)), None]);
     /// ```
-    pub fn diff<R2>(&self, other: &R2) -> (Option<RangeUniv<T>>, Option<RangeUniv<T>>)
+    pub fn diff<R2>(&self, other: &R2) -> [Option<RangeUniv<T>>; 2]
     where
         R2: ?Sized + RangeBounds<T>,
         T: Clone + PartialOrd,
@@ -1625,16 +1631,12 @@ where
     /// let r2 = rv::new(&(30..60)).diff_adv(&(40..50), CursorMode::Off);
     /// let r3 = rv::new(&(30..60)).diff_adv(&(40..40), CursorMode::Off);
     /// let r4 = rv::new(&(30..60)).diff_adv(&(40..40), CursorMode::On);
-    /// assert_eq!(r1, (Some(ru::new(30..50)), None));
-    /// assert_eq!(r2, (Some(ru::new(30..40)), Some(ru::new(50..60))));
-    /// assert_eq!(r3, (Some(ru::new(30..60)), None));
-    /// assert_eq!(r4, (Some(ru::new(30..40)), Some(ru::new(40..60))));
+    /// assert_eq!(r1, [Some(ru::new(30..50)), None]);
+    /// assert_eq!(r2, [Some(ru::new(30..40)), Some(ru::new(50..60))]);
+    /// assert_eq!(r3, [Some(ru::new(30..60)), None]);
+    /// assert_eq!(r4, [Some(ru::new(30..40)), Some(ru::new(40..60))]);
     /// ```
-    pub fn diff_adv<R2>(
-        &self,
-        other: &R2,
-        mode: CursorMode,
-    ) -> (Option<RangeUniv<T>>, Option<RangeUniv<T>>)
+    pub fn diff_adv<R2>(&self, other: &R2, mode: CursorMode) -> [Option<RangeUniv<T>>; 2]
     where
         R2: ?Sized + RangeBounds<T>,
         T: Clone + PartialOrd,

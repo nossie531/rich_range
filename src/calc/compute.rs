@@ -11,7 +11,7 @@ use core::borrow::Borrow;
 use core::ops::{Add, RangeBounds, Sub};
 
 /// Returns two ranges by flipping given range.
-pub(crate) fn flip<R, T>(range: &R) -> (Option<RangeUniv<T>>, Option<RangeUniv<T>>)
+pub(crate) fn flip<R, T>(range: &R) -> [Option<RangeUniv<T>>; 2]
 where
     R: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
@@ -20,10 +20,7 @@ where
 }
 
 /// Returns two ranges by flipping given range with advanced parameters.
-pub(crate) fn flip_adv<R, T>(
-    range: &R,
-    mode: CursorMode,
-) -> (Option<RangeUniv<T>>, Option<RangeUniv<T>>)
+pub(crate) fn flip_adv<R, T>(range: &R, mode: CursorMode) -> [Option<RangeUniv<T>>; 2]
 where
     R: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
@@ -32,20 +29,20 @@ where
 
     // Guard for broken empty.
     if range.is_broken() {
-        return (Some(RangeUniv::new(Ub, Ub)), None);
+        return [Some(RangeUniv::new(Ub, Ub)), None];
     }
 
     // Guard for cursor empty.
     if range.is_cursor() {
         return if mode == CursorMode::Off {
-            (Some(RangeUniv::new(Ub, Ub)), None)
+            [Some(RangeUniv::new(Ub, Ub)), None]
         } else {
             let pos = range.cursor().unwrap();
             let face = if range.is_cursor_fwd() { Ex } else { In }(pos.clone());
             let back = if range.is_cursor_fwd() { In } else { Ex }(pos.clone());
             let fst = Some(RangeUniv::new(Ub, face));
             let snd = Some(RangeUniv::new(back, Ub));
-            (fst, snd)
+            [fst, snd]
         };
     }
 
@@ -54,10 +51,10 @@ where
     let xs = s.toggle_included().cloned();
     let xe = e.toggle_included().cloned();
     match (&xs, &xe) {
-        (Ub, Ub) => (None, None),
-        (_, Ub) => (Some(RangeUniv::new(Ub, xs)), None),
-        (Ub, _) => (Some(RangeUniv::new(xe, Ub)), None),
-        (_, _) => (Some(RangeUniv::new(Ub, xs)), Some(RangeUniv::new(xe, Ub))),
+        (Ub, Ub) => [None, None],
+        (_, Ub) => [Some(RangeUniv::new(Ub, xs)), None],
+        (Ub, _) => [Some(RangeUniv::new(xe, Ub)), None],
+        (_, _) => [Some(RangeUniv::new(Ub, xs)), Some(RangeUniv::new(xe, Ub))],
     }
 }
 
@@ -506,11 +503,7 @@ where
 }
 
 /// Return two ranges by cutting a range at given position.
-pub(crate) fn cut<R, T>(
-    range: &R,
-    pos: &T,
-    mode: CutMode,
-) -> (Option<RangeUniv<T>>, Option<RangeUniv<T>>)
+pub(crate) fn cut<R, T>(range: &R, pos: &T, mode: CutMode) -> [Option<RangeUniv<T>>; 2]
 where
     R: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
@@ -518,15 +511,15 @@ where
     let range = &rv::new(range);
 
     if range.is_broken() {
-        return (None, None);
+        return [None, None];
     }
 
     if bound(range.start_bound()).pos().is_some_and(|s| pos <= s) {
-        return (None, Some(range.to_univ()));
+        return [None, Some(range.to_univ())];
     }
 
     if bound(range.end_bound()).pos().is_some_and(|e| e <= pos) {
-        return (Some(range.to_univ()), None);
+        return [Some(range.to_univ()), None];
     }
 
     let fst_stt = range.start_bound().cloned();
@@ -535,7 +528,7 @@ where
     let snd_end = range.end_bound().cloned();
     let fst = RangeUniv::new(fst_stt, fst_end);
     let snd = RangeUniv::new(snd_stt, snd_end);
-    (Some(fst), Some(snd))
+    [Some(fst), Some(snd)]
 }
 
 /// Returns the range between two ranges.
@@ -695,7 +688,7 @@ where
 /// # Panics
 ///
 /// Panics if ranges have unordered position like NaN.
-pub(crate) fn diff<RX, RY, T>(rx: &RX, ry: &RY) -> (Option<RangeUniv<T>>, Option<RangeUniv<T>>)
+pub(crate) fn diff<RX, RY, T>(rx: &RX, ry: &RY) -> [Option<RangeUniv<T>>; 2]
 where
     RX: ?Sized + RangeBounds<T>,
     RY: ?Sized + RangeBounds<T>,
@@ -710,11 +703,7 @@ where
 /// # Panics
 ///
 /// Panics if ranges have unordered position like NaN.
-pub(crate) fn diff_adv<RX, RY, T>(
-    rx: &RX,
-    ry: &RY,
-    mode: CursorMode,
-) -> (Option<RangeUniv<T>>, Option<RangeUniv<T>>)
+pub(crate) fn diff_adv<RX, RY, T>(rx: &RX, ry: &RY, mode: CursorMode) -> [Option<RangeUniv<T>>; 2]
 where
     RX: ?Sized + RangeBounds<T>,
     RY: ?Sized + RangeBounds<T>,
@@ -728,22 +717,22 @@ where
 
     // Guard for cursor.
     if mode == CursorMode::Off && ry.is_cursor() {
-        return (Some(rx.to_univ()), None);
+        return [Some(rx.to_univ()), None];
     }
 
     // Guard for no intersection.
     if !rx.intersects(ry) {
-        return (Some(rx.to_univ()), None);
+        return [Some(rx.to_univ()), None];
     }
 
     // Guard for same position cursors.
     if rx.cursor().is_some() && rx.cursor() == ry.cursor() {
-        return (None, None);
+        return [None, None];
     }
 
     // Guard for 2nd argument cursor on 1st argument edge.
     if ry.cursor().is_some_and(|x| rx.at_edge(x)) {
-        return (Some(rx.to_univ()), None);
+        return [Some(rx.to_univ()), None];
     }
 
     // Calculate return range.
@@ -756,10 +745,10 @@ where
     let fst = (has_fst && !rv::new(&fst).is_broken()).then_some(fst);
     let snd = (has_snd && !rv::new(&snd).is_broken()).then_some(snd);
     match (&fst, &snd) {
-        (None, None) => (None, None),
-        (Some(_), None) => (fst, None),
-        (None, Some(_)) => (snd, None),
-        (Some(_), Some(_)) => (fst, snd),
+        (None, None) => [None, None],
+        (Some(_), None) => [fst, None],
+        (None, Some(_)) => [snd, None],
+        (Some(_), Some(_)) => [fst, snd],
     }
 }
 
