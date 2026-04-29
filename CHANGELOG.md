@@ -9,10 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `RichRangeBounds::cut_adv`
-- `RangeUniv::cut_adv`
-- `RangeView::cut_adv`
-- `RangeWrapper::cut_adv`
+- `RichRangeBounds::cut_adv` methods on some items
 
 ### Changed
 
@@ -20,10 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CutMode` variants
 - `CutMode::for_start` public level
 - `CutMode::for_end` public level
-- `cut` return type
-- `flip` return type
-- `diff` and `diff_adv` return type
-- `diff` and `diff_adv` spec
+- `bounds` methods on some items
+- `edges` methods on some items
+- `cut` methods on some items
+- `flip` methods on some items
+- `diff` methods on some items
+- `diff_adv` methods on some items
 
 ## [0.1.0] - 2026-04-18
 

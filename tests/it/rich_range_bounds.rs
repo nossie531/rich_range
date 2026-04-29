@@ -485,8 +485,8 @@ fn iter() {
 #[test]
 fn flip_xxx() {
     with_normal();
-    with_flip_vs_cursor();
-    with_flipx_vs_cursor();
+    with_cursor_mode_off();
+    with_cursor_mode_on();
 
     fn with_normal() {
         let datas = [
@@ -508,19 +508,21 @@ fn flip_xxx() {
         }
     }
 
-    fn with_flip_vs_cursor() {
+    fn with_cursor_mode_off() {
         let datas = [
             (r!(=30, ?30), [ro!(--, --), ro!(--)]),
             (r!(?30, =30), [ro!(--, --), ro!(--)]),
         ];
 
         for (target, tobe) in datas {
-            let asis = target.flip();
-            assert_eq!(asis, tobe);
+            let asis1 = target.flip();
+            let asis2 = target.flip_adv(CursorMode::Off);
+            assert_eq!(asis1, tobe);
+            assert_eq!(asis2, tobe);
         }
     }
 
-    fn with_flipx_vs_cursor() {
+    fn with_cursor_mode_on() {
         let datas = [
             (r!(=30, ?30), [ro!(--, ?30), ro!(=30, --)]),
             (r!(?30, =30), [ro!(--, =30), ro!(?30, --)]),

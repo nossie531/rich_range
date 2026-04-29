@@ -773,9 +773,13 @@ where
 
     /// Returns two ranges by flipping this range.
     ///
+    /// This is equivalent to [`flip_adv`] with [`CursorMode::Off`].
+    /// 
+    /// [`flip_adv`]: Self::flip_adv
+    /// 
     /// # Notes
     ///
-    /// If range is empty, returns full range.
+    /// If range is empty, returns one full range.
     ///
     /// # Examples
     ///
@@ -1945,7 +1949,9 @@ where
 
     /// Return two ranges by cutting self at given position.
     ///
-    /// This is equivalent to [`cut_adv`](Self::cut_adv) with [CutMode::FallbackFw].
+    /// This is equivalent to [`cut_adv`] with [`CutMode::FallbackFw`].
+    /// 
+    /// [`cut_adv`]: Self::cut_adv
     /// 
     /// # Notes
     ///
@@ -2178,6 +2184,10 @@ where
 
     /// Returns the difference of two ranges.
     ///
+    /// This is equivalent to [`diff_adv`] with [`CursorMode::Off`].
+    /// 
+    /// [`diff_adv`]: Self::diff_adv
+    /// 
     /// # Panics
     ///
     /// Panics if ranges have unordered position like NaN.
