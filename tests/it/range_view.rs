@@ -228,11 +228,11 @@ fn flip() {
     let r3 = rv::new(&(..60)).flip();
     let r4 = rv::new(&(30..60)).flip();
     let r5 = rv::new(&(30..30)).flip();
-    assert_eq!(r1, [None, None]);
-    assert_eq!(r2, [Some(ru::new(..30)), None]);
-    assert_eq!(r3, [Some(ru::new(60..)), None]);
-    assert_eq!(r4, [Some(ru::new(..30)), Some(ru::new(60..))]);
-    assert_eq!(r5, [Some(ru::new(..)), None]);
+    assert_eq!(r1, (None, None));
+    assert_eq!(r2, (Some(ru::new(..30)), None));
+    assert_eq!(r3, (Some(ru::new(60..)), None));
+    assert_eq!(r4, (Some(ru::new(..30)), Some(ru::new(60..))));
+    assert_eq!(r5, (Some(ru::new(..)), None));
 }
 
 #[test]
@@ -243,12 +243,12 @@ fn flip_adv() {
     let r4 = rv::new(&(30..60)).flip_adv(CursorMode::Off);
     let r5 = rv::new(&(30..30)).flip_adv(CursorMode::Off);
     let r6 = rv::new(&(30..30)).flip_adv(CursorMode::On);
-    assert_eq!(r1, [None, None]);
-    assert_eq!(r2, [Some(ru::new(..30)), None]);
-    assert_eq!(r3, [Some(ru::new(60..)), None]);
-    assert_eq!(r4, [Some(ru::new(..30)), Some(ru::new(60..))]);
-    assert_eq!(r5, [Some(ru::new(..)), None]);
-    assert_eq!(r6, [Some(ru::new(..30)), Some(ru::new(30..))]);
+    assert_eq!(r1, (None, None));
+    assert_eq!(r2, (Some(ru::new(..30)), None));
+    assert_eq!(r3, (Some(ru::new(60..)), None));
+    assert_eq!(r4, (Some(ru::new(..30)), Some(ru::new(60..))));
+    assert_eq!(r5, (Some(ru::new(..)), None));
+    assert_eq!(r6, (Some(ru::new(..30)), Some(ru::new(30..))));
 }
 
 #[test]
@@ -515,7 +515,7 @@ fn rel() {
 #[test]
 fn cut() {
     let r = rv::new(&(30..60));
-    let [fst, snd] = r.cut(&40);
+    let (fst, snd) = r.cut(&40);
     assert_eq!(fst, Some(ru::new(30..40)));
     assert_eq!(snd, Some(ru::new(40..60)));
 }
@@ -523,7 +523,7 @@ fn cut() {
 #[test]
 fn cut_adv() {
     let r = rv::new(&(30..60));
-    let [fst, snd] = r.cut_adv(&40, CutMode::FallbackFw);
+    let (fst, snd) = r.cut_adv(&40, CutMode::FallbackFw);
     assert_eq!(fst, Some(ru::new(30..40)));
     assert_eq!(snd, Some(ru::new(40..60)));
 }
@@ -579,9 +579,9 @@ fn diff() {
     let r1 = rv::new(&(30..60)).diff(&(50..70));
     let r2 = rv::new(&(30..60)).diff(&(40..50));
     let r3 = rv::new(&(30..60)).diff(&(40..40));
-    assert_eq!(r1, [Some(ru::new(30..50)), None]);
-    assert_eq!(r2, [Some(ru::new(30..40)), Some(ru::new(50..60))]);
-    assert_eq!(r3, [Some(ru::new(30..60)), None]);
+    assert_eq!(r1, (Some(ru::new(30..50)), None));
+    assert_eq!(r2, (Some(ru::new(30..40)), Some(ru::new(50..60))));
+    assert_eq!(r3, (Some(ru::new(30..60)), None));
 }
 
 #[test]
@@ -590,10 +590,10 @@ fn diff_adv() {
     let r2 = rv::new(&(30..60)).diff_adv(&(40..50), CursorMode::Off);
     let r3 = rv::new(&(30..60)).diff_adv(&(40..40), CursorMode::Off);
     let r4 = rv::new(&(30..60)).diff_adv(&(40..40), CursorMode::On);
-    assert_eq!(r1, [Some(ru::new(30..50)), None]);
-    assert_eq!(r2, [Some(ru::new(30..40)), Some(ru::new(50..60))]);
-    assert_eq!(r3, [Some(ru::new(30..60)), None]);
-    assert_eq!(r4, [Some(ru::new(30..40)), Some(ru::new(40..60))]);
+    assert_eq!(r1, (Some(ru::new(30..50)), None));
+    assert_eq!(r2, (Some(ru::new(30..40)), Some(ru::new(50..60))));
+    assert_eq!(r3, (Some(ru::new(30..60)), None));
+    assert_eq!(r4, (Some(ru::new(30..40)), Some(ru::new(40..60))));
 }
 
 #[test]

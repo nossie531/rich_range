@@ -2,6 +2,7 @@
 
 use crate::conv::*;
 use crate::parts::*;
+use crate::util::*;
 use crate::*;
 use core::borrow::Borrow;
 use core::cmp::Ordering;
@@ -683,13 +684,13 @@ where
     /// let r3 = rv::new(&(..60)).flip();
     /// let r4 = rv::new(&(30..60)).flip();
     /// let r5 = rv::new(&(30..30)).flip();
-    /// assert_eq!(r1, [None, None]);
-    /// assert_eq!(r2, [Some(ru::new(..30)), None]);
-    /// assert_eq!(r3, [Some(ru::new(60..)), None]);
-    /// assert_eq!(r4, [Some(ru::new(..30)), Some(ru::new(60..))]);
-    /// assert_eq!(r5, [Some(ru::new(..)), None]);
+    /// assert_eq!(r1, (None, None));
+    /// assert_eq!(r2, (Some(ru::new(..30)), None));
+    /// assert_eq!(r3, (Some(ru::new(60..)), None));
+    /// assert_eq!(r4, (Some(ru::new(..30)), Some(ru::new(60..))));
+    /// assert_eq!(r5, (Some(ru::new(..)), None));
     /// ```
-    pub fn flip(&self) -> [Option<RangeUniv<T>>; 2]
+    pub fn flip(&self) -> Pair<Option<RangeUniv<T>>>
     where
         T: Clone + PartialOrd,
     {
@@ -712,14 +713,14 @@ where
     /// let r4 = rv::new(&(30..60)).flip_adv(CursorMode::Off);
     /// let r5 = rv::new(&(30..30)).flip_adv(CursorMode::Off);
     /// let r6 = rv::new(&(30..30)).flip_adv(CursorMode::On);
-    /// assert_eq!(r1, [None, None]);
-    /// assert_eq!(r2, [Some(ru::new(..30)), None]);
-    /// assert_eq!(r3, [Some(ru::new(60..)), None]);
-    /// assert_eq!(r4, [Some(ru::new(..30)), Some(ru::new(60..))]);
-    /// assert_eq!(r5, [Some(ru::new(..)), None]);
-    /// assert_eq!(r6, [Some(ru::new(..30)), Some(ru::new(30..))]);
+    /// assert_eq!(r1, (None, None));
+    /// assert_eq!(r2, (Some(ru::new(..30)), None));
+    /// assert_eq!(r3, (Some(ru::new(60..)), None));
+    /// assert_eq!(r4, (Some(ru::new(..30)), Some(ru::new(60..))));
+    /// assert_eq!(r5, (Some(ru::new(..)), None));
+    /// assert_eq!(r6, (Some(ru::new(..30)), Some(ru::new(30..))));
     /// ```
-    pub fn flip_adv(&self, mode: CursorMode) -> [Option<RangeUniv<T>>; 2]
+    pub fn flip_adv(&self, mode: CursorMode) -> Pair<Option<RangeUniv<T>>>
     where
         T: Clone + PartialOrd,
     {
@@ -1465,11 +1466,11 @@ where
     /// use rich_range::*;
     ///
     /// let r = rv::new(&(30..60));
-    /// let [fst, snd] = r.cut(&40);
+    /// let (fst, snd) = r.cut(&40);
     /// assert_eq!(fst, Some(ru::new(30..40)));
     /// assert_eq!(snd, Some(ru::new(40..60)));
     /// ```
-    pub fn cut(&self, pos: &T) -> [Option<RangeUniv<T>>; 2]
+    pub fn cut(&self, pos: &T) -> Pair<Option<RangeUniv<T>>>
     where
         T: Clone + PartialOrd,
     {
@@ -1487,11 +1488,11 @@ where
     /// use rich_range::*;
     ///
     /// let r = rv::new(&(30..60));
-    /// let [fst, snd] = r.cut_adv(&40, CutMode::FallbackFw);
+    /// let (fst, snd) = r.cut_adv(&40, CutMode::FallbackFw);
     /// assert_eq!(fst, Some(ru::new(30..40)));
     /// assert_eq!(snd, Some(ru::new(40..60)));
     /// ```
-    pub fn cut_adv(&self, pos: &T, mode: CutMode) -> [Option<RangeUniv<T>>; 2]
+    pub fn cut_adv(&self, pos: &T, mode: CutMode) -> Pair<Option<RangeUniv<T>>>
     where
         T: Clone + PartialOrd,
     {
@@ -1625,11 +1626,11 @@ where
     /// let r1 = rv::new(&(30..60)).diff(&(50..70));
     /// let r2 = rv::new(&(30..60)).diff(&(40..50));
     /// let r3 = rv::new(&(30..60)).diff(&(40..40));
-    /// assert_eq!(r1, [Some(ru::new(30..50)), None]);
-    /// assert_eq!(r2, [Some(ru::new(30..40)), Some(ru::new(50..60))]);
-    /// assert_eq!(r3, [Some(ru::new(30..60)), None]);
+    /// assert_eq!(r1, (Some(ru::new(30..50)), None));
+    /// assert_eq!(r2, (Some(ru::new(30..40)), Some(ru::new(50..60))));
+    /// assert_eq!(r3, (Some(ru::new(30..60)), None));
     /// ```
-    pub fn diff<R2>(&self, other: &R2) -> [Option<RangeUniv<T>>; 2]
+    pub fn diff<R2>(&self, other: &R2) -> Pair<Option<RangeUniv<T>>>
     where
         R2: ?Sized + RangeBounds<T>,
         T: Clone + PartialOrd,
@@ -1651,12 +1652,12 @@ where
     /// let r2 = rv::new(&(30..60)).diff_adv(&(40..50), CursorMode::Off);
     /// let r3 = rv::new(&(30..60)).diff_adv(&(40..40), CursorMode::Off);
     /// let r4 = rv::new(&(30..60)).diff_adv(&(40..40), CursorMode::On);
-    /// assert_eq!(r1, [Some(ru::new(30..50)), None]);
-    /// assert_eq!(r2, [Some(ru::new(30..40)), Some(ru::new(50..60))]);
-    /// assert_eq!(r3, [Some(ru::new(30..60)), None]);
-    /// assert_eq!(r4, [Some(ru::new(30..40)), Some(ru::new(40..60))]);
+    /// assert_eq!(r1, (Some(ru::new(30..50)), None));
+    /// assert_eq!(r2, (Some(ru::new(30..40)), Some(ru::new(50..60))));
+    /// assert_eq!(r3, (Some(ru::new(30..60)), None));
+    /// assert_eq!(r4, (Some(ru::new(30..40)), Some(ru::new(40..60))));
     /// ```
-    pub fn diff_adv<R2>(&self, other: &R2, mode: CursorMode) -> [Option<RangeUniv<T>>; 2]
+    pub fn diff_adv<R2>(&self, other: &R2, mode: CursorMode) -> Pair<Option<RangeUniv<T>>>
     where
         R2: ?Sized + RangeBounds<T>,
         T: Clone + PartialOrd,
