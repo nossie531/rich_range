@@ -1948,7 +1948,7 @@ where
         calc::rel(self, other, ps)
     }
 
-    /// Return two ranges by cutting self at given position.
+    /// Return two ranges by cutting this range at given position.
     ///
     /// This is equivalent to [`cut_adv`] with [`CutMode::FallbackFw`].
     /// 
@@ -1980,7 +1980,7 @@ where
         calc::cut(self, pos, CutMode::FallbackFw)
     }
 
-    /// Return two ranges by cutting self at given position with advanced parameter.
+    /// Return two ranges by cutting this range at given position with advanced parameter.
     ///
     /// # Notes
     ///

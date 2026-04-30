@@ -22,14 +22,14 @@ pub trait RangeSrc<T>: RangeBounds<T> {
     ///
     /// # Panics
     ///
-    /// Panics if this range type does not support given bounds.
+    /// Panics if `Self` does not support given bounds.
     fn new<U>(bounds: (Bound<U>, Bound<U>)) -> Result<Self::Range<U>, BoundsUnfit>;
 
     /// Creates a new [broken empty](crate::RichRangeBounds#empty-handling).
     ///
     /// # Panics
     ///
-    /// Panics if this range type does not support broken empty.
+    /// Panics if `Self` does not support broken empty.
     fn new_broken() -> Result<Self::Range<T>, BoundsUnfit>
     where
         T: HasLimits;
@@ -38,7 +38,7 @@ pub trait RangeSrc<T>: RangeBounds<T> {
     ///
     /// # Panics
     ///
-    /// Panics if this range type is incompatible with given range.
+    /// Panics if `Self` is incompatible with given range.
     fn new_from<R>(range: R) -> Result<Self::Range<T>, BoundsUnfit>
     where
         R: RangeParts<T>,
