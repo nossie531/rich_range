@@ -34,13 +34,17 @@ impl BoundsUnfit {
 /// Error at new range.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct NewRangeErr {
+    /// The name of the target type.
     to_type: &'static str,
+    /// Start bound state of source range.
     from_sb: Option<bool>,
+    /// End bound state of source range.
     from_eb: Option<bool>,
 }
 
 /// Error at new broken range.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct NewBrokenErr {
+    /// The name of the target type.
     to_type: &'static str,
 }

@@ -58,6 +58,25 @@ where
     }
 }
 
+/// Returns a new range by shifting given value to both sides.
+///
+/// # Panics
+///
+/// Panics if any of the following cases occured.
+///
+/// - Position of the bound is overflowed.
+/// - [Custom range type][crt] conversion is failed.
+///
+/// [crt]: crate::conv::RangeSrc#about-custom-range-type
+pub(crate) fn shift<R, T>(range: &R, value: impl Borrow<T>, positive: bool) -> R::Range<T>
+where
+    R: ?Sized + RangeSrc<T>,
+    for<'a> &'a T: Add<&'a T, Output = T>,
+    for<'a> &'a T: Sub<&'a T, Output = T>,
+{
+    (if positive { shr } else { shl })(range, value)
+}
+
 /// Returns a new range by subtracting given value to both sides.
 ///
 /// # Panics
@@ -344,6 +363,26 @@ where
     }
 
     Err(Error::Overflow)
+}
+
+/// Overflow checked version of [`shift`].
+///
+/// # Panics
+///
+/// Panics if [custom range type][crt] conversion is failed.
+///
+/// [crt]: crate::conv::RangeSrc#about-custom-range-type
+pub(crate) fn checked_shift<R, T>(
+    range: &R,
+    value: impl Borrow<T>,
+    positive: bool,
+) -> Option<R::Range<T>>
+where
+    R: ?Sized + RangeSrc<T>,
+    for<'a> &'a T: CheckedAdd<&'a T, Output = T>,
+    for<'a> &'a T: CheckedSub<&'a T, Output = T>,
+{
+    (if positive { checked_shr } else { checked_shl })(range, value)
 }
 
 /// Overflow checked version of [`shl`].

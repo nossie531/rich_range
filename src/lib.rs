@@ -28,3 +28,6 @@ mod inst;
 mod msg;
 mod ranges;
 use rustdoc_copy::prelude::*;
+
+#[cfg(doc)]
+use core::ops::*;

@@ -123,8 +123,8 @@ impl<T> BoundWrapper<T> {
 
     /// Returns unbounded bound or mapped position by given function.
     pub fn map_pos<F, U>(self, for_ub: F, pos: U) -> Bound<U>
-    where 
-        F: Fn(U) -> Bound<U>
+    where
+        F: Fn(U) -> Bound<U>,
     {
         match self.0 {
             Ub => for_ub(pos),

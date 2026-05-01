@@ -10,7 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `Pair` type alias
-- `RichRangeBounds::cut_adv` methods on some items
+- `checked_shift` methods on some items
+- `cut_adv` methods on some items
+- `shift` methods on some items
 
 ### Changed
 

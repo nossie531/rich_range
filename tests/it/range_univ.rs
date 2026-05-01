@@ -56,6 +56,13 @@ fn with_end_bound() {
 }
 
 #[test]
+fn contains() {
+    let target = ru::new(30..60);
+    assert!(target.contains(&40));
+    assert!(!target.contains(&70));
+}
+
+#[test]
 fn is_empty() {
     assert!(ru::new(30..30).is_empty());
     assert!(ru::new(60..30).is_empty());
@@ -281,10 +288,10 @@ fn flip_adv() {
 }
 
 #[test]
-fn contains() {
+fn shift() {
     let target = ru::new(30..60);
-    assert!(target.contains(&40));
-    assert!(!target.contains(&70));
+    let result = target.shift(10, false);
+    assert_eq!(result, ru::new(20..50));
 }
 
 #[test]
@@ -356,6 +363,15 @@ fn try_map() {
     let result1 = target.clone().try_map(|x| x.checked_mul(2));
     let result2 = target.clone().try_map(|x| x.checked_mul(10));
     assert_eq!(result1, Some(ru::new(60..)));
+    assert_eq!(result2, None);
+}
+
+#[test]
+fn checked_shift() {
+    let target = ru::new::<_, u8>(30..60);
+    let result1 = target.checked_shift(10, false);
+    let result2 = target.checked_shift(40, false);
+    assert_eq!(result1, Some(ru::new(20..50)));
     assert_eq!(result2, None);
 }
 

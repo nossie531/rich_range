@@ -13,25 +13,25 @@ use core::ops::{Bound, RangeBounds};
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
 pub enum CutMode {
     /// Target range bounds first, forward rule fallback.
-    /// 
+    ///
     /// Follows target range bounds variants; if they are unbounded,
     /// start bound is included, end bound is excluded.
     FallbackFw,
 
     /// Target range bounds first, forward rule fallback.
-    /// 
+    ///
     /// Follows target range bounds variants; if they are unbounded,
     /// start bound is excluded, end bound is included.
     FallbackBw,
 
     /// Target range bounds first, forward rule fallback.
-    /// 
+    ///
     /// Follows target range bounds variants; if they are unbounded,
     /// start bound and end bound are both included.
     FallbackIn,
 
     /// Target range bounds first, forward rule fallback.
-    /// 
+    ///
     /// Follows target range bounds variants; if they are unbounded,
     /// start bound and end bound are both excluded.
     FallbackEx,

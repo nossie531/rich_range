@@ -536,6 +536,21 @@ fn flip_xxx() {
 }
 
 #[test]
+fn shift() {
+    let datas = [
+        (r!(?30, ?60), 10, false, ok(r!(?20, ?50))),
+        (r!(?30, ?60), 10, true, ok(r!(?40, ?70))),
+        (r!(---, =00), 10, false, ng()),
+        (r!(---, =MAX), 10, true, ng()),
+    ];
+
+    for (target, value, positive, tobe) in datas {
+        let asis = test_panic(|| target.shift(value, positive));
+        assert_eqa!(asis, tobe);
+    }
+}
+
+#[test]
 fn shl() {
     let datas = [
         (r!(---, ---), 10, ok(r!(---, ---))),
@@ -737,7 +752,7 @@ fn align_start() {
             (BuggyRange::<i8>::new(In(30), Ub), 40),
             (BuggyRange::<i8>::new(Ub, Ex(60)), 40),
             // Small offset and big width.
-            (BuggyRange::<i8>::new(In(-110), Ex(100)), -100),            
+            (BuggyRange::<i8>::new(In(-110), Ex(100)), -100),
             // Big offset and small width.
             (BuggyRange::<i8>::new(In(-120), Ex(-110)), 110),
         ];
@@ -833,7 +848,7 @@ fn align_end() {
             (BuggyRange::<i8>::new(In(30), Ub), 40),
             (BuggyRange::<i8>::new(Ub, Ex(60)), 40),
             // Small offset and big width.
-            (BuggyRange::<i8>::new(In(-110), Ex(110)), 100),            
+            (BuggyRange::<i8>::new(In(-110), Ex(110)), 100),
             // Big offset and small width.
             (BuggyRange::<i8>::new(In(-120), Ex(-110)), 110),
         ];
@@ -878,6 +893,21 @@ fn try_map() {
 
     for (target, f, tobe) in datas {
         let asis = target.try_map(f);
+        assert_eq!(asis, tobe);
+    }
+}
+
+#[test]
+fn checked_shift() {
+    let datas = [
+        (r!(<u8>, =30, ?60), 10, false, ro!(<u8>, =20, ?50)),
+        (r!(<u8>, =30, ?60), 100, true, ro!(<u8>, =130, ?160)),
+        (r!(<u8>, =30, ?60), 40, false, ro!(<u8>, --------)),
+        (r!(<u8>, =30, ?60), 200, true, ro!(<u8>, ----------)),
+    ];
+
+    for (target, rhs, positive, tobe) in datas {
+        let asis = target.checked_shift(rhs, positive);
         assert_eq!(asis, tobe);
     }
 }

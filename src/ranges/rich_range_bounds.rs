@@ -775,9 +775,9 @@ where
     /// Returns two ranges by flipping this range.
     ///
     /// This is equivalent to [`flip_adv`] with [`CursorMode::Off`].
-    /// 
+    ///
     /// [`flip_adv`]: Self::flip_adv
-    /// 
+    ///
     /// # Notes
     ///
     /// If range is empty, returns one full range.
@@ -845,7 +845,40 @@ where
         calc::flip_adv(self, mode)
     }
 
-    /// Returns a new range with both ends subtracted by given value.
+    /// Returns a new range by shifting given value to both sides.
+    ///
+    /// # Panics
+    ///
+    /// Panics if any of the following cases occured.
+    ///
+    /// - Position of the bound is overflowed.
+    /// - [Custom range type][crt] conversion is failed.
+    ///
+    /// [crt]: crate::conv::RangeSrc#about-custom-range-type
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rich_range::prelude::*;
+    /// use rich_range::*;
+    ///
+    /// let target = ru::new(30..60);
+    /// let result = RichRangeBounds::shift(&target, 10, false);
+    /// assert_eq!(result, ru::new(20..50));
+    /// ```
+    #[must_use]
+    #[doc_on_only]
+    fn shift(&self, value: impl Borrow<T>, positive: bool) -> Self::Range<T>
+    where
+        T: Sized,
+        Self: RangeSrc<T>,
+        for<'a> &'a T: Add<&'a T, Output = T>,
+        for<'a> &'a T: Sub<&'a T, Output = T>,
+    {
+        calc::shift(self, value, positive)
+    }
+
+    /// Returns a new range by subtracting given value to both sides.
     ///
     /// # Panics
     ///
@@ -877,7 +910,7 @@ where
         calc::shl(self, value)
     }
 
-    /// Returns a new range with both ends subtracted by given value.
+    /// Returns a new range by adding given value to both sides.
     ///
     /// # Panics
     ///
@@ -1239,6 +1272,38 @@ where
         let s = bound(bounds.0).try_map(&mut f)?;
         let e = bound(bounds.1).try_map(&mut f)?;
         Some(<Self as RangeSrc<_>>::new((s, e)).unwrap())
+    }
+
+    /// Overflow checked version of [`shift`](Self::shift).
+    ///
+    /// # Panics
+    ///
+    /// Panics if [custom range type][crt] conversion is failed.
+    ///
+    /// [crt]: crate::conv::RangeSrc#about-custom-range-type
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rich_range::prelude::*;
+    /// use rich_range::*;
+    ///
+    /// let target = ru::new::<_, u8>(30..60);
+    /// let result1 = RichRangeBounds::checked_shift(&target, 10, false);
+    /// let result2 = RichRangeBounds::checked_shift(&target, 40, false);
+    /// assert_eq!(result1, Some(ru::new(20..50)));
+    /// assert_eq!(result2, None);
+    /// ```
+    #[must_use]
+    #[doc_on_only]
+    fn checked_shift(&self, value: impl Borrow<T>, positive: bool) -> Option<Self::Range<T>>
+    where
+        T: Sized,
+        Self: RangeSrc<T>,
+        for<'a> &'a T: CheckedAdd<&'a T, Output = T>,
+        for<'a> &'a T: CheckedSub<&'a T, Output = T>,
+    {
+        calc::checked_shift(self, value, positive)
     }
 
     /// Overflow checked version of [`shl`](Self::shl).
@@ -1951,9 +2016,9 @@ where
     /// Return two ranges by cutting this range at given position.
     ///
     /// This is equivalent to [`cut_adv`] with [`CutMode::FallbackFw`].
-    /// 
+    ///
     /// [`cut_adv`]: Self::cut_adv
-    /// 
+    ///
     /// # Notes
     ///
     /// - If this range is broken empty, returns two [`None`].
@@ -2186,9 +2251,9 @@ where
     /// Returns the difference of two ranges.
     ///
     /// This is equivalent to [`diff_adv`] with [`CursorMode::Off`].
-    /// 
+    ///
     /// [`diff_adv`]: Self::diff_adv
-    /// 
+    ///
     /// # Panics
     ///
     /// Panics if ranges have unordered position like NaN.

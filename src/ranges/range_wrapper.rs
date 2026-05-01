@@ -717,6 +717,29 @@ where
     #[inline]
     #[must_use]
     #[doc_on_only]
+    #[doc = doc_rrb::side::shift::top!()]
+    #[doc = doc_rrb::side::shift::sub::panics::all!()]
+    #[doc = doc_rrb::side::shift::sub::examples::head!()]
+    /// ```
+    /// use rich_range::prelude::*;
+    ///
+    /// let target = rw::new(30..60);
+    /// let result = target.shift(10, false);
+    /// assert_eq!(result, rw::new(20..50));
+    /// ```
+    pub fn shift(&self, value: impl Borrow<T>, positive: bool) -> Self
+    where
+        T: Sized,
+        Self: RangeSrc<T, Range<T> = Self>,
+        for<'a> &'a T: Add<&'a T, Output = T>,
+        for<'a> &'a T: Sub<&'a T, Output = T>,
+    {
+        RichRangeBounds::shift(self, value, positive)
+    }
+
+    #[inline]
+    #[must_use]
+    #[doc_on_only]
     #[doc = doc_rrb::side::shl::top!()]
     #[doc = doc_rrb::side::shl::sub::panics::all!()]
     #[doc = doc_rrb::side::shl::sub::examples::head!()]
@@ -976,6 +999,30 @@ where
         Self: RangeSrc<T> + RangeParts<T>,
     {
         RichRangeBounds::try_map(self, f)
+    }
+
+    #[inline]
+    #[must_use]
+    #[doc_on_only]
+    #[doc = doc_rrb::side::checked_shift::top!()]
+    #[doc = doc_rrb::side::checked_shift::sub::examples::head!()]
+    /// ```
+    /// use rich_range::prelude::*;
+    ///
+    /// let target = rw::new::<_, u8>(30..60);
+    /// let result1 = target.checked_shift(10, false);
+    /// let result2 = target.checked_shift(40, false);
+    /// assert_eq!(result1, Some(rw::new(20..50)));
+    /// assert_eq!(result2, None);
+    /// ```
+    pub fn checked_shift(&self, value: impl Borrow<T>, positive: bool) -> Option<Self>
+    where
+        T: Sized,
+        Self: RangeSrc<T, Range<T> = Self>,
+        for<'a> &'a T: CheckedAdd<&'a T, Output = T>,
+        for<'a> &'a T: CheckedSub<&'a T, Output = T>,
+    {
+        RichRangeBounds::checked_shift(self, value, positive)
     }
 
     #[inline]
@@ -1761,7 +1808,6 @@ macro_rules! impl_shl {
             $(
                 #[$main]
                 /// Performs the `<<` operation.
-                /// <a id="main_shl" style="visibility:hidden;"></a>
                 ///
                 /// Returns a new range with both ends subtracted by given value.
                 ///
@@ -1780,7 +1826,7 @@ macro_rules! impl_shl {
             )?
             $(
                 #[$sub]
-                /// See main overload [document](RangeUniv::shl).
+                /// See main overload [document](RangeWrapper::shl).
             )?
             fn shl(self, rhs: $($rhsRef)?T) -> Self::Output {
                 calc::shl(util::to_ref!($($lhsRef)?, self), rhs)
@@ -1803,7 +1849,6 @@ macro_rules! impl_shr {
             $(
                 #[$main]
                 /// Performs the `>>` operation.
-                /// <a id="main_shr" style="visibility:hidden;"></a>
                 ///
                 /// Returns a new range with both ends added by given value.
                 ///
@@ -1822,7 +1867,7 @@ macro_rules! impl_shr {
             )?
             $(
                 #[$sub]
-                /// See main overload [document](RangeUniv::shr).
+                /// See main overload [document](RangeWrapper::shr).
             )?
             fn shr(self, rhs: $($rhsRef)?T) -> Self::Output {
                 calc::shr(util::to_ref!($($lhsRef)?, self), rhs)
@@ -1869,7 +1914,7 @@ macro_rules! impl_bitand {
             )?
             $(
                 #[$sub]
-                /// See main overload [document](RangeUniv::bitand).
+                /// See main overload [document](RangeWrapper::bitand).
             )?
             fn bitand(self, rhs: $($rhsRef)?RangeWrapper<R, T>) -> Self::Output {
                 let rx = util::to_ref!($($lhsRef)?, self);
@@ -1912,7 +1957,7 @@ macro_rules! impl_bitor {
             )?
             $(
                 #[$sub]
-                /// See main overload [document](RangeUniv::bitor).
+                /// See main overload [document](RangeWrapper::bitor).
             )?
             fn bitor(self, rhs: $($rhsRef)?RangeWrapper<R, T>) -> Self::Output {
                 let rx = util::to_ref!($($lhsRef)?, self);
@@ -1963,7 +2008,7 @@ macro_rules! impl_bitxor {
             )?
             $(
                 #[$sub]
-                /// See main overload [document](RangeUniv::bitxor).
+                /// See main overload [document](RangeWrapper::bitxor).
             )?
             fn bitxor(self, rhs: $($rhsRef)?RangeWrapper<R, T>) -> Self::Output {
                 let rx = util::to_ref!($($lhsRef)?, self);
@@ -1987,7 +2032,6 @@ macro_rules! impl_shl_assign {
             $(
                 #[$main]
                 /// Performs the `<<=` operation.
-                /// <a id="main_shl_assign" style="visibility:hidden;"></a>
                 ///
                 /// Assigns range with both ends subtracted by given value.
                 ///
@@ -2007,7 +2051,7 @@ macro_rules! impl_shl_assign {
             )?
             $(
                 #[$sub]
-                /// See main overload [document](RangeUniv::shl_assign).
+                /// See main overload [document](RangeWrapper::shl_assign).
             )?
             fn shl_assign(&mut self, rhs: $($rhsRef)?T) {
                 *self = calc::shl(self, rhs);
@@ -2029,7 +2073,6 @@ macro_rules! impl_shr_assign {
             $(
                 #[$main]
                 /// Performs the `>>=` operation.
-                /// <a id="main_shr_assign" style="visibility:hidden;"></a>
                 ///
                 /// Assigns range with both ends subtracted by given value.
                 ///
@@ -2049,7 +2092,7 @@ macro_rules! impl_shr_assign {
             )?
             $(
                 #[$sub]
-                /// See main overload [document](RangeUniv::shr_assign).
+                /// See main overload [document](RangeWrapper::shr_assign).
             )?
             fn shr_assign(&mut self, rhs: $($rhsRef)?T) {
                 *self = calc::shr(self, rhs);
@@ -2099,7 +2142,7 @@ macro_rules! impl_bitand_assign {
             )?
             $(
                 #[$sub]
-                /// See main overload [document](RangeUniv::bitand_assign).
+                /// See main overload [document](RangeWrapper::bitand_assign).
             )?
             fn bitand_assign(&mut self, rhs: $($rhsRef)?RangeWrapper<R, T>) {
                 *self = calc::closed_prod(self, &rhs);
@@ -2143,7 +2186,7 @@ macro_rules! impl_bitor_assign {
             )?
             $(
                 #[$sub]
-                /// See main overload [document](RangeUniv::bitor_assign).
+                /// See main overload [document](RangeWrapper::bitor_assign).
             )?
             fn bitor_assign(&mut self, rhs: $($rhsRef)?RangeWrapper<R, T>) {
                 *self = calc::closed_union(self, &rhs);
@@ -2194,7 +2237,7 @@ macro_rules! impl_bitxor_assign {
             )?
             $(
                 #[$sub]
-                /// See main overload [document](RangeUniv::bitxor_assign).
+                /// See main overload [document](RangeWrapper::bitxor_assign).
             )?
             fn bitxor_assign(&mut self, rhs: $($rhsRef)?RangeWrapper<R, T>) {
                 *self = calc::closed_enwrap(self, &rhs);

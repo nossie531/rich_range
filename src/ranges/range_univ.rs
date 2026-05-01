@@ -785,6 +785,28 @@ impl<T> RangeUniv<T> {
     #[inline]
     #[must_use]
     #[doc_on_only]
+    #[doc = doc_rrb::side::shift::top!()]
+    #[doc = doc_rrb::side::shift::sub::panics::all!()]
+    #[doc = doc_rrb::side::shift::sub::examples::head!()]
+    /// ```
+    /// use rich_range::prelude::*;
+    ///
+    /// let target = ru::new(30..60);
+    /// let result = target.shift(10, false);
+    /// assert_eq!(result, ru::new(20..50));
+    /// ```
+    pub fn shift(&self, value: impl Borrow<T>, positive: bool) -> Self
+    where
+        T: Sized,
+        for<'a> &'a T: Add<&'a T, Output = T>,
+        for<'a> &'a T: Sub<&'a T, Output = T>,
+    {
+        RichRangeBounds::shift(self, value, positive)
+    }
+
+    #[inline]
+    #[must_use]
+    #[doc_on_only]
     #[doc = doc_rrb::side::shl::top!()]
     #[doc = doc_rrb::side::shl::sub::panics::all!()]
     #[doc = doc_rrb::side::shl::sub::examples::head!()]
@@ -1032,6 +1054,29 @@ impl<T> RangeUniv<T> {
         F: FnMut(T) -> Option<U>,
     {
         RichRangeBounds::try_map(self, f)
+    }
+
+    #[inline]
+    #[must_use]
+    #[doc_on_only]
+    #[doc = doc_rrb::side::checked_shift::top!()]
+    #[doc = doc_rrb::side::checked_shift::sub::examples::head!()]
+    /// ```
+    /// use rich_range::prelude::*;
+    ///
+    /// let target = ru::new::<_, u8>(30..60);
+    /// let result1 = target.checked_shift(10, false);
+    /// let result2 = target.checked_shift(40, false);
+    /// assert_eq!(result1, Some(ru::new(20..50)));
+    /// assert_eq!(result2, None);
+    /// ```
+    pub fn checked_shift(&self, value: impl Borrow<T>, positive: bool) -> Option<Self>
+    where
+        T: Sized,
+        for<'a> &'a T: CheckedAdd<&'a T, Output = T>,
+        for<'a> &'a T: CheckedSub<&'a T, Output = T>,
+    {
+        RichRangeBounds::checked_shift(self, value, positive)
     }
 
     #[inline]
@@ -1844,7 +1889,6 @@ macro_rules! impl_shl {
             $(
                 #[$main]
                 /// Performs the `<<` operation.
-                /// <a id="main_shl" style="visibility:hidden;"></a>
                 ///
                 /// Returns a new range with both ends subtracted by given value.
                 ///
@@ -1884,7 +1928,6 @@ macro_rules! impl_shr {
             $(
                 #[$main]
                 /// Performs the `>>` operation.
-                /// <a id="main_shr" style="visibility:hidden;"></a>
                 ///
                 /// Returns a new range with both ends added by given value.
                 ///
@@ -1924,7 +1967,6 @@ macro_rules! impl_bitand {
             $(
                 #[$main]
                 /// Performs the `&` operation.
-                /// <a id="main_bitand" style="visibility:hidden;"></a>
                 ///
                 /// Returns the shared range of two ranges.
                 ///
@@ -1972,7 +2014,6 @@ macro_rules! impl_bitor {
             $(
                 #[$main]
                 /// Performs the `|` operation.
-                /// <a id="main_bitor" style="visibility:hidden;"></a>
                 ///
                 /// Returns the merged ranges of two ranges.
                 ///
@@ -2014,7 +2055,6 @@ macro_rules! impl_bitxor {
             $(
                 #[$main]
                 /// Performs the `^` operation.
-                /// <a id="main_bitxor" style="visibility:hidden;"></a>
                 ///
                 /// Returns the super range of two ranges.
                 ///
@@ -2062,7 +2102,6 @@ macro_rules! impl_shl_assign {
             $(
                 #[$main]
                 /// Performs the `<<=` operation.
-                /// <a id="main_shl_assign" style="visibility:hidden;"></a>
                 ///
                 /// Assigns range with both ends subtracted by given value.
                 ///
@@ -2102,7 +2141,6 @@ macro_rules! impl_shr_assign {
             $(
                 #[$main]
                 /// Performs the `>>=` operation.
-                /// <a id="main_shr_assign" style="visibility:hidden;"></a>
                 ///
                 /// Assigns range with both ends added by given value.
                 ///
@@ -2141,7 +2179,6 @@ macro_rules! impl_bitand_assign {
             $(
                 #[$main]
                 /// Performs the `&=` operation.
-                /// <a id="main_bitand_assign" style="visibility:hidden;"></a>
                 ///
                 /// Assigns shared range of two ranges.
                 ///
@@ -2190,7 +2227,6 @@ macro_rules! impl_bitor_assign {
             $(
                 #[$main]
                 /// Performs the `|=` operation.
-                /// <a id="main_bitor_assign" style="visibility:hidden;"></a>
                 ///
                 /// Assigns merged range of two ranges.
                 ///
@@ -2233,7 +2269,6 @@ macro_rules! impl_bitxor_assign {
             $(
                 #[$main]
                 /// Performs the `^=` operation.
-                /// <a id="main_bitxor_assign" style="visibility:hidden;"></a>
                 ///
                 /// Assigns super range of two ranges.
                 ///

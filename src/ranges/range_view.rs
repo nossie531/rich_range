@@ -730,6 +730,28 @@ where
     #[inline]
     #[must_use]
     #[doc_on_only]
+    #[doc = doc_rrb::side::shift::top!()]
+    #[doc = doc_rrb::side::shift::sub::panics::all!()]
+    #[doc = doc_rrb::side::shift::sub::examples::head!()]
+    /// ```
+    /// use rich_range::prelude::*;
+    ///
+    /// let target = rv::new(&(30..60));
+    /// let result = target.shift(10, false);
+    /// assert_eq!(result, ru::new(20..50));
+    /// ```
+    pub fn shift(&self, value: impl Borrow<T>, positive: bool) -> RangeUniv<T>
+    where
+        T: Sized,
+        for<'x> &'x T: Add<&'x T, Output = T>,
+        for<'x> &'x T: Sub<&'x T, Output = T>,
+    {
+        RichRangeBounds::shift(self, value, positive)
+    }
+
+    #[inline]
+    #[must_use]
+    #[doc_on_only]
     #[doc = doc_rrb::side::shl::top!()]
     #[doc = doc_rrb::side::shl::sub::panics::all!()]
     #[doc = doc_rrb::side::shl::sub::examples::head!()]
@@ -979,6 +1001,29 @@ where
         F: FnMut(T) -> Option<U>,
     {
         RichRangeBounds::try_map(self, f)
+    }
+
+    #[inline]
+    #[must_use]
+    #[doc_on_only]
+    #[doc = doc_rrb::side::checked_shift::top!()]
+    #[doc = doc_rrb::side::checked_shift::sub::examples::head!()]
+    /// ```
+    /// use rich_range::prelude::*;
+    ///
+    /// let target = rv::new::<_, u8>(&(30..60));
+    /// let result1 = target.checked_shift(10, false);
+    /// let result2 = target.checked_shift(40, false);
+    /// assert_eq!(result1, Some(ru::new(20..50)));
+    /// assert_eq!(result2, None);
+    /// ```
+    pub fn checked_shift(&self, value: impl Borrow<T>, positive: bool) -> Option<RangeUniv<T>>
+    where
+        T: Sized,
+        for<'x> &'x T: CheckedAdd<&'x T, Output = T>,
+        for<'x> &'x T: CheckedSub<&'x T, Output = T>,
+    {
+        RichRangeBounds::checked_shift(self, value, positive)
     }
 
     #[inline]
