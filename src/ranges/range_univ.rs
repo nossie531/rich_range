@@ -45,6 +45,7 @@ impl<T> RangeUniv<T> {
     /// assert_eq!(r.start, Included(30));
     /// assert_eq!(r.end, Excluded(60));
     /// ```
+    #[inline]
     #[must_use]
     pub fn new(start: Bound<T>, end: Bound<T>) -> Self {
         Self { start, end }
@@ -62,6 +63,7 @@ impl<T> RangeUniv<T> {
     /// let r = RangeUniv::new_cursor(42);
     /// assert_eq!(r, ru::new(42..42));
     /// ```
+    #[inline]
     #[must_use]
     pub fn new_cursor(value: T) -> Self
     where
@@ -83,6 +85,7 @@ impl<T> RangeUniv<T> {
     /// let r = RangeUniv::<u8>::new_broken();
     /// assert_eq!(r, ru::new((Excluded(255), Excluded(0))));
     /// ```
+    #[inline]
     #[must_use]
     pub fn new_broken() -> Self
     where
@@ -101,6 +104,7 @@ impl<T> RangeUniv<T> {
     /// let r = RangeUniv::new_point(42);
     /// assert_eq!(r, ru::new(42..=42));
     /// ```
+    #[inline]
     #[must_use]
     pub fn new_point(value: T) -> Self
     where
@@ -120,6 +124,7 @@ impl<T> RangeUniv<T> {
     /// let r = ru::new(30..60).with_start_bound(Included(40));
     /// assert_eq!(r, ru::new(40..60));
     /// ```
+    #[inline]
     #[must_use]
     pub fn with_start_bound(&self, value: Bound<T>) -> Self
     where
@@ -139,6 +144,7 @@ impl<T> RangeUniv<T> {
     /// let r = ru::new(30..60).with_end_bound(Excluded(50));
     /// assert_eq!(r, ru::new(30..50));
     /// ```
+    #[inline]
     #[must_use]
     pub fn with_end_bound(&self, value: Bound<T>) -> Self
     where

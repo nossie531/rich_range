@@ -54,6 +54,8 @@ where
     /// let r = RangeView::new(&(30..60));
     /// assert_eq!(r.0, &(30..60));
     /// ```
+    #[inline]
+    #[must_use]
     pub fn new(base: &'a R) -> Self {
         Self(base, PhantomData)
     }
@@ -68,6 +70,8 @@ where
     /// let r = rv::new(&(30..60)).to_univ();
     /// assert_eq!(r, ru::new(30..60));
     /// ```
+    #[inline]
+    #[must_use]
     pub fn to_univ(&self) -> RangeUniv<T>
     where
         T: Clone,

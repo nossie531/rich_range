@@ -48,6 +48,7 @@ where
     /// let r = RangeWrapper::new(30..60);
     /// assert_eq!(r.0, 30..60);
     /// ```
+    #[inline]
     #[must_use]
     pub fn new(value: R) -> Self {
         Self(value, PhantomData)
@@ -63,6 +64,7 @@ where
     /// let r = RangeWrapper::from_ref(&(30..60));
     /// assert_eq!(r.0, 30..60);
     /// ```
+    #[inline]
     #[must_use]
     pub fn from_ref(base: &R) -> &RangeWrapper<R, T> {
         unsafe { mem::transmute(base) }

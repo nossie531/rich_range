@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `cut` methods on some items
 - `diff` methods on some items
 - `diff_adv` methods on some items
+- `inline` attribute on some items
+- `must_use` attribute on some items
 
 ## [0.1.0] - 2026-04-18
 
