@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No items
 
+## [0.2.1] - 2026-06-02
+
+- Polish documentation
+
 ## [0.2.0] - 2026-06-02
 
 ### Added
@@ -36,6 +40,7 @@ No items
 
 - First relsease.
 
-[unreleased]: https://github.com/nossie531/rich_range/releases/tag/v0.2.0...HEAD
+[unreleased]: https://github.com/nossie531/rich_range/releases/tag/v0.2.1...HEAD
+[0.2.1]: https://github.com/nossie531/rich_range/releases/tag/v0.2.1
 [0.2.0]: https://github.com/nossie531/rich_range/releases/tag/v0.2.0
 [0.1.0]: https://github.com/nossie531/rich_range/releases/tag/v0.1.0
