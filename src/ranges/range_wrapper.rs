@@ -1897,9 +1897,9 @@ macro_rules! impl_bitand {
                 ///
                 /// # Notes
                 ///
-                /// If two range has no intersection, returns [broken empty][eh].
+                /// If two range has no intersection, returns [default broken empty][dbe].
                 ///
-                /// [eh]: crate::RichRangeBounds#empty-handling
+                /// [dbe]: crate::RichRangeBounds#default-broken-empty
                 ///
                 /// # Panics
                 ///
@@ -1989,10 +1989,10 @@ macro_rules! impl_bitxor {
                 ///
                 /// # Note
                 ///
-                /// - Both range is empty, returns [broken empty][eh].
+                /// - Both range is empty, returns [default broken empty][dbe].
                 /// - One range is empty, returns the other range.
                 ///
-                /// [eh]: crate::RichRangeBounds#empty-handling
+                /// [dbe]: crate::RichRangeBounds#default-broken-empty
                 ///
                 /// # Panics
                 ///
@@ -2120,9 +2120,9 @@ macro_rules! impl_bitand_assign {
                 ///
                 /// # Notes
                 ///
-                /// If two range has no intersection, assigns [broken empty][eh].
+                /// If two range has no intersection, assigns [default broken empty][dbe].
                 ///
-                /// [eh]: crate::RichRangeBounds#empty-handling
+                /// [dbe]: crate::RichRangeBounds#default-broken-empty
                 ///
                 /// # Panics
                 ///
@@ -2214,10 +2214,10 @@ macro_rules! impl_bitxor_assign {
                 ///
                 /// # Note
                 ///
-                /// - Both range is empty, assigns [broken empty][eh].
+                /// - Both range is empty, assigns [default broken empty][dbe].
                 /// - One range is empty, assigns the other range.
                 ///
-                /// [eh]: crate::RichRangeBounds#empty-handling
+                /// [dbe]: crate::RichRangeBounds#default-broken-empty
                 ///
                 /// # Panics
                 ///

@@ -29,10 +29,16 @@ use rustdoc_copy::prelude::*;
 /// if the first range includes the cursor position.
 ///
 /// Broken empties' informations (variants and positions) are not used
-/// anymore in this crate. For example, [`includes`] method with some
-/// range and broken empty returns always `false`, even if both ends
-/// of the broken empty are included in the first range.
+/// aggressively in this crate. For example, [`includes`] method with
+/// some range and broken empty returns always `false`, even if both
+/// ends of the broken empty are included in the first range.
 ///
+/// # Default broken empty
+/// 
+/// Best default broken empty is one that has included minimum at start
+/// bound and excluded maximum at end bound. However, if unable to comply
+/// boundary variants, they are ignored.
+/// 
 /// [`includes`]: doc_share::Self::includes
 #[doc_on_only]
 #[doc_share(doc_rrb)]

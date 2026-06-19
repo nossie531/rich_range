@@ -30,7 +30,7 @@ fn new_cursor() {
 #[test]
 fn new_broken() {
     let result = RangeUniv::new_broken();
-    assert_eq!(result, r!(?MAX, ?0));
+    assert_eq!(result, r!(=MAX, ?0));
 }
 
 #[test]
@@ -843,7 +843,7 @@ fn shr() {
 fn bitand() {
     let datas = [
         (r!(=30, ?60), r!(=40, ?70), r!(=040, ?60)),
-        (r!(=20, ?40), r!(=50, ?70), r!(?MAX, ?00)),
+        (r!(=20, ?40), r!(=50, ?70), r!(=MAX, ?00)),
     ];
 
     for (target, rhs, tobe) in datas {
@@ -884,7 +884,7 @@ fn bitor() {
 fn bitxor() {
     let datas = [
         (r!(=30, ?40), r!(=60, ?70), r!(=030, ?70)),
-        (r!(=30, ?30), r!(=60, ?60), r!(?MAX, ?00)),
+        (r!(=30, ?30), r!(=60, ?60), r!(=MAX, ?00)),
     ];
 
     for (target, rhs, tobe) in datas {
@@ -947,7 +947,7 @@ fn shr_assign() {
 fn bitand_assign() {
     let datas = [
         (r!(=30, ?60), r!(=40, ?70), r!(=040, ?60)),
-        (r!(=20, ?40), r!(=50, ?70), r!(?MAX, ?00)),
+        (r!(=20, ?40), r!(=50, ?70), r!(=MAX, ?00)),
     ];
 
     for (target, rhs, tobe) in datas {
@@ -984,7 +984,7 @@ fn bitor_assign() {
 fn bitxor_assign() {
     let datas = [
         (r!(=30, ?40), r!(=60, ?70), r!(=030, ?70)),
-        (r!(=30, ?30), r!(=60, ?60), r!(?MAX, ?00)),
+        (r!(=30, ?30), r!(=60, ?60), r!(=MAX, ?00)),
     ];
 
     for (target, rhs, tobe) in datas {

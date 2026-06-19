@@ -13,11 +13,11 @@ fn new_broken() {
         let r3 = <RwNormal<_> as RangeSrc<_>>::new_broken();
         let r4 = <RwInclusive<_> as RangeSrc<_>>::new_broken();
         let r5 = <RwBounds<_> as RangeSrc<_>>::new_broken();
-        assert_eq!(r1, Ok(ru::new((Ex(usize::MAX), Ex(usize::MIN)))));
-        assert_eq!(r2, Ok(ru::new((Ex(usize::MAX), Ex(usize::MIN)))));
+        assert_eq!(r1, Ok(ru::new((In(usize::MAX), Ex(usize::MIN)))));
+        assert_eq!(r2, Ok(ru::new((In(usize::MAX), Ex(usize::MIN)))));
         assert_eq!(r3, Ok(rw::new(usize::MAX..usize::MIN)));
         assert_eq!(r4, Ok(rw::new(usize::MAX..=usize::MIN)));
-        assert_eq!(r5, Ok(rw::new((Ex(usize::MAX), Ex(usize::MIN)))));
+        assert_eq!(r5, Ok(rw::new((In(usize::MAX), Ex(usize::MIN)))));
     }
 
     fn with_ng() {

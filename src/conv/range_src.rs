@@ -25,7 +25,9 @@ pub trait RangeSrc<T>: RangeBounds<T> {
     /// Panics if `Self` does not support given bounds.
     fn new<U>(bounds: (Bound<U>, Bound<U>)) -> Result<Self::Range<U>, BoundsUnfit>;
 
-    /// Creates a new [broken empty](crate::RichRangeBounds#empty-handling).
+    /// Creates a new [default broken empty][dbe].
+    /// 
+    /// [dbe]: crate::RichRangeBounds#default-broken-empty
     ///
     /// # Panics
     ///
@@ -199,6 +201,6 @@ impl<T> RangeSrc<T> for RangeBoundsWrapper<T> {
     where
         T: HasLimits,
     {
-        Ok(Self::new((Ex(T::MAX), Ex(T::MIN))))
+        Ok(Self::new((In(T::MAX), Ex(T::MIN))))
     }
 }
