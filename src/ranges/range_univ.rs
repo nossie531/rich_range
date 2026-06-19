@@ -73,7 +73,7 @@ impl<T> RangeUniv<T> {
     }
 
     /// Creates a new [default broken empty][dbe].
-    /// 
+    ///
     /// [dbe]: crate::RichRangeBounds#default-broken-empty
     ///
     /// # Examples

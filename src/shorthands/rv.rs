@@ -4,7 +4,7 @@ use crate::*;
 use core::ops::RangeBounds;
 
 /// Returns a new [`RangeView`] from range bounds.
-/// 
+///
 /// # Examples
 ///
 /// ```

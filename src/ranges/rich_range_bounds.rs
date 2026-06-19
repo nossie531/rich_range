@@ -34,11 +34,11 @@ use rustdoc_copy::prelude::*;
 /// ends of the broken empty are included in the first range.
 ///
 /// # Default broken empty
-/// 
+///
 /// Best default broken empty is one that has included minimum at start
 /// bound and excluded maximum at end bound. However, if unable to comply
 /// boundary variants, they are ignored.
-/// 
+///
 /// [`includes`]: doc_share::Self::includes
 #[doc_on_only]
 #[doc_share(doc_rrb)]

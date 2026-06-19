@@ -26,7 +26,7 @@ pub trait RangeSrc<T>: RangeBounds<T> {
     fn new<U>(bounds: (Bound<U>, Bound<U>)) -> Result<Self::Range<U>, BoundsUnfit>;
 
     /// Creates a new [default broken empty][dbe].
-    /// 
+    ///
     /// [dbe]: crate::RichRangeBounds#default-broken-empty
     ///
     /// # Panics

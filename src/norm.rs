@@ -23,7 +23,7 @@ use core::ops::Bound;
 /// [Normalize][nu] start bound.
 ///
 /// If result is overflowed, returns [`None`].
-/// 
+///
 /// [nu]: crate::norm#normalization-and-unnormalization
 ///
 /// # Examples
@@ -49,7 +49,7 @@ where
 /// [Unnormalize][nu] start bound.
 ///
 /// If result is overflowed, returns [`None`].
-/// 
+///
 /// [nu]: crate::norm#normalization-and-unnormalization
 ///
 /// # Examples
@@ -75,7 +75,7 @@ where
 /// [Normalize][nu] end bound.
 ///
 /// If result is overflowed, returns [`None`].
-/// 
+///
 /// [nu]: crate::norm#normalization-and-unnormalization
 ///
 /// # Examples
@@ -103,7 +103,7 @@ where
 /// If result is overflowed, returns [`None`].
 ///
 /// [nu]: crate::norm#normalization-and-unnormalization
-/// 
+///
 /// # Examples
 ///
 /// ```
