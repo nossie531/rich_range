@@ -24,7 +24,7 @@ This crate is designed with the following focus.
 - Multiple range operations with sufficient variety.
 - Abstraction and normalization of bound variants.
 - Interoperability with Rust standard ranges in short code.
-- Similar usage style to Rust [new range API] (nightly as of 2025).
+- Similar usage style to Rust [new range API].
 
 [new range API]: https://rust-lang.github.io/rfcs/3550-new-range.html
 
