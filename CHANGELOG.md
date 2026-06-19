@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Polish documentation
 - Bring in "default broken empty" idea ([#1][issue1])
 
 ## [0.2.1] - 2026-06-02

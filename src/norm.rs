@@ -20,9 +20,11 @@ use crate::shorthands::aliases::*;
 use crate::*;
 use core::ops::Bound;
 
-/// [Normalize](crate::norm#n) start bound.
+/// [Normalize][nu] start bound.
 ///
 /// If result is overflowed, returns [`None`].
+/// 
+/// [nu]: crate::norm#normalization-and-unnormalization
 ///
 /// # Examples
 ///
@@ -44,9 +46,11 @@ where
     })
 }
 
-/// [Unnormalize](crate::norm#u) start bound.
+/// [Unnormalize][nu] start bound.
 ///
 /// If result is overflowed, returns [`None`].
+/// 
+/// [nu]: crate::norm#normalization-and-unnormalization
 ///
 /// # Examples
 ///
@@ -68,9 +72,11 @@ where
     })
 }
 
-/// [Normalize](crate::norm#n) end bound.
+/// [Normalize][nu] end bound.
 ///
 /// If result is overflowed, returns [`None`].
+/// 
+/// [nu]: crate::norm#normalization-and-unnormalization
 ///
 /// # Examples
 ///
@@ -92,10 +98,12 @@ where
     })
 }
 
-/// [Unnormalize](crate::norm#u) end bound.
+/// [Unnormalize][nu] end bound.
 ///
 /// If result is overflowed, returns [`None`].
 ///
+/// [nu]: crate::norm#normalization-and-unnormalization
+/// 
 /// # Examples
 ///
 /// ```
