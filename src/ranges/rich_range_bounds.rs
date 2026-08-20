@@ -61,6 +61,7 @@ where
     /// assert!(!RichRangeBounds::is_empty(&ru::new(30..60)));
     /// assert!(!RichRangeBounds::is_empty(&ru::new(30..=30)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn is_empty(&self) -> bool
@@ -92,6 +93,7 @@ where
     /// assert!(!RichRangeBounds::is_broken(&ru::new(30..30)));
     /// assert!(!RichRangeBounds::is_broken(&ru::new(30..=30)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn is_broken(&self) -> bool
@@ -116,6 +118,7 @@ where
     /// assert!(!RichRangeBounds::is_cursor(&ru::new(60..30)));
     /// assert!(!RichRangeBounds::is_cursor(&ru::new(30..=30)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn is_cursor(&self) -> bool
@@ -141,6 +144,7 @@ where
     /// assert!(RichRangeBounds::is_cursor_fwd(&target1));
     /// assert!(!RichRangeBounds::is_cursor_fwd(&target2));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn is_cursor_fwd(&self) -> bool
@@ -166,6 +170,7 @@ where
     /// assert!(RichRangeBounds::is_cursor_bwd(&target1));
     /// assert!(!RichRangeBounds::is_cursor_bwd(&target2));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn is_cursor_bwd(&self) -> bool
@@ -188,6 +193,7 @@ where
     /// assert!(!RichRangeBounds::is_point(&ru::new(30..60)));
     /// assert!(!RichRangeBounds::is_point(&ru::new(60..30)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn is_point(&self) -> bool
@@ -209,6 +215,7 @@ where
     /// assert!(RichRangeBounds::is_wide(&ru::new(30..)));
     /// assert!(!RichRangeBounds::is_wide(&ru::new(30..60)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn is_wide(&self) -> bool
@@ -230,6 +237,7 @@ where
     /// assert!(!RichRangeBounds::is_full(&ru::new(30..)));
     /// assert!(!RichRangeBounds::is_full(&ru::new(30..60)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn is_full(&self) -> bool
@@ -253,6 +261,7 @@ where
     /// let result = RichRangeBounds::start_edge(&target);
     /// assert_eq!(result, Edge::new(Side::S, Included(&30)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn start_edge(&self) -> Edge<&T> {
@@ -273,6 +282,7 @@ where
     /// let result = RichRangeBounds::end_edge(&target);
     /// assert_eq!(result, Edge::new(Side::E, Excluded(&60)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn end_edge(&self) -> Edge<&T> {
@@ -300,6 +310,7 @@ where
     /// assert_eq!(RichRangeBounds::head(&ru::new((Excluded(30), Unbounded))), 31);
     /// assert_eq!(RichRangeBounds::head(&ru::new(..60)), i32::MIN);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn head(&self) -> T
@@ -330,6 +341,7 @@ where
     /// assert_eq!(RichRangeBounds::tail(&ru::new(30..=60)), 60);
     /// assert_eq!(RichRangeBounds::tail(&ru::new(30..)), i32::MAX);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn tail(&self) -> T
@@ -360,6 +372,7 @@ where
     /// assert_eq!(RichRangeBounds::prev(&ru::new((Excluded(30), Unbounded))), 30);
     /// assert_eq!(RichRangeBounds::prev(&ru::new(..60)), i32::MIN);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn prev(&self) -> T
@@ -389,6 +402,7 @@ where
     /// assert_eq!(RichRangeBounds::next(&ru::new(30..=60)), 61);
     /// assert_eq!(RichRangeBounds::next(&ru::new(30..)), i32::MAX);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn next(&self) -> T
@@ -414,6 +428,7 @@ where
     /// assert_eq!(RichRangeBounds::cursor(&ru::new(30..=30)), None);
     /// assert_eq!(RichRangeBounds::cursor(&ru::new(30..30)), Some(&30));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn cursor(&self) -> Option<&T>
@@ -445,6 +460,7 @@ where
     /// assert_eq!(RichRangeBounds::point(&ru::new(30..30)), None);
     /// assert_eq!(RichRangeBounds::point(&ru::new(30..=30)), Some(&30));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn point(&self) -> Option<&T>
@@ -482,6 +498,7 @@ where
     /// assert_eq!(RichRangeBounds::len(&ru::new(60..30)), Some(0));
     /// assert_eq!(RichRangeBounds::len(&ru::new(30..=60)), Some(31));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn len(&self) -> Option<usize>
@@ -521,6 +538,7 @@ where
     /// assert_eq!(RichRangeBounds::size(&ru::new(60..30)), Some(0));
     /// assert_eq!(RichRangeBounds::size(&ru::new(30..=60)), Some(31));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn size(&self) -> Option<T>
@@ -565,6 +583,7 @@ where
     /// assert_eq!(RichRangeBounds::width(&ru::new(60.0..30.0)), Some(0.0));
     /// assert_eq!(RichRangeBounds::width(&ru::new(30.0..=60.0)), Some(30.0));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn width(&self) -> Option<T>
@@ -593,6 +612,7 @@ where
     /// assert_eq!(result.0, Included(&30));
     /// assert_eq!(result.1, Excluded(&60));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn bounds(&self) -> Pair<Bound<&T>> {
@@ -614,6 +634,7 @@ where
     /// assert_eq!(result.0, Edge::new(Side::S, Included(&30)));
     /// assert_eq!(result.1, Edge::new(Side::E, Excluded(&60)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn edges(&self) -> Pair<Edge<&T>> {
@@ -640,6 +661,7 @@ where
     /// assert_eq!(result.start_bound(), Included(&30));
     /// assert_eq!(result.end_bound(), Excluded(&60));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn as_ref(&self) -> Self::Range<&T>
@@ -664,6 +686,7 @@ where
     /// let dst = RichRangeBounds::cast::<f32>(src);
     /// assert_eq!(dst, ru::new(30.0..60.0));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn cast<U>(self) -> Self::Range<U>
@@ -690,6 +713,7 @@ where
     /// assert_eq!(dst1, Some(ru::new(30..60)));
     /// assert_eq!(dst2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn try_cast<U>(self) -> Option<Self::Range<U>>
@@ -719,6 +743,7 @@ where
     /// let result = RichRangeBounds::to_range(&target);
     /// assert_eq!(result, 30..61);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn to_range(&self) -> Range<T>
@@ -746,6 +771,7 @@ where
     /// assert_eq!(result1, Some(target1));
     /// assert_eq!(result2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn into_option(self) -> Option<Self>
@@ -768,6 +794,7 @@ where
     /// let result = RichRangeBounds::iter(&target);
     /// assert!(result.eq([3, 4, 5].into_iter()));
     /// ```
+    #[inline]
     #[doc_on_only]
     fn iter(&self) -> IterRichRange<T>
     where
@@ -805,6 +832,7 @@ where
     /// assert_eq!(r4, (Some(ru::new(..30)), Some(ru::new(60..))));
     /// assert_eq!(r5, (Some(ru::new(..)), None));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn flip(&self) -> Pair<Option<RangeUniv<T>>>
@@ -842,6 +870,7 @@ where
     /// assert_eq!(r5, (Some(ru::new(..)), None));
     /// assert_eq!(r6, (Some(ru::new(..30)), Some(ru::new(30..))));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn flip_adv(&self, mode: CursorMode) -> Pair<Option<RangeUniv<T>>>
@@ -872,6 +901,7 @@ where
     /// let result = RichRangeBounds::shift(&target, 10, false);
     /// assert_eq!(result, ru::new(20..50));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn shift(&self, value: impl Borrow<T>, positive: bool) -> Self::Range<T>
@@ -905,6 +935,7 @@ where
     /// let result = RichRangeBounds::shl(&target, 10);
     /// assert_eq!(result, ru::new(20..50));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn shl(&self, value: impl Borrow<T>) -> Self::Range<T>
@@ -937,6 +968,7 @@ where
     /// let result = RichRangeBounds::shr(&target, 10);
     /// assert_eq!(result, ru::new(40..70));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn shr(&self, value: impl Borrow<T>) -> Self::Range<T>
@@ -969,6 +1001,7 @@ where
     /// let result = RichRangeBounds::add_start(&target, 10);
     /// assert_eq!(result, ru::new(40..60));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn add_start(&self, value: impl Borrow<T>) -> Self::Range<T>
@@ -1001,6 +1034,7 @@ where
     /// let result = RichRangeBounds::add_end(&target, 10);
     /// assert_eq!(result, ru::new(30..70));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn add_end(&self, value: impl Borrow<T>) -> Self::Range<T>
@@ -1033,6 +1067,7 @@ where
     /// let result = RichRangeBounds::sub_start(&target, 10);
     /// assert_eq!(result, ru::new(20..60));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn sub_start(&self, value: impl Borrow<T>) -> Self::Range<T>
@@ -1065,6 +1100,7 @@ where
     /// let result = RichRangeBounds::sub_end(&target, 10);
     /// assert_eq!(result, ru::new(30..50));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn sub_end(&self, value: impl Borrow<T>) -> Self::Range<T>
@@ -1099,6 +1135,7 @@ where
     /// let result = RichRangeBounds::calc_start(&target, 40);
     /// assert_eq!(result, ru::new(20..60));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn calc_start(&self, width: impl Borrow<T>) -> Self::Range<T>
@@ -1133,6 +1170,7 @@ where
     /// let result = RichRangeBounds::calc_end(&target, 40);
     /// assert_eq!(result, ru::new(30..70));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn calc_end(&self, width: impl Borrow<T>) -> Self::Range<T>
@@ -1167,6 +1205,7 @@ where
     /// let result = RichRangeBounds::align_start(&target, 40);
     /// assert_eq!(result, ru::new(40..70));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn align_start(&self, value: impl Borrow<T>) -> Self::Range<T>
@@ -1202,6 +1241,7 @@ where
     /// let result = RichRangeBounds::align_end(&target, 70);
     /// assert_eq!(result, ru::new(40..70));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn align_end(&self, value: impl Borrow<T>) -> Self::Range<T>
@@ -1232,6 +1272,7 @@ where
     /// let result = RichRangeBounds::map(target, |x| x * 2);
     /// assert_eq!(result, ru::new(60..));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn map<F, U>(self, mut f: F) -> Self::Range<U>
@@ -1266,6 +1307,7 @@ where
     /// assert_eq!(result1, Some(ru::new(60..)));
     /// assert_eq!(result2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn try_map<F, U>(self, mut f: F) -> Option<Self::Range<U>>
@@ -1300,6 +1342,7 @@ where
     /// assert_eq!(result1, Some(ru::new(20..50)));
     /// assert_eq!(result2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn checked_shift(&self, value: impl Borrow<T>, positive: bool) -> Option<Self::Range<T>>
@@ -1332,6 +1375,7 @@ where
     /// assert_eq!(result1, Some(ru::new(20..50)));
     /// assert_eq!(result2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn checked_shl(&self, value: impl Borrow<T>) -> Option<Self::Range<T>>
@@ -1363,6 +1407,7 @@ where
     /// assert_eq!(result1, Some(ru::new(40..70)));
     /// assert_eq!(result2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn checked_shr(&self, value: impl Borrow<T>) -> Option<Self::Range<T>>
@@ -1394,6 +1439,7 @@ where
     /// assert_eq!(result1, Some(ru::new(40..60)));
     /// assert_eq!(result2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn checked_add_start(&self, value: impl Borrow<T>) -> Option<Self::Range<T>>
@@ -1425,6 +1471,7 @@ where
     /// assert_eq!(result1, Some(ru::new(30..70)));
     /// assert_eq!(result2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn checked_add_end(&self, value: impl Borrow<T>) -> Option<Self::Range<T>>
@@ -1456,6 +1503,7 @@ where
     /// assert_eq!(result1, Some(ru::new(20..60)));
     /// assert_eq!(result2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn checked_sub_start(&self, value: impl Borrow<T>) -> Option<Self::Range<T>>
@@ -1487,6 +1535,7 @@ where
     /// assert_eq!(result1, Some(ru::new(30..50)));
     /// assert_eq!(result2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn checked_sub_end(&self, value: impl Borrow<T>) -> Option<Self::Range<T>>
@@ -1521,6 +1570,7 @@ where
     /// assert_eq!(r1, Some(ru::new(20..60)));
     /// assert_eq!(r2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn checked_calc_start(&self, width: impl Borrow<T>) -> Option<Self::Range<T>>
@@ -1555,6 +1605,7 @@ where
     /// assert_eq!(r1, Some(ru::new(30..70)));
     /// assert_eq!(r2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn checked_calc_end(&self, width: impl Borrow<T>) -> Option<Self::Range<T>>
@@ -1590,6 +1641,7 @@ where
     /// assert_eq!(result1, Some(ru::new(40..70)));
     /// assert_eq!(result2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn checked_align_start(&self, value: impl Borrow<T>) -> Option<Self::Range<T>>
@@ -1630,6 +1682,7 @@ where
     /// assert_eq!(result1, Some(ru::new(40..70)));
     /// assert_eq!(result2, None);
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn checked_align_end(&self, value: impl Borrow<T>) -> Option<Self::Range<T>>
@@ -1663,6 +1716,7 @@ where
     /// assert!(!RichRangeBounds::equiv(&ru::new(30..60), &(30..65)));
     /// assert!(RichRangeBounds::equiv(&ru::new(30..30), &(0..0)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn equiv<R2>(&self, other: &R2) -> bool
@@ -1696,6 +1750,7 @@ where
     /// assert!(RichRangeBounds::intersects(&ru::new(30..60), &(50..50)));
     /// assert!(!RichRangeBounds::intersects(&ru::new(30..60), &(70..80)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn intersects<R2>(&self, other: &R2) -> bool
@@ -1731,6 +1786,7 @@ where
     /// assert!(RichRangeBounds::includes(&ru::new(30..30), &(30..30)));
     /// assert!(!RichRangeBounds::includes(&ru::new(30..30), &(40..40)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn includes<R2>(&self, other: &R2) -> bool
@@ -1765,6 +1821,7 @@ where
     /// assert!(RichRangeBounds::included(&ru::new(30..30), &(30..30)));
     /// assert!(!RichRangeBounds::included(&ru::new(30..30), &(40..40)));
     /// ```    
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn included<R>(&self, other: &R) -> bool
@@ -1803,6 +1860,7 @@ where
     /// assert!(RichRangeBounds::adjoins(&ru::new(30..60), &(20..=30)));
     /// assert!(!RichRangeBounds::adjoins(&ru::new(30..60), &(10..=20)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn adjoins<R2>(&self, other: &R2) -> bool
@@ -1839,6 +1897,7 @@ where
     /// assert!(RichRangeBounds::adjoins_prev(&ru::new(30..60), &(20..=30)));
     /// assert!(!RichRangeBounds::adjoins_prev(&ru::new(30..60), &(10..=20)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn adjoins_prev<R2>(&self, other: &R2) -> bool
@@ -1875,6 +1934,7 @@ where
     /// assert!(RichRangeBounds::adjoins_next(&ru::new(30..=60), &(60..70)));
     /// assert!(!RichRangeBounds::adjoins_next(&ru::new(30..=60), &(70..80)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn adjoins_next<R2>(&self, other: &R2) -> bool
@@ -1913,6 +1973,7 @@ where
     /// assert!(RichRangeBounds::touches(&ru::new(30..60), &(20..30)));
     /// assert!(!RichRangeBounds::touches(&ru::new(30..60), &(10..20)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn touches<R2>(&self, other: &R2) -> bool
@@ -1949,6 +2010,7 @@ where
     /// assert!(RichRangeBounds::touches_prev(&ru::new(30..60), &(20..30)));
     /// assert!(!RichRangeBounds::touches_prev(&ru::new(30..60), &(10..20)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn touches_prev<R2>(&self, other: &R2) -> bool
@@ -1985,6 +2047,7 @@ where
     /// assert!(RichRangeBounds::touches_next(&ru::new(30..60), &(60..70)));
     /// assert!(!RichRangeBounds::touches_next(&ru::new(30..60), &(70..80)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn touches_next<R2>(&self, other: &R2) -> bool
@@ -2009,6 +2072,7 @@ where
     /// let result = RichRangeBounds::rel(&target, &ru::new(20..70), PosStyle::Step);
     /// assert_eq!(result, RangeRel::During(true));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn rel<R2>(&self, other: &R2, ps: PosStyle) -> RangeRel
@@ -2042,6 +2106,7 @@ where
     /// assert_eq!(fst, Some(ru::new(30..40)));
     /// assert_eq!(snd, Some(ru::new(40..60)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn cut(&self, pos: &T) -> Pair<Option<RangeUniv<T>>>
@@ -2070,6 +2135,7 @@ where
     /// assert_eq!(fst, Some(ru::new(30..40)));
     /// assert_eq!(snd, Some(ru::new(40..60)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn cut_adv(&self, pos: &T, mode: CutMode) -> Pair<Option<RangeUniv<T>>>
@@ -2099,6 +2165,7 @@ where
     /// assert_eq!(r2, None);
     /// assert_eq!(r3, Some(ru::new(60..70)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn interval(&self, other: &Self) -> Option<RangeUniv<T>>
@@ -2132,6 +2199,7 @@ where
     /// assert_eq!(r3, Some(ru::new(60..60)));    
     /// assert_eq!(r4, Some(ru::new(60..70)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn interval_adv(&self, other: &Self, mode: CursorMode) -> Option<RangeUniv<T>>
@@ -2167,6 +2235,7 @@ where
     /// let r = RichRangeBounds::prod(&ru::new(30..60), &ru::new(40..70));
     /// assert_eq!(r, Some(ru::new(40..60)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn prod(&self, other: &Self) -> Option<Self::Range<T>>
@@ -2201,6 +2270,7 @@ where
     /// assert_eq!(r1, Some(ru::new(20..50)));
     /// assert_eq!(r2, Some(ru::new(10..60)));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn enwrap(&self, other: &Self) -> Option<Self::Range<T>>
@@ -2240,6 +2310,7 @@ where
     /// assert_eq!(r1, (ru::new(30..70), None));
     /// assert_eq!(r2, (ru::new(30..60), Some(ru::new(70..80))));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn union(&self, other: &Self) -> (Self::Range<T>, Option<Self::Range<T>>)
@@ -2277,6 +2348,7 @@ where
     /// assert_eq!(r2, (Some(ru::new(30..40)), Some(ru::new(50..60))));
     /// assert_eq!(r3, (Some(ru::new(30..60)), None));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn diff<R>(&self, other: &R) -> Pair<Option<RangeUniv<T>>>
@@ -2311,6 +2383,7 @@ where
     /// assert_eq!(r3, (Some(ru::new(30..60)), None));
     /// assert_eq!(r4, (Some(ru::new(30..40)), Some(ru::new(40..60))));
     /// ```
+    #[inline]
     #[must_use]
     #[doc_on_only]
     fn diff_adv<R>(&self, other: &R, mode: CursorMode) -> Pair<Option<RangeUniv<T>>>

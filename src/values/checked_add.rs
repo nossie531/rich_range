@@ -14,6 +14,7 @@ pub trait CheckedAdd<Rhs = Self>: Add<Rhs> {
 macro_rules! impl_checked_add_for_int_ref {
     ($ty:ty) => {
         impl CheckedAdd for &$ty {
+            #[inline]
             fn checked_add(self, rhs: &$ty) -> Option<Self::Output> {
                 (*self).checked_add(*rhs)
             }
@@ -25,6 +26,7 @@ macro_rules! impl_checked_add_for_int_ref {
 macro_rules! impl_checked_add_for_float_ref {
     ($ty:ty) => {
         impl CheckedAdd for &$ty {
+            #[inline]
             fn checked_add(self, rhs: &$ty) -> Option<Self::Output> {
                 Some(self + rhs)
             }

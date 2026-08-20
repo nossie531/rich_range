@@ -1744,6 +1744,7 @@ where
     type Item = T;
     type IntoIter = IterRichRange<T>;
 
+    #[inline]
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
     }
@@ -1762,6 +1763,7 @@ where
     R: RangeBounds<T>,
     T: PartialEq,
 {
+    #[inline]
     fn eq(&self, other: &Self) -> bool {
         calc::is_eq(self, other)
     }
@@ -1791,6 +1793,7 @@ where
     /// let r = rw::new(30..60).partial_cmp(&rw::new(70..90));
     /// assert_eq!(r, Some(Ordering::Less));
     /// ```
+    #[inline]
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         calc::cmp(self, other)
     }
@@ -1830,6 +1833,7 @@ macro_rules! impl_shl {
                 #[$sub]
                 /// See main overload [document](RangeWrapper::shl).
             )?
+            #[inline]
             fn shl(self, rhs: $($rhsRef)?T) -> Self::Output {
                 calc::shl(util::to_ref!($($lhsRef)?, self), rhs)
             }
@@ -1871,6 +1875,7 @@ macro_rules! impl_shr {
                 #[$sub]
                 /// See main overload [document](RangeWrapper::shr).
             )?
+            #[inline]
             fn shr(self, rhs: $($rhsRef)?T) -> Self::Output {
                 calc::shr(util::to_ref!($($lhsRef)?, self), rhs)
             }
@@ -1918,6 +1923,7 @@ macro_rules! impl_bitand {
                 #[$sub]
                 /// See main overload [document](RangeWrapper::bitand).
             )?
+            #[inline]
             fn bitand(self, rhs: $($rhsRef)?RangeWrapper<R, T>) -> Self::Output {
                 let rx = util::to_ref!($($lhsRef)?, self);
                 let ry = util::to_ref!($($rhsRef)?, rhs);
@@ -1961,6 +1967,7 @@ macro_rules! impl_bitor {
                 #[$sub]
                 /// See main overload [document](RangeWrapper::bitor).
             )?
+            #[inline]
             fn bitor(self, rhs: $($rhsRef)?RangeWrapper<R, T>) -> Self::Output {
                 let rx = util::to_ref!($($lhsRef)?, self);
                 let ry = util::to_ref!($($rhsRef)?, rhs);
@@ -2012,6 +2019,7 @@ macro_rules! impl_bitxor {
                 #[$sub]
                 /// See main overload [document](RangeWrapper::bitxor).
             )?
+            #[inline]
             fn bitxor(self, rhs: $($rhsRef)?RangeWrapper<R, T>) -> Self::Output {
                 let rx = util::to_ref!($($lhsRef)?, self);
                 let ry = util::to_ref!($($rhsRef)?, rhs);
@@ -2055,6 +2063,7 @@ macro_rules! impl_shl_assign {
                 #[$sub]
                 /// See main overload [document](RangeWrapper::shl_assign).
             )?
+            #[inline]
             fn shl_assign(&mut self, rhs: $($rhsRef)?T) {
                 *self = calc::shl(self, rhs);
             }
@@ -2096,6 +2105,7 @@ macro_rules! impl_shr_assign {
                 #[$sub]
                 /// See main overload [document](RangeWrapper::shr_assign).
             )?
+            #[inline]
             fn shr_assign(&mut self, rhs: $($rhsRef)?T) {
                 *self = calc::shr(self, rhs);
             }
@@ -2146,6 +2156,7 @@ macro_rules! impl_bitand_assign {
                 #[$sub]
                 /// See main overload [document](RangeWrapper::bitand_assign).
             )?
+            #[inline]
             fn bitand_assign(&mut self, rhs: $($rhsRef)?RangeWrapper<R, T>) {
                 *self = calc::closed_prod(self, &rhs);
             }
@@ -2190,6 +2201,7 @@ macro_rules! impl_bitor_assign {
                 #[$sub]
                 /// See main overload [document](RangeWrapper::bitor_assign).
             )?
+            #[inline]
             fn bitor_assign(&mut self, rhs: $($rhsRef)?RangeWrapper<R, T>) {
                 *self = calc::closed_union(self, &rhs);
             }
@@ -2241,6 +2253,7 @@ macro_rules! impl_bitxor_assign {
                 #[$sub]
                 /// See main overload [document](RangeWrapper::bitxor_assign).
             )?
+            #[inline]
             fn bitxor_assign(&mut self, rhs: $($rhsRef)?RangeWrapper<R, T>) {
                 *self = calc::closed_enwrap(self, &rhs);
             }

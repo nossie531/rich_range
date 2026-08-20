@@ -13,6 +13,8 @@ use core::ops::RangeBounds;
 /// let r = rv::new(&(30..60));
 /// assert_eq!(r.0, &(30..60));
 /// ```
+#[inline]
+#[must_use]
 pub fn new<R, T>(range: &R) -> RangeView<'_, R, T>
 where
     R: ?Sized + RangeBounds<T>,

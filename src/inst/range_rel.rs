@@ -87,111 +87,133 @@ pub enum RangeRel {
 
 impl RangeRel {
     /// Returns `true` if this is [`Undefined`](Self::Undefined) value.
+    #[inline]
     pub fn is_undefined(&self) -> bool {
         *self == Self::Undefined
     }
 
     /// Returns `true` if this is [`Equal`](Self::Equal) value.
+    #[inline]
     pub fn is_equal(&self) -> bool {
         *self == Self::Equal
     }
 
     /// Returns `true` if this is [`Before`](Self::Before) value.
+    #[inline]
     pub fn is_bef_xxx(&self) -> bool {
         matches!(*self, Self::Before(_))
     }
 
     /// Returns `true` if this is normal [`Before`](Self::Before) value.
+    #[inline]
     pub fn is_bef_reg(&self) -> bool {
         *self == Self::Before(true)
     }
 
     /// Returns `true` if this is inverse [`Before`](Self::Before) value.
+    #[inline]
     pub fn is_bef_inv(&self) -> bool {
         *self == Self::Before(false)
     }
 
     /// Returns `true` if this is [`Meets`](Self::Meets) value.
+    #[inline]
     pub fn is_met_xxx(&self) -> bool {
         matches!(*self, Self::Meets(_))
     }
 
     /// Returns `true` if this is normal [`Meets`](Self::Meets) value.
+    #[inline]
     pub fn is_met_reg(&self) -> bool {
         *self == Self::Meets(true)
     }
 
     /// Returns `true` if this is inverse [`Meets`](Self::Meets) value.
+    #[inline]
     pub fn is_met_inv(&self) -> bool {
         *self == Self::Meets(false)
     }
 
     /// Returns `true` if this is [`Starts`](Self::Starts) value.
+    #[inline]
     pub fn is_stt_xxx(&self) -> bool {
         matches!(*self, Self::Starts(_))
     }
 
     /// Returns `true` if this is normal [`Starts`](Self::Starts) value.
+    #[inline]
     pub fn is_stt_reg(&self) -> bool {
         *self == Self::Starts(true)
     }
 
     /// Returns `true` if this is inverse [`Starts`](Self::Starts) value.
+    #[inline]
     pub fn is_stt_inv(&self) -> bool {
         *self == Self::Starts(false)
     }
 
     /// Returns `true` if this is [`Finishes`](Self::Finishes) value.
+    #[inline]
     pub fn is_fin_xxx(&self) -> bool {
         matches!(*self, Self::Finishes(_))
     }
 
     /// Returns `true` if this is normal [`Finishes`](Self::Finishes) value.
+    #[inline]
     pub fn is_fin_reg(&self) -> bool {
         *self == Self::Finishes(true)
     }
 
     /// Returns `true` if this is inverse [`Finishes`](Self::Finishes) value.
+    #[inline]
     pub fn is_fin_inv(&self) -> bool {
         *self == Self::Finishes(false)
     }
 
     /// Returns `true` if this is [`Overlaps`](Self::Overlaps) value.
+    #[inline]
     pub fn is_ovl_xxx(&self) -> bool {
         matches!(*self, Self::Overlaps(_))
     }
 
     /// Returns `true` if this is normal [`Overlaps`](Self::Overlaps) value.
+    #[inline]
     pub fn is_ovl_reg(&self) -> bool {
         *self == Self::Overlaps(true)
     }
 
     /// Returns `true` if this is inverse [`Overlaps`](Self::Overlaps) value.
+    #[inline]
     pub fn is_ovl_inv(&self) -> bool {
         *self == Self::Overlaps(false)
     }
 
     /// Returns `true` if this is [`During`](Self::During) value.
+    #[inline]
     pub fn is_dur_xxx(&self) -> bool {
         matches!(*self, Self::During(_))
     }
 
     /// Returns `true` if this is normal [`During`](Self::During) value.
+    #[inline]
     pub fn is_dur_reg(&self) -> bool {
         *self == Self::During(true)
     }
 
     /// Returns `true` if this is inverse [`During`](Self::During) value.
+    #[inline]
     pub fn is_dur_inv(&self) -> bool {
         *self == Self::During(false)
     }
 
     /// Returns `true` if this relation represent intersection state.
+    #[inline]
     pub fn is_intersects(&self) -> bool {
         !matches!(*self, Self::Undefined | Self::Before(_) | Self::Meets(_))
     }
 
     /// Returns `true` if this relation represent includes state.
+    #[inline]
     pub fn is_includes(&self) -> bool {
         matches!(
             *self,
@@ -200,6 +222,7 @@ impl RangeRel {
     }
 
     /// Returns `true` if this relation represent included state.
+    #[inline]
     pub fn is_included(&self) -> bool {
         matches!(
             *self,
@@ -208,6 +231,7 @@ impl RangeRel {
     }
 
     /// Returns inversed relation.
+    #[inline]
     pub fn inverse(&self) -> Self {
         match *self {
             Self::Undefined => Self::Undefined,

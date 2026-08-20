@@ -41,6 +41,7 @@ pub trait RangeSrc<T>: RangeBounds<T> {
     /// # Panics
     ///
     /// Panics if `Self` is incompatible with given range.
+    #[inline]
     fn new_from<R>(range: R) -> Result<Self::Range<T>, BoundsUnfit>
     where
         R: RangeParts<T>,
@@ -52,10 +53,12 @@ pub trait RangeSrc<T>: RangeBounds<T> {
 impl<T> RangeSrc<T> for RangeUniv<T> {
     type Range<U> = RangeUniv<U>;
 
+    #[inline]
     fn new<U>(bounds: (Bound<U>, Bound<U>)) -> Result<Self::Range<U>, BoundsUnfit> {
         Ok(RangeUniv::from(bounds))
     }
 
+    #[inline]
     fn new_broken() -> Result<Self::Range<T>, BoundsUnfit>
     where
         T: HasLimits,
@@ -70,10 +73,12 @@ where
 {
     type Range<U> = RangeUniv<U>;
 
+    #[inline]
     fn new<U>(bounds: (Bound<U>, Bound<U>)) -> Result<Self::Range<U>, BoundsUnfit> {
         Ok(RangeUniv::from(bounds))
     }
 
+    #[inline]
     fn new_broken() -> Result<Self::Range<T>, BoundsUnfit>
     where
         T: HasLimits,
@@ -85,6 +90,7 @@ where
 impl<T> RangeSrc<T> for RangeNormalWrapper<T> {
     type Range<U> = RangeNormalWrapper<U>;
 
+    #[inline]
     fn new<U>(bounds: (Bound<U>, Bound<U>)) -> Result<Self::Range<U>, BoundsUnfit> {
         match bounds {
             (In(s), Ex(e)) => Ok(rw::new(s..e)),
@@ -92,6 +98,7 @@ impl<T> RangeSrc<T> for RangeNormalWrapper<T> {
         }
     }
 
+    #[inline]
     fn new_broken() -> Result<Self::Range<T>, BoundsUnfit>
     where
         T: HasLimits,
@@ -103,6 +110,7 @@ impl<T> RangeSrc<T> for RangeNormalWrapper<T> {
 impl<T> RangeSrc<T> for RangeFromWrapper<T> {
     type Range<U> = RangeFromWrapper<U>;
 
+    #[inline]
     fn new<U>(bounds: (Bound<U>, Bound<U>)) -> Result<Self::Range<U>, BoundsUnfit> {
         match bounds {
             (In(s), Ub) => Ok(rw::new(s..)),
@@ -110,6 +118,7 @@ impl<T> RangeSrc<T> for RangeFromWrapper<T> {
         }
     }
 
+    #[inline]
     fn new_broken() -> Result<Self::Range<T>, BoundsUnfit>
     where
         T: HasLimits,
@@ -121,6 +130,7 @@ impl<T> RangeSrc<T> for RangeFromWrapper<T> {
 impl<T> RangeSrc<T> for RangeToWrapper<T> {
     type Range<U> = RangeToWrapper<U>;
 
+    #[inline]
     fn new<U>(bounds: (Bound<U>, Bound<U>)) -> Result<Self::Range<U>, BoundsUnfit> {
         match bounds {
             (Ub, Ex(e)) => Ok(rw::new(..e)),
@@ -128,6 +138,7 @@ impl<T> RangeSrc<T> for RangeToWrapper<T> {
         }
     }
 
+    #[inline]
     fn new_broken() -> Result<Self::Range<T>, BoundsUnfit>
     where
         T: HasLimits,
@@ -139,6 +150,7 @@ impl<T> RangeSrc<T> for RangeToWrapper<T> {
 impl<T> RangeSrc<T> for RangeInclusiveWrapper<T> {
     type Range<U> = RangeInclusiveWrapper<U>;
 
+    #[inline]
     fn new<U>(bounds: (Bound<U>, Bound<U>)) -> Result<Self::Range<U>, BoundsUnfit> {
         match bounds {
             (In(s), In(e)) => Ok(rw::new(s..=e)),
@@ -146,6 +158,7 @@ impl<T> RangeSrc<T> for RangeInclusiveWrapper<T> {
         }
     }
 
+    #[inline]
     fn new_broken() -> Result<Self::Range<T>, BoundsUnfit>
     where
         T: HasLimits,
@@ -157,6 +170,7 @@ impl<T> RangeSrc<T> for RangeInclusiveWrapper<T> {
 impl<T> RangeSrc<T> for RangeToInclusiveWrapper<T> {
     type Range<U> = RangeToInclusiveWrapper<U>;
 
+    #[inline]
     fn new<U>(bounds: (Bound<U>, Bound<U>)) -> Result<Self::Range<U>, BoundsUnfit> {
         match bounds {
             (Ub, In(e)) => Ok(rw::new(..=e)),
@@ -164,6 +178,7 @@ impl<T> RangeSrc<T> for RangeToInclusiveWrapper<T> {
         }
     }
 
+    #[inline]
     fn new_broken() -> Result<Self::Range<T>, BoundsUnfit>
     where
         T: HasLimits,
@@ -175,6 +190,7 @@ impl<T> RangeSrc<T> for RangeToInclusiveWrapper<T> {
 impl<T> RangeSrc<T> for RangeFullWrapper<T> {
     type Range<U> = RangeFullWrapper<U>;
 
+    #[inline]
     fn new<U>(bounds: (Bound<U>, Bound<U>)) -> Result<Self::Range<U>, BoundsUnfit> {
         match bounds {
             (Ub, Ub) => Ok(rw::new(..)),
@@ -182,6 +198,7 @@ impl<T> RangeSrc<T> for RangeFullWrapper<T> {
         }
     }
 
+    #[inline]
     fn new_broken() -> Result<Self::Range<T>, BoundsUnfit>
     where
         T: HasLimits,
@@ -193,10 +210,12 @@ impl<T> RangeSrc<T> for RangeFullWrapper<T> {
 impl<T> RangeSrc<T> for RangeBoundsWrapper<T> {
     type Range<U> = RangeBoundsWrapper<U>;
 
+    #[inline]
     fn new<U>(bounds: (Bound<U>, Bound<U>)) -> Result<Self::Range<U>, BoundsUnfit> {
         Ok(RangeBoundsWrapper::new(bounds))
     }
 
+    #[inline]
     fn new_broken() -> Result<Self::Range<T>, BoundsUnfit>
     where
         T: HasLimits,

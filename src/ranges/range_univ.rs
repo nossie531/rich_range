@@ -1765,30 +1765,35 @@ impl<T> Default for RangeUniv<T>
 where
     T: Default,
 {
+    #[inline]
     fn default() -> Self {
         Self::new(In(T::default()), Ex(T::default()))
     }
 }
 
 impl<T> From<Range<T>> for RangeUniv<T> {
+    #[inline]
     fn from(value: Range<T>) -> Self {
         Self::new(In(value.start), Ex(value.end))
     }
 }
 
 impl<T> From<RangeFrom<T>> for RangeUniv<T> {
+    #[inline]
     fn from(value: RangeFrom<T>) -> Self {
         Self::new(In(value.start), Ub)
     }
 }
 
 impl<T> From<RangeTo<T>> for RangeUniv<T> {
+    #[inline]
     fn from(value: RangeTo<T>) -> Self {
         Self::new(Ub, Ex(value.end))
     }
 }
 
 impl<T> From<RangeInclusive<T>> for RangeUniv<T> {
+    #[inline]
     fn from(value: RangeInclusive<T>) -> Self {
         let bounds = value.into_inner();
         Self::new(In(bounds.0), In(bounds.1))
@@ -1796,28 +1801,33 @@ impl<T> From<RangeInclusive<T>> for RangeUniv<T> {
 }
 
 impl<T> From<RangeToInclusive<T>> for RangeUniv<T> {
+    #[inline]
     fn from(value: RangeToInclusive<T>) -> Self {
         Self::new(Ub, In(value.end))
     }
 }
 
 impl<T> From<RangeFull> for RangeUniv<T> {
+    #[inline]
     fn from(_value: RangeFull) -> Self {
         Self::new(Ub, Ub)
     }
 }
 
 impl<T> From<(Bound<T>, Bound<T>)> for RangeUniv<T> {
+    #[inline]
     fn from(value: (Bound<T>, Bound<T>)) -> Self {
         Self::new(value.0, value.1)
     }
 }
 
 impl<T> RangeBounds<T> for RangeUniv<T> {
+    #[inline]
     fn start_bound(&self) -> Bound<&T> {
         self.start.as_ref()
     }
 
+    #[inline]
     fn end_bound(&self) -> Bound<&T> {
         self.end.as_ref()
     }
@@ -1850,6 +1860,7 @@ where
     type Item = T;
     type IntoIter = IterRichRange<T>;
 
+    #[inline]
     fn into_iter(self) -> Self::IntoIter {
         IterRichRange::new(self.start, self.end)
     }
@@ -1878,6 +1889,7 @@ where
     /// let r = ru::new(30..60).partial_cmp(&ru::new(70..90));
     /// assert_eq!(r, Some(Ordering::Less));
     /// ```
+    #[inline]
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         calc::cmp(self, other)
     }
@@ -1915,6 +1927,7 @@ macro_rules! impl_shl {
                 #[$sub]
                 /// See main overload [document](RangeUniv::shl).
             )?
+            #[inline]
             fn shl(self, rhs: $($rhsRef)?T) -> Self::Output {
                 calc::shl(util::to_ref!($($lhsRef)?, self), rhs)
             }
@@ -1954,6 +1967,7 @@ macro_rules! impl_shr {
                 #[$sub]
                 /// See main overload [document](RangeUniv::shr).
             )?
+            #[inline]
             fn shr(self, rhs: $($rhsRef)?T) -> Self::Output {
                 calc::shr(util::to_ref!($($lhsRef)?, self), rhs)
             }
@@ -1999,6 +2013,7 @@ macro_rules! impl_bitand {
                 #[$sub]
                 /// See main overload [document](RangeUniv::bitand).
             )?
+            #[inline]
             fn bitand(self, rhs: $($rhsRef)?RangeUniv<T>) -> Self::Output {
                 let rx = util::to_ref!($($lhsRef)?, self);
                 let ry = util::to_ref!($($rhsRef)?, rhs);
@@ -2040,6 +2055,7 @@ macro_rules! impl_bitor {
                 #[$sub]
                 /// See main overload [document](RangeUniv::bitor).
             )?
+            #[inline]
             fn bitor(self, rhs: $($rhsRef)?RangeUniv<T>) -> Self::Output {
                 let rx = util::to_ref!($($lhsRef)?, self);
                 let ry = util::to_ref!($($rhsRef)?, rhs);
@@ -2088,6 +2104,7 @@ macro_rules! impl_bitxor {
                 #[$sub]
                 /// See main overload [document](RangeUniv::bitxor).
             )?
+            #[inline]
             fn bitxor(self, rhs: $($rhsRef)?RangeUniv<T>) -> Self::Output {
                 let rx = util::to_ref!($($lhsRef)?, self);
                 let ry = util::to_ref!($($rhsRef)?, rhs);
@@ -2129,6 +2146,7 @@ macro_rules! impl_shl_assign {
                 #[$sub]
                 /// See main overload [document](RangeUniv::shl_assign).
             )?
+            #[inline]
             fn shl_assign(&mut self, rhs: $($rhsRef)?T) {
                 *self = calc::shl(self, rhs);
             }
@@ -2168,6 +2186,7 @@ macro_rules! impl_shr_assign {
                 #[$sub]
                 /// See main overload [document](RangeUniv::shr_assign).
             )?
+            #[inline]
             fn shr_assign(&mut self, rhs: $($rhsRef)?T) {
                 *self = calc::shr(self, rhs);
             }
@@ -2216,6 +2235,7 @@ macro_rules! impl_bitand_assign {
                 #[$sub]
                 /// See main overload [document](RangeUniv::bitand_assign).
             )?
+            #[inline]
             fn bitand_assign(&mut self, rhs: $($rhsRef)?RangeUniv<T>) {
                 *self = calc::closed_prod(self, &rhs);
             }
@@ -2258,6 +2278,7 @@ macro_rules! impl_bitor_assign {
                 #[$sub]
                 /// See main overload [document](RangeUniv::bitor_assign).
             )?
+            #[inline]
             fn bitor_assign(&mut self, rhs: $($rhsRef)?RangeUniv<T>) {
                 *self = calc::closed_union(self, &rhs);
             }
@@ -2307,6 +2328,7 @@ macro_rules! impl_bitxor_assign {
                 #[$sub]
                 /// See main overload [document](RangeUniv::bitxor_assign).
             )?
+            #[inline]
             fn bitxor_assign(&mut self, rhs: $($rhsRef)?RangeUniv<T>) {
                 *self = calc::closed_enwrap(self, &rhs);
             }
@@ -2348,6 +2370,7 @@ impl_bitxor_assign!((&), sub:doc = "");
 impl<T> TryFrom<RangeUniv<T>> for Range<T> {
     type Error = ();
 
+    #[inline]
     fn try_from(value: RangeUniv<T>) -> Result<Self, Self::Error> {
         match (value.start, value.end) {
             (In(s), Ex(e)) => Ok(s..e),
@@ -2359,6 +2382,7 @@ impl<T> TryFrom<RangeUniv<T>> for Range<T> {
 impl<T> TryFrom<RangeUniv<T>> for RangeFrom<T> {
     type Error = ();
 
+    #[inline]
     fn try_from(value: RangeUniv<T>) -> Result<Self, Self::Error> {
         match (value.start, value.end) {
             (In(s), Ub) => Ok(s..),
@@ -2370,6 +2394,7 @@ impl<T> TryFrom<RangeUniv<T>> for RangeFrom<T> {
 impl<T> TryFrom<RangeUniv<T>> for RangeTo<T> {
     type Error = ();
 
+    #[inline]
     fn try_from(value: RangeUniv<T>) -> Result<Self, Self::Error> {
         match (value.start, value.end) {
             (Ub, Ex(e)) => Ok(..e),
@@ -2381,6 +2406,7 @@ impl<T> TryFrom<RangeUniv<T>> for RangeTo<T> {
 impl<T> TryFrom<RangeUniv<T>> for RangeInclusive<T> {
     type Error = ();
 
+    #[inline]
     fn try_from(value: RangeUniv<T>) -> Result<Self, Self::Error> {
         match (value.start, value.end) {
             (In(s), In(e)) => Ok(s..=e),
@@ -2392,6 +2418,7 @@ impl<T> TryFrom<RangeUniv<T>> for RangeInclusive<T> {
 impl<T> TryFrom<RangeUniv<T>> for RangeToInclusive<T> {
     type Error = ();
 
+    #[inline]
     fn try_from(value: RangeUniv<T>) -> Result<Self, Self::Error> {
         match (value.start, value.end) {
             (Ub, In(e)) => Ok(..=e),
@@ -2406,6 +2433,7 @@ where
 {
     type Error = ();
 
+    #[inline]
     fn try_from(value: RangeUniv<T>) -> Result<Self, Self::Error> {
         match (&value.start, &value.end) {
             (Ub, Ub) => Ok(..),
@@ -2417,12 +2445,14 @@ where
 impl<T> Index<RangeUniv<usize>> for [T] {
     type Output = [T];
 
+    #[inline]
     fn index(&self, index: RangeUniv<usize>) -> &Self::Output {
         &self[(index.start_bound().cloned(), index.end_bound().cloned())]
     }
 }
 
 impl<T> IndexMut<RangeUniv<usize>> for [T] {
+    #[inline]
     fn index_mut(&mut self, index: RangeUniv<usize>) -> &mut Self::Output {
         &mut self[(index.start_bound().cloned(), index.end_bound().cloned())]
     }

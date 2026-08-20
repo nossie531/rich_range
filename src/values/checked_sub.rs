@@ -14,6 +14,7 @@ pub trait CheckedSub<Rhs = Self>: Sub<Rhs> {
 macro_rules! impl_checked_sub_for_int_ref {
     ($ty:ty) => {
         impl CheckedSub for &$ty {
+            #[inline]
             fn checked_sub(self, rhs: &$ty) -> Option<Self::Output> {
                 (*self).checked_sub(*rhs)
             }
@@ -25,6 +26,7 @@ macro_rules! impl_checked_sub_for_int_ref {
 macro_rules! impl_checked_sub_for_float_ref {
     ($ty:ty) => {
         impl CheckedSub for &$ty {
+            #[inline]
             fn checked_sub(self, rhs: &$ty) -> Option<Self::Output> {
                 Some(self - rhs)
             }

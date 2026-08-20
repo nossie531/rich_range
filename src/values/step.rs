@@ -38,6 +38,7 @@ pub trait Step: Clone + PartialOrd + Sized {
     /// See original method [document][doc] for details.
     ///
     /// [doc]: core::iter::Step::forward
+    #[inline]
     fn forward(start: Self, count: usize) -> Self {
         Step::forward_checked(start, count).expect(msg::NO_OVF)
     }
@@ -48,6 +49,7 @@ pub trait Step: Clone + PartialOrd + Sized {
     /// See original method [document][doc] for details.
     ///
     /// [doc]: core::iter::Step::backward
+    #[inline]
     fn backward(start: Self, count: usize) -> Self {
         Step::backward_checked(start, count).expect(msg::NO_OVF)
     }
@@ -57,6 +59,7 @@ pub trait Step: Clone + PartialOrd + Sized {
 macro_rules! impl_step_for_int {
     ($ty:ty as $mode:ident) => {
         impl Step for $ty {
+            #[inline]
             fn steps_between(start: &Self, end: &Self) -> (usize, Option<usize>) {
                 if *start > *end {
                     (0, Some(0))
@@ -66,10 +69,12 @@ macro_rules! impl_step_for_int {
                 }
             }
 
+            #[inline]
             fn forward_checked(start: Self, count: usize) -> Option<Self> {
                 forward_checked!(start, count.try_into().ok()?, $mode)
             }
 
+            #[inline]
             fn backward_checked(start: Self, count: usize) -> Option<Self> {
                 backward_checked!(start, count.try_into().ok()?, $mode)
             }

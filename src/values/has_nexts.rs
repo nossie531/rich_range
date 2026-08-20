@@ -19,10 +19,12 @@ impl<T> HasNexts for T
 where
     T: Step,
 {
+    #[inline]
     fn next(&self) -> Option<Self> {
         T::forward_checked(self.clone(), 1)
     }
 
+    #[inline]
     fn prev(&self) -> Option<Self> {
         T::backward_checked(self.clone(), 1)
     }
@@ -32,9 +34,12 @@ where
 macro_rules! impl_has_nexts_for_float {
     ($ty:ty) => {
         impl HasNexts for $ty {
+            #[inline]
             fn next(&self) -> Option<Self> {
                 (self != &Self::INFINITY && !self.is_nan()).then_some(self.next_up())
             }
+
+            #[inline]
             fn prev(&self) -> Option<Self> {
                 (self != &Self::NEG_INFINITY && !self.is_nan()).then_some(self.next_down())
             }

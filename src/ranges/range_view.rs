@@ -1720,10 +1720,12 @@ where
     T: ?Sized,
     R: ?Sized + RangeBounds<T>,
 {
+    #[inline]
     fn start_bound(&self) -> Bound<&T> {
         self.0.start_bound()
     }
 
+    #[inline]
     fn end_bound(&self) -> Bound<&T> {
         self.0.end_bound()
     }
@@ -1745,6 +1747,7 @@ where
     type Item = T;
     type IntoIter = IterRichRange<T>;
 
+    #[inline]
     fn into_iter(self) -> Self::IntoIter {
         let s = self.0.start_bound().cloned();
         let e = self.0.end_bound().cloned();
@@ -1757,6 +1760,7 @@ where
     T: ?Sized,
     R: ?Sized + RangeBounds<T>,
 {
+    #[inline]
     fn clone(&self) -> Self {
         *self
     }
@@ -1783,6 +1787,7 @@ where
     R: ?Sized + RangeBounds<T>,
     T: PartialEq,
 {
+    #[inline]
     fn eq(&self, other: &Self) -> bool {
         calc::is_eq(self, other)
     }
@@ -1812,6 +1817,7 @@ where
     /// let r = rv::new(&(30..60)).partial_cmp(&rv::new(&(70..90)));
     /// assert_eq!(r, Some(Ordering::Less));
     /// ```
+    #[inline]
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         calc::cmp(self, other)
     }

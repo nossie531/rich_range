@@ -43,6 +43,7 @@ impl<T> Edge<T> {
     /// assert_eq!(edge.side(), Side::S);
     /// assert_eq!(edge.bound(), Included(42));
     /// ```
+    #[inline]
     pub fn new(side: Side, bound: Bound<T>) -> Self {
         Self { side, bound }
     }
@@ -60,6 +61,7 @@ impl<T> Edge<T> {
     /// assert!(t1.is_unbounded());
     /// assert!(!t2.is_unbounded());
     /// ```
+    #[inline]
     pub fn is_unbounded(&self) -> bool {
         matches!(self.bound.as_ref(), Ub)
     }
@@ -77,6 +79,7 @@ impl<T> Edge<T> {
     /// assert!(t1.is_included());
     /// assert!(!t2.is_included());
     /// ```
+    #[inline]
     pub fn is_included(&self) -> bool {
         matches!(self.bound.as_ref(), In(_))
     }
@@ -94,6 +97,7 @@ impl<T> Edge<T> {
     /// assert!(t1.is_excluded());
     /// assert!(!t2.is_excluded());
     /// ```
+    #[inline]
     pub fn is_excluded(&self) -> bool {
         matches!(self.bound.as_ref(), Ex(_))
     }
@@ -109,6 +113,7 @@ impl<T> Edge<T> {
     /// let edge = Edge::new(Side::S, Included(42));
     /// assert_eq!(edge.side(), Side::S);
     /// ```
+    #[inline]
     pub fn side(self) -> Side {
         self.side
     }
@@ -124,6 +129,7 @@ impl<T> Edge<T> {
     /// let edge = Edge::new(Side::S, Included(42));
     /// assert_eq!(edge.bound(), Included(42));
     /// ```
+    #[inline]
     pub fn bound(self) -> Bound<T> {
         self.bound
     }
@@ -143,6 +149,7 @@ impl<T> Edge<T> {
     /// assert_eq!(t2.pos(), Some(42));
     /// assert_eq!(t3.pos(), None);
     /// ```
+    #[inline]
     pub fn pos(self) -> Option<T> {
         bound(self.bound).pos()
     }
@@ -159,6 +166,7 @@ impl<T> Edge<T> {
     /// let result = edge.as_ref();
     /// assert_eq!(result.bound(), Included(&42));
     /// ```
+    #[inline]
     pub fn as_ref(&self) -> Edge<&T> {
         Edge::new(self.side, self.bound.as_ref())
     }
@@ -175,6 +183,7 @@ impl<T> Edge<T> {
     /// let result = edge.with_bound(Excluded(43));
     /// assert_eq!(result, Edge::new(Side::S, Excluded(43)));
     /// ```
+    #[inline]
     pub fn with_bound(self, value: Bound<T>) -> Self {
         Self::new(self.side, value)
     }
@@ -194,6 +203,7 @@ impl<T> Edge<T> {
     /// assert_eq!(t1.with_included(false), Edge::new(Side::S, Excluded(42)));
     /// assert_eq!(t2.with_included(false), Edge::new(Side::S, Unbounded));
     /// ```
+    #[inline]
     pub fn with_included(self, included: bool) -> Self {
         Self::new(self.side, bound(self.bound).with_included(included))
     }
@@ -215,6 +225,7 @@ impl<T> Edge<T> {
     /// assert_eq!(t2.with_pos(43), Edge::new(Side::S, Excluded(43)));
     /// assert_eq!(t3.with_pos(43), Edge::new(Side::S, Unbounded));
     /// ```
+    #[inline]
     pub fn with_pos(self, value: T) -> Self {
         Self::new(self.side, bound(self.bound).with_pos(value))
     }
@@ -231,6 +242,7 @@ impl<T> Edge<T> {
     /// let result = edge.map(|x| x + 3);
     /// assert_eq!(result, Edge::new(Side::S, Included(45)));
     /// ```
+    #[inline]
     pub fn map<F, U>(self, f: F) -> Edge<U>
     where
         F: FnMut(T) -> U,
@@ -253,6 +265,7 @@ impl<T> Edge<T> {
     /// assert_eq!(r1, Some(Edge::new(Side::S, Included(242))));
     /// assert_eq!(r2, None);
     /// ```
+    #[inline]
     pub fn try_map<F, U>(self, f: F) -> Option<Edge<U>>
     where
         F: FnMut(T) -> Option<U>,
@@ -274,6 +287,7 @@ impl<T> Edge<&T> {
     /// let result = edge.cloned();
     /// assert_eq!(result, Edge::new(Side::S, Included(42)));
     /// ```
+    #[inline]
     pub fn cloned(&self) -> Edge<T>
     where
         T: Clone,
@@ -332,6 +346,7 @@ impl<T> Ord for Edge<T>
 where
     T: Ord,
 {
+    #[inline]
     fn cmp(&self, other: &Self) -> Ordering {
         self.parts().cmp(&other.parts())
     }
@@ -341,6 +356,7 @@ impl<T> PartialOrd for Edge<T>
 where
     T: PartialOrd,
 {
+    #[inline]
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         self.parts().partial_cmp(&other.parts())
     }

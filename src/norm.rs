@@ -35,6 +35,7 @@ use core::ops::Bound;
 /// let r = sb_to_head(Excluded(&10));
 /// assert_eq!(r, Some(11));
 /// ```
+#[inline]
 pub fn sb_to_head<T>(value: Bound<&T>) -> Option<T>
 where
     T: Clone + HasLimits + HasNexts,
@@ -61,6 +62,7 @@ where
 /// let r = sb_to_prev(Included(&10));
 /// assert_eq!(r, Some(9));
 /// ```
+#[inline]
 pub fn sb_to_prev<T>(value: Bound<&T>) -> Option<T>
 where
     T: Clone + HasLimits + HasNexts,
@@ -87,6 +89,7 @@ where
 /// let r = eb_to_next(Included(&10));
 /// assert_eq!(r, Some(11));
 /// ```
+#[inline]
 pub fn eb_to_next<T>(value: Bound<&T>) -> Option<T>
 where
     T: Clone + HasLimits + HasNexts,
@@ -113,6 +116,7 @@ where
 /// let r = eb_to_tail(Excluded(&10));
 /// assert_eq!(r, Some(9));
 /// ```
+#[inline]
 pub fn eb_to_tail<T>(value: Bound<&T>) -> Option<T>
 where
     T: Clone + HasLimits + HasNexts,
