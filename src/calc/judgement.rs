@@ -15,10 +15,11 @@ where
     RY: ?Sized + RangeBounds<T>,
     T: ?Sized + PartialOrd,
 {
-    let (rx, ry) = (rv::new(rx), rv::new(ry));
-    let (bx, by) = (rx.bounds(), ry.bounds());
-    let positions = [bx.0, bx.1, by.0, by.1].map(|x| bound(x).pos());
-    util::is_ordered(&positions)
+    let p1 = bound(rx.start_bound()).pos();
+    let p2 = bound(rx.end_bound()).pos();
+    let p3 = bound(ry.start_bound()).pos();
+    let p4 = bound(ry.end_bound()).pos();
+    util::is_ordered(&[p1, p2, p3, p4])
 }
 
 /// Returns `true` if two ranges are equal.
@@ -41,9 +42,8 @@ where
     T: ?Sized + PartialOrd,
 {
     let (rx, ry) = (rv::new(rx), rv::new(ry));
-    let (px, py) = (rx.edges(), ry.edges());
     let both_empty = rx.is_empty() && ry.is_empty();
-    if both_empty { true } else { px == py }
+    both_empty || rx.bounds() == ry.bounds()
 }
 
 /// Returns `true` if two ranges are intersect.
@@ -58,13 +58,13 @@ where
     }
 
     let (rx, ry) = (rv::new(rx), rv::new(ry));
-    let (sx, sy) = (rx.edges(), ry.edges());
+    let (ex, ey) = (rx.edges(), ry.edges());
     let broken = rx.is_broken() || ry.is_broken();
     let hit_cur = rx.is_cursor() && rx.cursor() == ry.cursor();
-    let hit_x_min = sx.0.is_contained(&ry.bounds());
-    let hit_x_max = sx.1.is_contained(&ry.bounds());
-    let hit_y_min = sy.0.is_contained(&rx.bounds());
-    let hit_y_max = sy.1.is_contained(&rx.bounds());
+    let hit_x_min = ex.0.is_contained(&ry.bounds());
+    let hit_x_max = ex.1.is_contained(&ry.bounds());
+    let hit_y_min = ey.0.is_contained(&rx.bounds());
+    let hit_y_max = ey.1.is_contained(&rx.bounds());
     !broken && (hit_cur || hit_x_min || hit_x_max || hit_y_min || hit_y_max)
 }
 

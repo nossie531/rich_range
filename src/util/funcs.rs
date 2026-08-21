@@ -34,9 +34,9 @@ pub(crate) fn is_ordered<T, const N: usize>(values: &[T; N]) -> bool
 where
     T: PartialOrd,
 {
-    for (i, e1) in values.iter().enumerate().take(values.len() - 1) {
-        for e2 in values.iter().skip(i + 1) {
-            if e1.partial_cmp(e2).is_none() {
+    for i in 0..N {
+        for j in (i + 1)..N {
+            if values[i].partial_cmp(&values[j]).is_none() {
                 return false;
             }
         }
