@@ -60,12 +60,10 @@ where
     let (rx, ry) = (rv::new(rx), rv::new(ry));
     let (ex, ey) = (rx.edges(), ry.edges());
     let broken = rx.is_broken() || ry.is_broken();
-    let hit_cur = rx.is_cursor() && rx.cursor() == ry.cursor();
-    let hit_x_min = ex.0.is_contained(&ry.bounds());
-    let hit_x_max = ex.1.is_contained(&ry.bounds());
-    let hit_y_min = ey.0.is_contained(&rx.bounds());
-    let hit_y_max = ey.1.is_contained(&rx.bounds());
-    !broken && (hit_cur || hit_x_min || hit_x_max || hit_y_min || hit_y_max)
+    let hit_cur = matches!((rx.cursor(), ry.cursor()), (Some(x), Some(y)) if x == y);
+    let hit_edge = ex.0 == ey.0 || ex.1 == ey.1;
+    let hit_inside = ex.0 <= ey.1 && ex.1 >= ey.0;
+    !broken && (hit_cur || hit_edge || hit_inside)
 }
 
 /// Returns `true` if 1st range includes 2nd range.
