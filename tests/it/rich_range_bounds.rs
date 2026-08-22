@@ -340,6 +340,10 @@ fn size() {
     }
 
     fn when_signed_limits() {
+        if !tu::overflow_checks() {
+            return;
+        }
+
         let target = ru::new(i8::MIN..=i8::MAX);
         let result = test_panic(|| target.size());
         assert!(result.is_panic());
@@ -380,6 +384,10 @@ fn width() {
     }
 
     fn when_signed_limits() {
+        if !tu::overflow_checks() {
+            return;
+        }
+
         let target = ru::new(i8::MIN..=i8::MAX);
         let result = test_panic(|| target.width());
         assert!(result.is_panic());
@@ -537,134 +545,253 @@ fn flip_xxx() {
 
 #[test]
 fn shift() {
-    let datas = [
-        (r!(?30, ?60), 10, false, ok(r!(?20, ?50))),
-        (r!(?30, ?60), 10, true, ok(r!(?40, ?70))),
-        (r!(---, =00), 10, false, ng()),
-        (r!(---, =MAX), 10, true, ng()),
-    ];
+    when_normal();
+    when_overflow();
 
-    for (target, value, positive, tobe) in datas {
-        let asis = test_panic(|| target.shift(value, positive));
-        assert_eqa!(asis, tobe);
+    fn when_normal() {
+        let datas = [
+            (r!(?30, ?60), 10, false, r!(?20, ?50)),
+            (r!(?30, ?60), 10, true, r!(?40, ?70)),
+        ];
+
+        for (target, value, positive, tobe) in datas {
+            let asis = target.shift(value, positive);
+            assert_eq!(asis, tobe);
+        }
+    }
+
+    fn when_overflow() {
+        if !tu::overflow_checks() {
+            return;
+        }
+
+        let datas = [
+            (r!(<u8>, ---, =000), 10, false),
+            (r!(<u8>, ---, =250), 10, true),
+        ];
+
+        for (target, value, positive) in datas {
+            let result = test_panic(|| target.shift(value, positive));
+            assert!(result.is_panic());
+        }
     }
 }
 
 #[test]
 fn shl() {
-    let datas = [
-        (r!(---, ---), 10, ok(r!(---, ---))),
-        (r!(?30, ?60), 10, ok(r!(?20, ?50))),
-        (r!(=30, =60), 10, ok(r!(=20, =50))),
-        (r!(---, =00), 10, ng()),
-        (r!(=00, ---), 10, ng()),
-    ];
+    when_normal();
+    when_overflow();
 
-    for (target, rhs, tobe) in datas {
-        let asis = test_panic(|| target.shl(rhs));
-        assert_eqa!(asis, tobe);
+    fn when_normal() {
+        let datas = [
+            (r!(---, ---), 10, r!(---, ---)),
+            (r!(?30, ?60), 10, r!(?20, ?50)),
+            (r!(=30, =60), 10, r!(=20, =50)),
+        ];
+
+        for (target, rhs, tobe) in datas {
+            let asis = target.shl(rhs);
+            assert_eq!(asis, tobe);
+        }
+    }
+
+    fn when_overflow() {
+        if !tu::overflow_checks() {
+            return;
+        }
+
+        let datas = [
+            (r!(---, =00), 10),
+            (r!(=00, ---), 10),
+        ];
+
+        for (target, rhs) in datas {
+            let result = test_panic(|| target.shl(rhs));
+            assert!(result.is_panic());
+            dbg!(result.is_panic());
+        }
     }
 }
 
 #[test]
 fn shr() {
-    let datas = [
-        (r!(---, ---), 10, ok(r!(---, ---))),
-        (r!(?30, ?60), 10, ok(r!(?40, ?70))),
-        (r!(=30, =60), 10, ok(r!(=40, =70))),
-        (r!(---, =MAX), 10, ng()),
-        (r!(=MAX, ---), 10, ng()),
-    ];
+    when_normal();
+    when_overflow();
 
-    for (target, rhs, tobe) in datas {
-        let asis = test_panic(|| target.shr(rhs));
-        assert_eqa!(asis, tobe);
+    fn when_normal() {
+        let datas = [
+            (r!(---, ---), 10, r!(---, ---)),
+            (r!(?30, ?60), 10, r!(?40, ?70)),
+            (r!(=30, =60), 10, r!(=40, =70)),
+        ];
+
+        for (target, rhs, tobe) in datas {
+            let asis = target.shr(rhs);
+            assert_eq!(asis, tobe);
+        }
+    }
+
+    fn when_overflow() {
+        if !tu::overflow_checks() {
+            return;
+        }
+
+        let datas = [(r!(<u8>, ----, =250), 10), (r!(<u8>, =250, ----), 10)];
+
+        for (target, rhs) in datas {
+            let result = test_panic(|| target.shr(rhs));
+            assert!(result.is_panic());
+        }
     }
 }
 
 #[test]
 fn add_start() {
-    let datas = [
-        (r!(<u8>, =30, ?60), 010, ok(r!(<u8>, =40, ?60))),
-        (r!(<u8>, =30, ?60), 230, ng()),
-    ];
+    when_normal();
+    when_overflow();
 
-    for (target, rhs, tobe) in datas {
-        let asis = test_panic(|| target.add_start(rhs));
-        assert_eqa!(asis, tobe);
+    fn when_normal() {
+        let target = r!(=30, ?60);
+        let result = target.add_start(10);
+        assert_eq!(result, r!(=40, ?60));
+    }
+
+    fn when_overflow() {
+        if !tu::overflow_checks() {
+            return;
+        }
+
+        let target = r!(<u8>, =30, ?60);
+        let result = test_panic(|| target.add_start(230));
+        assert!(result.is_panic());
     }
 }
 
 #[test]
 fn add_end() {
-    let datas = [
-        (r!(<u8>, =30, ?60), 010, ok(r!(<u8>, =30, ?70))),
-        (r!(<u8>, =30, ?60), 200, ng()),
-    ];
+    when_normal();
+    when_overflow();
 
-    for (target, rhs, tobe) in datas {
-        let asis = test_panic(|| target.add_end(rhs));
-        assert_eqa!(asis, tobe);
+    fn when_normal() {
+        let target = r!(=30, ?60);
+        let result = target.add_end(10);
+        assert_eq!(result, r!(=30, ?70));
+    }
+
+    fn when_overflow() {
+        if !tu::overflow_checks() {
+            return;
+        }
+
+        let target = r!(<u8>, =30, ?60);
+        let result = test_panic(|| target.add_end(200));
+        assert!(result.is_panic());
     }
 }
 
 #[test]
 fn sub_start() {
-    let datas = [
-        (r!(<u8>, =30, ?60), 10, ok(r!(<u8>, =20, ?60))),
-        (r!(<u8>, =30, ?60), 40, ng()),
-    ];
+    when_normal();
+    when_overflow();
 
-    for (target, rhs, tobe) in datas {
-        let asis = test_panic(|| target.sub_start(rhs));
-        assert_eqa!(asis, tobe);
+    fn when_normal() {
+        let target = r!(=30, ?60);
+        let result = target.sub_start(10);
+        assert_eq!(result, r!(=20, ?60));
+    }
+
+    fn when_overflow() {
+        if !tu::overflow_checks() {
+            return;
+        }
+
+        let target = r!(<u8>, =30, ?60);
+        let result = test_panic(|| target.sub_start(70));
+        assert!(result.is_panic());
     }
 }
 
 #[test]
 fn sub_end() {
-    let datas = [
-        (r!(<u8>, =30, ?60), 10, ok(r!(<u8>, =30, ?50))),
-        (r!(<u8>, =30, ?60), 70, ng()),
-    ];
+    when_normal();
+    when_overflow();
 
-    for (target, rhs, tobe) in datas {
-        let asis = test_panic(|| target.sub_end(rhs));
-        assert_eqa!(asis, tobe);
+    fn when_normal() {
+        let target = r!(=30, ?60);
+        let result = target.sub_end(10);
+        assert_eq!(result, r!(=30, ?50));
+    }
+
+    fn when_overflow() {
+        if !tu::overflow_checks() {
+            return;
+        }
+
+        let target = r!(<u8>, =30, ?60);
+        let result = test_panic(|| target.sub_end(70));
+        assert!(result.is_panic());
     }
 }
 
 #[test]
 fn calc_start() {
-    let datas = [
-        (r!(<u8>, ---, =60), 40, ng()),
-        (r!(<u8>, =30, ---), 40, ng()),
-        (r!(<u8>, =30, ?60), 40, ok(r!(<u8>, =20, ?60))),
-        (r!(<u8>, ?30, ?60), 40, ok(r!(<u8>, ?20, ?60))),
-        (r!(<u8>, =30, =60), 40, ok(r!(<u8>, =20, =60))),
-        (r!(<u8>, =30, =60), 70, ng()),
-    ];
+    when_normal();
+    when_overflow();
 
-    for (target, value, tobe) in datas {
-        let asis = test_panic(|| target.calc_start(value));
-        assert_eqa!(asis, tobe);
+    fn when_normal() {
+        let datas = [
+            (r!(---, =60), 40, ng()),
+            (r!(=30, ---), 40, ng()),
+            (r!(=30, ?60), 40, ok(r!(=20, ?60))),
+            (r!(?30, ?60), 40, ok(r!(?20, ?60))),
+            (r!(=30, =60), 40, ok(r!(=20, =60))),
+        ];
+
+        for (target, value, tobe) in datas {
+            let asis = test_panic(|| target.calc_start(value));
+            assert_eqa!(asis, tobe);
+        }
+    }
+
+    fn when_overflow() {
+        if !tu::overflow_checks() {
+            return;
+        }
+
+        let target = r!(<u8>, =30, ?60);
+        let result = test_panic(|| target.calc_start(70));
+        assert!(result.is_panic());
     }
 }
 
 #[test]
 fn calc_end() {
-    let datas = [
-        (r!(<u8>, ---, =60), 040, ng()),
-        (r!(<u8>, =30, ---), 040, ng()),
-        (r!(<u8>, =30, ?60), 040, ok(r!(<u8>, =30, ?70))),
-        (r!(<u8>, ?30, ?60), 040, ok(r!(<u8>, ?30, ?70))),
-        (r!(<u8>, =30, =60), 040, ok(r!(<u8>, =30, =70))),
-        (r!(<u8>, =30, =60), 230, ng()),
-    ];
+    when_normal();
+    when_overflow();
 
-    for (target, value, tobe) in datas {
-        let asis = test_panic(|| target.calc_end(value));
-        assert_eqa!(asis, tobe);
+    fn when_normal() {
+        let datas = [
+            (r!(---, =60), 040, ng()),
+            (r!(=30, ---), 040, ng()),
+            (r!(=30, ?60), 040, ok(r!(=30, ?70))),
+            (r!(?30, ?60), 040, ok(r!(?30, ?70))),
+            (r!(=30, =60), 040, ok(r!(=30, =70))),
+        ];
+
+        for (target, value, tobe) in datas {
+            let asis = test_panic(|| target.calc_end(value));
+            assert_eqa!(asis, tobe);
+        }
+    }
+
+    fn when_overflow() {
+        if !tu::overflow_checks() {
+            return;
+        }
+
+        let target = r!(<u8>, =30, ?60);
+        let result = test_panic(|| target.calc_end(230));
+        assert!(result.is_panic());
     }
 }
 

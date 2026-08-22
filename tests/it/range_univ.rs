@@ -1,3 +1,4 @@
+use crate::for_test::*;
 use crate::for_test::aliases::*;
 use crate::for_test::consts::*;
 use crate::for_test::macros::*;
@@ -901,45 +902,91 @@ fn bitxor() {
 
 #[test]
 fn shl_assign() {
-    let datas = [
-        ((r!(---, ---), 1), (ok(()), r!(---, ---))),
-        ((r!(?31, ?61), 1), (ok(()), r!(?30, ?60))),
-        ((r!(=31, =61), 1), (ok(()), r!(=30, =60))),
-        ((r!(---, =00), 1), (ng(), r!(---, =0))),
-        ((r!(=0 , ---), 1), (ng(), r!(=0 ,---))),
-    ];
+    when_normal();
+    when_overflow();
 
-    for ((target, rhs), (tobe, after)) in datas {
-        let mut target1 = target;
-        let mut target2 = target;
-        let asis1 = test_panic(|| target1.shl_assign(rhs));
-        let asis2 = test_panic(|| target2.shl_assign(&rhs));
-        assert_eqa!(asis1, tobe);
-        assert_eqa!(asis2, tobe);
-        assert_eq!(target1, after);
-        assert_eq!(target2, after);
+    fn when_normal() {
+        let datas = [
+            ((r!(---, ---), 1), r!(---, ---)),
+            ((r!(?31, ?61), 1), r!(?30, ?60)),
+            ((r!(=31, =61), 1), r!(=30, =60)),
+        ];
+
+        for ((target, rhs), after) in datas {
+            let mut target1 = target;
+            let mut target2 = target;
+            target1.shl_assign(rhs);
+            target2.shl_assign(&rhs);
+            assert_eq!(target1, after);
+            assert_eq!(target2, after);
+        }
+    }
+
+    fn when_overflow() {
+        if !tu::overflow_checks() {
+            return;
+        }
+
+        let datas = [
+            ((r!(---, =00), 1), r!(---, =0)),
+            ((r!(=0 , ---), 1), r!(=0 ,---)),
+        ];
+
+        for ((target, rhs), after) in datas {
+            let mut target1 = target;
+            let mut target2 = target;
+            let result1 = test_panic(|| target1.shl_assign(rhs));
+            let result2 = test_panic(|| target2.shl_assign(&rhs));
+            assert!(result1.is_panic());
+            assert!(result2.is_panic());
+            assert_eq!(target1, after);
+            assert_eq!(target2, after);
+        }
     }
 }
 
 #[test]
 fn shr_assign() {
-    let datas = [
-        ((r!(----, ----), 1), (ok(()), r!(---, ---))),
-        ((r!(?030, ?060), 1), (ok(()), r!(?31, ?61))),
-        ((r!(=030, =060), 1), (ok(()), r!(=31, =61))),
-        ((r!(----, =MAX), 1), (ng(), r!(----, =MAX))),
-        ((r!(=MAX, ----), 1), (ng(), r!(=MAX, ----))),
-    ];
+    when_normal();
+    when_overflow();
 
-    for ((target, rhs), (tobe, after)) in datas {
-        let mut target1 = target;
-        let mut target2 = target;
-        let asis1 = test_panic(|| target1.shr_assign(rhs));
-        let asis2 = test_panic(|| target2.shr_assign(&rhs));
-        assert_eqa!(asis1, tobe);
-        assert_eqa!(asis2, tobe);
-        assert_eq!(target1, after);
-        assert_eq!(target2, after);
+    fn when_normal() {
+        let datas = [
+            ((r!(----, ----), 1), r!(---, ---)),
+            ((r!(?030, ?060), 1), r!(?31, ?61)),
+            ((r!(=030, =060), 1), r!(=31, =61)),
+        ];
+
+        for ((target, rhs), after) in datas {
+            let mut target1 = target;
+            let mut target2 = target;
+            target1.shr_assign(rhs);
+            target2.shr_assign(&rhs);
+            assert_eq!(target1, after);
+            assert_eq!(target2, after);
+        }
+    }
+
+    fn when_overflow() {
+        if !tu::overflow_checks() {
+            return;
+        }
+
+        let datas = [
+            ((r!(----, =MAX), 1), r!(----, =MAX)),
+            ((r!(=MAX, ----), 1), r!(=MAX, ----)),
+        ];
+
+        for ((target, rhs), after) in datas {
+            let mut target1 = target;
+            let mut target2 = target;
+            let result1 = test_panic(|| target1.shr_assign(rhs));
+            let result2 = test_panic(|| target2.shr_assign(&rhs));
+            assert!(result1.is_panic());
+            assert!(result2.is_panic());
+            assert_eq!(target1, after);
+            assert_eq!(target2, after);
+        }
     }
 }
 
