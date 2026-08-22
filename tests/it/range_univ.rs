@@ -935,7 +935,7 @@ fn shr_assign() {
         let mut target1 = target;
         let mut target2 = target;
         let asis1 = test_panic(|| target1.shr_assign(rhs));
-        let asis2 = test_panic(|| target2.shr_assign(rhs));
+        let asis2 = test_panic(|| target2.shr_assign(&rhs));
         assert_eqa!(asis1, tobe);
         assert_eqa!(asis2, tobe);
         assert_eq!(target1, after);
