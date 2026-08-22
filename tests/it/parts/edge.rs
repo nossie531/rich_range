@@ -113,10 +113,10 @@ fn cloned() {
 
 #[test]
 fn xxx_cmp() {
-    with_normal();
-    with_unordered();
+    when_normal();
+    when_unordered();
 
-    fn with_normal() {
+    fn when_normal() {
         let values = [
             (0, Edge::new(Side::S, Ub)),
             (1, Edge::new(Side::E, Ex(30))),
@@ -139,7 +139,7 @@ fn xxx_cmp() {
         }
     }
 
-    fn with_unordered() {
+    fn when_unordered() {
         let v1 = Edge::new(Side::S, In(30.0));
         let v2 = Edge::new(Side::S, In(f32::NAN));
         let asis1 = v1.partial_cmp(&v2);

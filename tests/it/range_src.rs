@@ -4,10 +4,10 @@ use rich_range::prelude::*;
 
 #[test]
 fn new_broken() {
-    with_ok();
-    with_ng();
+    when_ok();
+    when_ng();
 
-    fn with_ok() {
+    fn when_ok() {
         let r1 = <RangeUniv<_> as RangeSrc<_>>::new_broken();
         let r2 = <RvNormal<'_, usize>>::new_broken();
         let r3 = <RwNormal<_> as RangeSrc<_>>::new_broken();
@@ -20,7 +20,7 @@ fn new_broken() {
         assert_eq!(r5, Ok(rw::new((In(usize::MAX), Ex(usize::MIN)))));
     }
 
-    fn with_ng() {
+    fn when_ng() {
         let r1 = <RwFrom<usize> as RangeSrc<_>>::new_broken();
         let r2 = <RwTo<usize> as RangeSrc<_>>::new_broken();
         let r3 = <RwToInclusive<usize> as RangeSrc<_>>::new_broken();
@@ -34,10 +34,10 @@ fn new_broken() {
 
 #[test]
 fn from_bounds() {
-    with_ok();
-    with_ng();
+    when_ok();
+    when_ng();
 
-    fn with_ok() {
+    fn when_ok() {
         let r1 = <RangeUniv<usize> as RangeSrc<_>>::new((In(30), Ex(60)));
         let r2 = <RvNormal<'_, usize> as RangeSrc<_>>::new((In(30), Ex(60)));
         let r3 = <RwNormal<usize> as RangeSrc<_>>::new((In(30), Ex(60)));
@@ -58,7 +58,7 @@ fn from_bounds() {
         assert_eq!(r9, Ok(rw::new((Ex(30), Ex(60)))));
     }
 
-    fn with_ng() {
+    fn when_ng() {
         let r1 = <RwNormal<usize> as RangeSrc<_>>::new((Ex(30), Ub));
         let r2 = <RwFrom<usize> as RangeSrc<_>>::new((Ex(30), Ub));
         let r3 = <RwTo<usize> as RangeSrc<_>>::new((Ex(30), Ub));

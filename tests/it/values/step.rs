@@ -34,10 +34,10 @@ fn backward() {
 
 #[test]
 fn steps_between() {
-    with_normal();
-    with_large_type();
+    when_normal();
+    when_large_type();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [(30, 60, (30, Some(30))), (60, 30, (0, Some(0)))];
 
         for (start, end, tobe) in datas {
@@ -46,7 +46,7 @@ fn steps_between() {
         }
     }
 
-    fn with_large_type() {
+    fn when_large_type() {
         if size_of::<i128>() <= size_of::<usize>() {
             return;
         }
@@ -58,10 +58,10 @@ fn steps_between() {
 
 #[test]
 fn forward_checked() {
-    with_unsinged();
-    with_singed();
+    when_unsinged();
+    when_singed();
 
-    fn with_unsinged() {
+    fn when_unsinged() {
         let datas = [
             (0, U8_OVF, None),
             (42_u8, 1, Some(43)),
@@ -75,7 +75,7 @@ fn forward_checked() {
         }
     }
 
-    fn with_singed() {
+    fn when_singed() {
         let datas = [
             (0, U8_OVF, None),
             (-1_i8, I8_OVF, Some((-1 + I8_OVF as isize) as i8)),
@@ -93,10 +93,10 @@ fn forward_checked() {
 
 #[test]
 fn backward_checked() {
-    with_unsinged();
-    with_singed();
+    when_unsinged();
+    when_singed();
 
-    fn with_unsinged() {
+    fn when_unsinged() {
         let datas = [
             (0, U8_OVF, None),
             (42_u8, 1, Some(41)),
@@ -110,7 +110,7 @@ fn backward_checked() {
         }
     }
 
-    fn with_singed() {
+    fn when_singed() {
         let datas = [
             (0, U8_OVF, None),
             (1_i8, I8_OVF, Some((1 - I8_OVF as isize) as i8)),

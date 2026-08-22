@@ -2,10 +2,10 @@ use rich_range::*;
 
 #[test]
 fn next() {
-    with_step();
-    with_float();
+    when_step();
+    when_float();
 
-    fn with_step() {
+    fn when_step() {
         let datas = [
             (42, Some(43)),
             (i8::MIN, Some(i8::MIN + 1)),
@@ -18,7 +18,7 @@ fn next() {
         }
     }
 
-    fn with_float() {
+    fn when_float() {
         let datas = [
             (42_f32, Some((42_f32).next_up())),
             (f32::MIN, Some(f32::MIN.next_up())),
@@ -37,10 +37,10 @@ fn next() {
 
 #[test]
 fn prev() {
-    with_step();
-    with_float();
+    when_step();
+    when_float();
 
-    fn with_step() {
+    fn when_step() {
         let datas = [
             (42, Some(41)),
             (i8::MIN, None),
@@ -53,7 +53,7 @@ fn prev() {
         }
     }
 
-    fn with_float() {
+    fn when_float() {
         let datas = [
             (42_f32, Some((42_f32).next_down())),
             (f32::MIN, Some(f32::MIN.next_down())),

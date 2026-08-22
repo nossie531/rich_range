@@ -647,10 +647,10 @@ fn partial_cmp() {
 
 #[test]
 fn shl() {
-    with_refs_overloads();
-    with_bounds_overloads();
+    when_refs_overloads();
+    when_bounds_overloads();
 
-    fn with_refs_overloads() {
+    fn when_refs_overloads() {
         let target = || rw::new(30..60);
         let rhs = 10;
         let asis0 = (&target()).shl(rhs);
@@ -666,7 +666,7 @@ fn shl() {
         assert_eq!(asis4, tobe);
     }
 
-    fn with_bounds_overloads() {
+    fn when_bounds_overloads() {
         assert_eq!(rw::new(..).shl(10), rw::new(..));
         assert_eq!(rw::new(30..).shl(10), rw::new(20..));
         assert_eq!(rw::new(..60).shl(10), rw::new(..50));
@@ -679,10 +679,10 @@ fn shl() {
 
 #[test]
 fn shr() {
-    with_refs_overloads();
-    with_bounds_overloads();
+    when_refs_overloads();
+    when_bounds_overloads();
 
-    fn with_refs_overloads() {
+    fn when_refs_overloads() {
         let target = || rw::new(30..60);
         let rhs = 10;
         let asis0 = (&target()).shr(rhs);
@@ -698,7 +698,7 @@ fn shr() {
         assert_eq!(asis4, tobe);
     }
 
-    fn with_bounds_overloads() {
+    fn when_bounds_overloads() {
         assert_eq!(rw::new(..).shr(10), rw::new(..));
         assert_eq!(rw::new(30..).shr(10), rw::new(40..));
         assert_eq!(rw::new(..60).shr(10), rw::new(..70));
@@ -711,10 +711,10 @@ fn shr() {
 
 #[test]
 fn bitand() {
-    with_refs_overloads();
-    with_bounds_overloads();
+    when_refs_overloads();
+    when_bounds_overloads();
 
-    fn with_refs_overloads() {
+    fn when_refs_overloads() {
         let target = || rw::new(30..60);
         let other = || rw::new(40..70);
         let asis1 = target().bitand(other());
@@ -729,7 +729,7 @@ fn bitand() {
         assert_eq!(asis4.0, tobe);
     }
 
-    fn with_bounds_overloads() {
+    fn when_bounds_overloads() {
         assert_eq!(rw::new(..).bitand(rw::new(..)), rw::new::<_, usize>(..));
         assert_eq!(rw::new(30..).bitand(rw::new(40..)), rw::new(40..));
         assert_eq!(rw::new(..60).bitand(rw::new(..70)), rw::new(..60));
@@ -745,10 +745,10 @@ fn bitand() {
 
 #[test]
 fn bitor() {
-    with_refs_overloads();
-    with_bounds_overloads();
+    when_refs_overloads();
+    when_bounds_overloads();
 
-    fn with_refs_overloads() {
+    fn when_refs_overloads() {
         let target = || rw::new(30..60);
         let other = || rw::new(40..70);
         let asis1 = target().bitor(other());
@@ -763,7 +763,7 @@ fn bitor() {
         assert_eq!(asis4.0, tobe);
     }
 
-    fn with_bounds_overloads() {
+    fn when_bounds_overloads() {
         assert_eq!(rw::new(..).bitor(rw::new(..)), rw::new::<_, usize>(..));
         assert_eq!(rw::new(30..).bitor(rw::new(40..)), rw::new(30..));
         assert_eq!(rw::new(..60).bitor(rw::new(..70)), rw::new(..70));
@@ -779,10 +779,10 @@ fn bitor() {
 
 #[test]
 fn bitxor() {
-    with_refs_overloads();
-    with_bounds_overloads();
+    when_refs_overloads();
+    when_bounds_overloads();
 
-    fn with_refs_overloads() {
+    fn when_refs_overloads() {
         let target = || rw::new(30..40);
         let other = || rw::new(50..60);
         let asis1 = target().bitxor(other());
@@ -797,7 +797,7 @@ fn bitxor() {
         assert_eq!(asis4.0, tobe);
     }
 
-    fn with_bounds_overloads() {
+    fn when_bounds_overloads() {
         assert_eq!(rw::new(..).bitxor(rw::new(..)), rw::new::<_, usize>(..));
         assert_eq!(rw::new(30..).bitxor(rw::new(40..)), rw::new(30..));
         assert_eq!(rw::new(..60).bitxor(rw::new(..70)), rw::new(..70));
@@ -813,10 +813,10 @@ fn bitxor() {
 
 #[test]
 fn shl_assign() {
-    with_refs_overloads();
-    with_bounds_overloads();
+    when_refs_overloads();
+    when_bounds_overloads();
 
-    fn with_refs_overloads() {
+    fn when_refs_overloads() {
         let target = &sv::range_wrapper();
         let mut target1 = target.clone();
         let mut target2 = target.clone();
@@ -827,7 +827,7 @@ fn shl_assign() {
         assert_eq!(target2, target.shl(&rhs));
     }
 
-    fn with_bounds_overloads() {
+    fn when_bounds_overloads() {
         let target1 = &mut rw::new::<_, usize>(..);
         let target2 = &mut rw::new(30..);
         let target3 = &mut rw::new(..60);
@@ -855,10 +855,10 @@ fn shl_assign() {
 
 #[test]
 fn shr_assign() {
-    with_refs_overloads();
-    with_bounds_overloads();
+    when_refs_overloads();
+    when_bounds_overloads();
 
-    fn with_refs_overloads() {
+    fn when_refs_overloads() {
         let target = &sv::range_wrapper();
         let mut target1 = target.clone();
         let mut target2 = target.clone();
@@ -869,7 +869,7 @@ fn shr_assign() {
         assert_eq!(target2, target.shr(&rhs));
     }
 
-    fn with_bounds_overloads() {
+    fn when_bounds_overloads() {
         let target1 = &mut rw::new::<_, usize>(..);
         let target2 = &mut rw::new(30..);
         let target3 = &mut rw::new(..60);
@@ -897,10 +897,10 @@ fn shr_assign() {
 
 #[test]
 fn bitand_assign() {
-    with_refs_overloads();
-    with_bounds_overloads();
+    when_refs_overloads();
+    when_bounds_overloads();
 
-    fn with_refs_overloads() {
+    fn when_refs_overloads() {
         let target = &rw::new(30..60);
         let rhs = &rw::new(40..70);
         let mut target1 = target.clone();
@@ -911,7 +911,7 @@ fn bitand_assign() {
         assert_eq!(target2, target.bitand(rhs));
     }
 
-    fn with_bounds_overloads() {
+    fn when_bounds_overloads() {
         let target1 = &mut rw::new::<_, usize>(..);
         let target2 = &mut rw::new(30..);
         let target3 = &mut rw::new(..60);
@@ -938,10 +938,10 @@ fn bitand_assign() {
 
 #[test]
 fn bitor_assign() {
-    with_refs_overloads();
-    with_bounds_overloads();
+    when_refs_overloads();
+    when_bounds_overloads();
 
-    fn with_refs_overloads() {
+    fn when_refs_overloads() {
         let target = &rw::new(30..60);
         let rhs = &rw::new(40..70);
         let mut target1 = target.clone();
@@ -952,7 +952,7 @@ fn bitor_assign() {
         assert_eq!(target2, target.bitor(rhs));
     }
 
-    fn with_bounds_overloads() {
+    fn when_bounds_overloads() {
         let target1 = &mut rw::new::<_, usize>(..);
         let target2 = &mut rw::new(30..);
         let target3 = &mut rw::new(..60);
@@ -979,10 +979,10 @@ fn bitor_assign() {
 
 #[test]
 fn bitxor_assign() {
-    with_refs_overloads();
-    with_bounds_overloads();
+    when_refs_overloads();
+    when_bounds_overloads();
 
-    fn with_refs_overloads() {
+    fn when_refs_overloads() {
         let target = &rw::new(30..40);
         let rhs = &rw::new(50..60);
         let mut target1 = target.clone();
@@ -993,7 +993,7 @@ fn bitxor_assign() {
         assert_eq!(target2, target.bitxor(rhs));
     }
 
-    fn with_bounds_overloads() {
+    fn when_bounds_overloads() {
         let target1 = &mut rw::new::<_, usize>(..);
         let target2 = &mut rw::new(30..);
         let target3 = &mut rw::new(..60);

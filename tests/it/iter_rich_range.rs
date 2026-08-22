@@ -6,10 +6,10 @@ use test_panic::prelude::*;
 
 #[test]
 fn next() {
-    with_normal();
-    with_range_to();
+    when_normal();
+    when_range_to();
 
-    fn with_normal() {
+    fn when_normal() {
         let target = &mut r!(=10, ?13).iter();
         assert_eq!(target.next(), Some(10));
         assert_eq!(target.next(), Some(11));
@@ -17,7 +17,7 @@ fn next() {
         assert_eq!(target.next(), None);
     }
 
-    fn with_range_to() {
+    fn when_range_to() {
         let target = &mut r!(---, ?30).iter();
         let result = test_panic(|| target.next());
         assert!(result.is_panic());
@@ -26,12 +26,12 @@ fn next() {
 
 #[test]
 fn nth() {
-    with_normal();
-    with_range_to();
-    with_overflow();
-    with_overflow2();
+    when_normal();
+    when_range_to();
+    when_overflow();
+    when_overflow2();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             (r!(=10, ?10), 0, vec![]),
             (r!(=13, ?10), 0, vec![]),
@@ -52,13 +52,13 @@ fn nth() {
         }
     }
 
-    fn with_range_to() {
+    fn when_range_to() {
         let target = &mut r!(---, ?30).iter();
         let result = test_panic(|| target.nth(3));
         assert!(result.is_panic());
     }
 
-    fn with_overflow() {
+    fn when_overflow() {
         let target = &mut ru::new(0_u8..).iter();
         target.nth(128);
 
@@ -66,7 +66,7 @@ fn nth() {
         assert!(result.is_panic());
     }
 
-    fn with_overflow2() {
+    fn when_overflow2() {
         let target = &mut ru::new((Ex(0_u8), Ub)).iter();
         let result = test_panic(|| target.nth(255));
         assert!(result.is_panic());
@@ -171,10 +171,10 @@ fn is_sorted() {
 
 #[test]
 fn next_back() {
-    with_normal();
-    with_range_from();
+    when_normal();
+    when_range_from();
 
-    fn with_normal() {
+    fn when_normal() {
         let target = &mut r!(=10, ?13).iter();
         assert_eq!(target.next_back(), Some(12));
         assert_eq!(target.next_back(), Some(11));
@@ -182,7 +182,7 @@ fn next_back() {
         assert_eq!(target.next_back(), None);
     }
 
-    fn with_range_from() {
+    fn when_range_from() {
         let target = &mut r!(=10, ---).iter();
         let result = test_panic(|| target.next_back());
         assert!(result.is_panic());
@@ -191,12 +191,12 @@ fn next_back() {
 
 #[test]
 fn nth_back() {
-    with_normal();
-    with_range_from();
-    with_overflow();
-    with_overflow2();
+    when_normal();
+    when_range_from();
+    when_overflow();
+    when_overflow2();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             (r!(=10, ?10), 0, vec![]),
             (r!(=13, ?10), 0, vec![]),
@@ -217,13 +217,13 @@ fn nth_back() {
         }
     }
 
-    fn with_range_from() {
+    fn when_range_from() {
         let target = &mut r!(=10, ---).iter();
         let result = test_panic(|| target.nth_back(3));
         assert!(result.is_panic());
     }
 
-    fn with_overflow() {
+    fn when_overflow() {
         let target = &mut ru::new(..255u8).iter();
         target.nth_back(128);
 
@@ -231,7 +231,7 @@ fn nth_back() {
         assert!(result.is_panic());
     }
 
-    fn with_overflow2() {
+    fn when_overflow2() {
         let target = &mut ru::new(..255u8).iter();
         let result = test_panic(|| target.nth_back(255));
         assert!(result.is_panic());

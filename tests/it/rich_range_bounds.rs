@@ -258,11 +258,11 @@ fn point() {
 
 #[test]
 fn len() {
-    with_normals();
-    with_isize_limits();
-    with_large_type();
+    when_normals();
+    when_isize_limits();
+    when_large_type();
 
-    fn with_normals() {
+    fn when_normals() {
         let datas = [
             (r!(---, ?60), None),
             (r!(=30, ---), None),
@@ -285,13 +285,13 @@ fn len() {
         }
     }
 
-    fn with_isize_limits() {
+    fn when_isize_limits() {
         let target = ru::new(isize::MIN..=isize::MAX);
         let result = target.len();
         assert_eq!(result, None);
     }
 
-    fn with_large_type() {
+    fn when_large_type() {
         if size_of::<i128>() <= size_of::<usize>() {
             return;
         }
@@ -304,11 +304,11 @@ fn len() {
 
 #[test]
 fn size() {
-    with_normals();
-    with_signed_limits_half();
-    with_signed_limits();
+    when_normals();
+    when_signed_limits_half();
+    when_signed_limits();
 
-    fn with_normals() {
+    fn when_normals() {
         let datas = [
             (r!(---, ?60), None),
             (r!(---, =60), None),
@@ -333,13 +333,13 @@ fn size() {
         }
     }
 
-    fn with_signed_limits_half() {
+    fn when_signed_limits_half() {
         let target = ru::new((i8::MIN / 2)..(i8::MAX / 2));
         let result = target.size();
         assert_eq!(result, Some((i8::MAX / 2) - (i8::MIN / 2)));
     }
 
-    fn with_signed_limits() {
+    fn when_signed_limits() {
         let target = ru::new(i8::MIN..=i8::MAX);
         let result = test_panic(|| target.size());
         assert!(result.is_panic());
@@ -348,11 +348,11 @@ fn size() {
 
 #[test]
 fn width() {
-    with_normals();
-    with_signed_limits_half();
-    with_signed_limits();
+    when_normals();
+    when_signed_limits_half();
+    when_signed_limits();
 
-    fn with_normals() {
+    fn when_normals() {
         let datas = [
             (r!(---, ?60), None),
             (r!(---, =60), None),
@@ -373,13 +373,13 @@ fn width() {
         }
     }
 
-    fn with_signed_limits_half() {
+    fn when_signed_limits_half() {
         let target = ru::new((i8::MIN / 2)..(i8::MAX / 2));
         let result = target.width();
         assert_eq!(result, Some((i8::MAX / 2) - (i8::MIN / 2)));
     }
 
-    fn with_signed_limits() {
+    fn when_signed_limits() {
         let target = ru::new(i8::MIN..=i8::MAX);
         let result = test_panic(|| target.width());
         assert!(result.is_panic());
@@ -462,10 +462,10 @@ fn to_range() {
 
 #[test]
 fn iter() {
-    with_normal();
-    with_inclusive_limits();
+    when_normal();
+    when_inclusive_limits();
 
-    fn with_normal() {
+    fn when_normal() {
         let target = r!(=3, ?6);
         let master = 3..6;
         let asis = target.iter();
@@ -473,7 +473,7 @@ fn iter() {
         assert!(asis.eq(tobe));
     }
 
-    fn with_inclusive_limits() {
+    fn when_inclusive_limits() {
         let target = ru::new(0_u8..=255);
         let master = 0_u8..=255;
         let asis = target.iter();
@@ -484,11 +484,11 @@ fn iter() {
 
 #[test]
 fn flip_xxx() {
-    with_normal();
-    with_cursor_mode_off();
-    with_cursor_mode_on();
+    when_normal();
+    when_cursor_mode_off();
+    when_cursor_mode_on();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             (r!(---, ---), (ro!(--------), ro!(--------))),
             (r!(=30, ---), (ro!(---, ?30), ro!(--------))),
@@ -508,7 +508,7 @@ fn flip_xxx() {
         }
     }
 
-    fn with_cursor_mode_off() {
+    fn when_cursor_mode_off() {
         let datas = [
             (r!(=30, ?30), (ro!(--, --), ro!(--))),
             (r!(?30, =30), (ro!(--, --), ro!(--))),
@@ -522,7 +522,7 @@ fn flip_xxx() {
         }
     }
 
-    fn with_cursor_mode_on() {
+    fn when_cursor_mode_on() {
         let datas = [
             (r!(=30, ?30), (ro!(--, ?30), ro!(=30, --))),
             (r!(?30, =30), (ro!(--, =30), ro!(?30, --))),
@@ -670,12 +670,12 @@ fn calc_end() {
 
 #[test]
 fn align_start() {
-    with_normal();
-    with_signed();
-    with_unordered();
-    with_buggy_range();
+    when_normal();
+    when_signed();
+    when_unordered();
+    when_buggy_range();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             // Backword and forward.
             (r!(<u8>, =30, ?60), 20, ok(r!(<u8>, =20, ?50))),
@@ -703,7 +703,7 @@ fn align_start() {
         }
     }
 
-    fn with_signed() {
+    fn when_signed() {
         let datas = [
             // Small offset and small width.
             (r!(<i8>, =20, ?30), 10, ok(r!(<i8>, =10, ?20))),
@@ -730,7 +730,7 @@ fn align_start() {
         }
     }
 
-    fn with_unordered() {
+    fn when_unordered() {
         let nan = f32::NAN;
         let datas = [
             (r!(<f32>, =nan, ?60.), 40., ng()),
@@ -745,7 +745,7 @@ fn align_start() {
         }
     }
 
-    fn with_buggy_range() {
+    fn when_buggy_range() {
         let datas = [
             // Various bounds.
             (BuggyRange::<i8>::new(In(30), Ex(60)), 40),
@@ -766,12 +766,12 @@ fn align_start() {
 
 #[test]
 fn align_end() {
-    with_normal();
-    with_signed();
-    with_unordered();
-    with_buggy_range();
+    when_normal();
+    when_signed();
+    when_unordered();
+    when_buggy_range();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             // Backword and forward.
             (r!(<u8>, =30, ?60), 50, ok(r!(<u8>, =20, ?50))),
@@ -799,7 +799,7 @@ fn align_end() {
         }
     }
 
-    fn with_signed() {
+    fn when_signed() {
         let datas = [
             // Small offset and small width.
             (r!(<i8>, =20, ?30), 20, ok(r!(<i8>, =10, ?20))),
@@ -826,7 +826,7 @@ fn align_end() {
         }
     }
 
-    fn with_unordered() {
+    fn when_unordered() {
         let nan = f32::NAN;
         let datas = [
             (r!(<f32>, =nan, ?60.), 50., ng()),
@@ -841,7 +841,7 @@ fn align_end() {
         }
     }
 
-    fn with_buggy_range() {
+    fn when_buggy_range() {
         let datas = [
             // Various bounds.
             (BuggyRange::<i8>::new(In(30), Ex(60)), 40),
@@ -1071,10 +1071,10 @@ fn equiv() {
 
 #[test]
 fn intersects() {
-    with_normal();
-    with_unmixable();
+    when_normal();
+    when_unmixable();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             // Full ranges vs others.
             (r!(---, ---), r!(---, ---), true),
@@ -1156,7 +1156,7 @@ fn intersects() {
         }
     }
 
-    fn with_unmixable() {
+    fn when_unmixable() {
         for (x, y) in sv::unmixables() {
             let result1 = x.intersects(&y);
             let result2 = y.intersects(&x);
@@ -1168,10 +1168,10 @@ fn intersects() {
 
 #[test]
 fn include_xxx() {
-    with_normal();
-    with_unmixable();
+    when_normal();
+    when_unmixable();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             // Full range vs others.
             (r!(---, ---), r!(---, ---), true),
@@ -1301,7 +1301,7 @@ fn include_xxx() {
         }
     }
 
-    fn with_unmixable() {
+    fn when_unmixable() {
         for (x, y) in sv::unmixables() {
             let result1 = x.includes(&y);
             let result2 = y.included(&x);
@@ -1321,10 +1321,10 @@ fn adjoins() {
 
 #[test]
 fn adjoins_xxx() {
-    with_normal();
-    with_unmixable();
+    when_normal();
+    when_unmixable();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             // Unbound end vs others.
             (r!(---, ---), r!(---, ---), false),
@@ -1367,7 +1367,7 @@ fn adjoins_xxx() {
         }
     }
 
-    fn with_unmixable() {
+    fn when_unmixable() {
         for (x, y) in sv::unmixables() {
             let result1 = x.adjoins_next(&y);
             let result2 = x.adjoins_prev(&y);
@@ -1387,10 +1387,10 @@ fn touches() {
 
 #[test]
 fn touches_xxx() {
-    with_normal();
-    with_unmixable();
+    when_normal();
+    when_unmixable();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             // Unbound end vs others.
             (r!(---, ---), r!(---, ---), false),
@@ -1433,7 +1433,7 @@ fn touches_xxx() {
         }
     }
 
-    fn with_unmixable() {
+    fn when_unmixable() {
         for (x, y) in sv::unmixables() {
             let result1 = x.touches_next(&y);
             let result2 = x.touches_prev(&y);
@@ -1446,10 +1446,10 @@ fn touches_xxx() {
 #[test]
 #[rustfmt::skip]
 fn rel() {
-    with_normal();
-    with_unmixable();
+    when_normal();
+    when_unmixable();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             // Undefineds.
             (r!(=30, ?60), r!(=80, ?70), PosStyle::Step, RangeRel::Undefined),
@@ -1509,7 +1509,7 @@ fn rel() {
         }
     }
 
-    fn with_unmixable() {
+    fn when_unmixable() {
         for (x, y) in sv::unmixables() {
             let result = x.rel(&y, PosStyle::Step);
             assert_eq!(result, RangeRel::Undefined);
@@ -1519,10 +1519,10 @@ fn rel() {
 
 #[test]
 fn cut_xxx() {
-    with_normal();
-    with_cut_mode();
+    when_normal();
+    when_cut_mode();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             // Broken empty.
             (r!(=60, ?30), 40, (ro!(--------), ro!(--------))),
@@ -1544,7 +1544,7 @@ fn cut_xxx() {
         }
     }
 
-    fn with_cut_mode() {
+    fn when_cut_mode() {
         #[rustfmt::skip]
         let datas = [
             // Cut at a position inside the range.
@@ -1653,10 +1653,10 @@ fn interval_xxx() {
 
 #[test]
 fn prod() {
-    with_normal();
-    with_unmixable();
+    when_normal();
+    when_unmixable();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             // Full ranges vs others.
             (r!(---, ---), r!(---, ---), ro!(---, ---)),
@@ -1739,7 +1739,7 @@ fn prod() {
         }
     }
 
-    fn with_unmixable() {
+    fn when_unmixable() {
         for (x, y) in sv::unmixables() {
             let result = test_panic(|| x.prod(&y));
             assert!(result.is_panic());
@@ -1749,10 +1749,10 @@ fn prod() {
 
 #[test]
 fn enwrap() {
-    with_normal();
-    with_unmixable();
+    when_normal();
+    when_unmixable();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             // Full ranges vs others.
             (r!(---, ---), r!(---, ---), ro!(---, ---)),
@@ -1830,7 +1830,7 @@ fn enwrap() {
         }
     }
 
-    fn with_unmixable() {
+    fn when_unmixable() {
         for (x, y) in sv::unmixables() {
             let result = test_panic(|| x.enwrap(&y));
             assert!(result.is_panic());
@@ -1840,10 +1840,10 @@ fn enwrap() {
 
 #[test]
 fn union() {
-    with_normal();
-    with_unmixable();
+    when_normal();
+    when_unmixable();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             // Full ranges vs others
             (r!(---, ---), r!(---, ---), (r!(---, ---), ro!(--------))),
@@ -1931,7 +1931,7 @@ fn union() {
         }
     }
 
-    fn with_unmixable() {
+    fn when_unmixable() {
         for (x, y) in sv::unmixables() {
             let result = test_panic(|| x.union(&y));
             assert!(result.is_panic());
@@ -1941,12 +1941,12 @@ fn union() {
 
 #[test]
 fn diff_xxx() {
-    with_normal();
-    with_cursor_mode_off();
-    with_cursor_mode_on();
-    with_unmixable();
+    when_normal();
+    when_cursor_mode_off();
+    when_cursor_mode_on();
+    when_unmixable();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             // Full range vs others.
             (r!(---, ---), r!(---, ---), (ro!(--------), ro!(--------))),
@@ -2030,7 +2030,7 @@ fn diff_xxx() {
         }
     }
 
-    fn with_cursor_mode_off() {
+    fn when_cursor_mode_off() {
         let datas = [
             // Full ranges vs cursors.
             (r!(---, ---), r!(=30, ?30), (ro!(---, ---), ro!(--------))),
@@ -2064,7 +2064,7 @@ fn diff_xxx() {
         }
     }
 
-    fn with_cursor_mode_on() {
+    fn when_cursor_mode_on() {
         let datas = [
             // Full ranges vs cursors.
             (r!(---, ---), r!(=30, ?30), (ro!(---, ?30), ro!(=30, ---))),
@@ -2110,7 +2110,7 @@ fn diff_xxx() {
         }
     }
 
-    fn with_unmixable() {
+    fn when_unmixable() {
         for (x, y) in sv::unmixables() {
             let result1 = test_panic(|| x.diff(&y));
             let result2 = test_panic(|| x.diff_adv(&y, CursorMode::On));

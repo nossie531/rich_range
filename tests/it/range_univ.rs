@@ -649,16 +649,16 @@ fn from() {
 
 #[test]
 fn start_bound() {
-    with_normal();
-    with_ref();
+    when_normal();
+    when_ref();
 
-    fn with_normal() {
+    fn when_normal() {
         let target = sv::range_univ();
         let result = target.start_bound();
         assert_eq!(result, In(&START));
     }
 
-    fn with_ref() {
+    fn when_ref() {
         let value = sv::range_univ();
         let target = value.as_ref();
         let result = target.start_bound();
@@ -668,16 +668,16 @@ fn start_bound() {
 
 #[test]
 fn end_bound() {
-    with_normal();
-    with_ref();
+    when_normal();
+    when_ref();
 
-    fn with_normal() {
+    fn when_normal() {
         let target = sv::range_univ();
         let result = target.end_bound();
         assert_eq!(result, Ex(&END));
     }
 
-    fn with_ref() {
+    fn when_ref() {
         let value = sv::range_univ();
         let target = value.as_ref();
         let result = target.end_bound();
@@ -696,10 +696,10 @@ fn into_iter() {
 
 #[test]
 fn partial_cmp() {
-    with_normal();
-    with_unmixable();
+    when_normal();
+    when_unmixable();
 
-    fn with_normal() {
+    fn when_normal() {
         let datas = [
             // Full range vs others.
             (r!(---, ---), r!(---, ---), Some(Ordering::Equal)),
@@ -799,7 +799,7 @@ fn partial_cmp() {
         }
     }
 
-    fn with_unmixable() {
+    fn when_unmixable() {
         for (target, other) in sv::unmixables() {
             let result = target.partial_cmp(&other);
             assert_eq!(result, None);
