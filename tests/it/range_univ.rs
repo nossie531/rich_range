@@ -1,8 +1,7 @@
-use crate::for_test::*;
 use crate::for_test::aliases::*;
 use crate::for_test::consts::*;
 use crate::for_test::macros::*;
-use crate::for_test::samples as sv;
+use crate::for_test::*;
 use rich_range::parts::*;
 use rich_range::prelude::*;
 use rich_range::*;
@@ -42,7 +41,7 @@ fn new_point() {
 
 #[test]
 fn with_start_bound() {
-    let target = sv::range_univ();
+    let target = ts::range_univ();
     let result = target.with_start_bound(In(START - 1));
     assert_eq!(result.start, In(START - 1));
     assert_eq!(result.end, Ex(END));
@@ -50,7 +49,7 @@ fn with_start_bound() {
 
 #[test]
 fn with_end_bound() {
-    let target = sv::range_univ();
+    let target = ts::range_univ();
     let result = target.with_end_bound(Ex(END + 1));
     assert_eq!(result.start, In(START));
     assert_eq!(result.end, Ex(END + 1));
@@ -654,13 +653,13 @@ fn start_bound() {
     when_ref();
 
     fn when_normal() {
-        let target = sv::range_univ();
+        let target = ts::range_univ();
         let result = target.start_bound();
         assert_eq!(result, In(&START));
     }
 
     fn when_ref() {
-        let value = sv::range_univ();
+        let value = ts::range_univ();
         let target = value.as_ref();
         let result = target.start_bound();
         assert_eq!(result, In(&START));
@@ -673,13 +672,13 @@ fn end_bound() {
     when_ref();
 
     fn when_normal() {
-        let target = sv::range_univ();
+        let target = ts::range_univ();
         let result = target.end_bound();
         assert_eq!(result, Ex(&END));
     }
 
     fn when_ref() {
-        let value = sv::range_univ();
+        let value = ts::range_univ();
         let target = value.as_ref();
         let result = target.end_bound();
         assert_eq!(result, Ex(&END));
@@ -801,7 +800,7 @@ fn partial_cmp() {
     }
 
     fn when_unmixable() {
-        for (target, other) in sv::unmixables() {
+        for (target, other) in ts::unmixables() {
             let result = target.partial_cmp(&other);
             assert_eq!(result, None);
         }

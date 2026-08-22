@@ -1,6 +1,6 @@
 use crate::for_test::aliases::*;
 use crate::for_test::consts::*;
-use crate::for_test::samples as sv;
+use crate::for_test::*;
 use rich_range::parts::*;
 use rich_range::prelude::*;
 use rich_range::*;
@@ -18,7 +18,7 @@ fn new() {
 
 #[test]
 fn from_ref() {
-    let base = &sv::range();
+    let base = &ts::range();
     let result = RangeWrapper::from_ref(base);
     assert_eq!(&result.0, base);
 }
@@ -597,14 +597,14 @@ fn diff_adv() {
 
 #[test]
 fn start_bound() {
-    let target = sv::range_wrapper();
+    let target = ts::range_wrapper();
     let result = target.start_bound();
     assert_eq!(result, In(&START));
 }
 
 #[test]
 fn end_bound() {
-    let target = sv::range_wrapper();
+    let target = ts::range_wrapper();
     let result = target.end_bound();
     assert_eq!(result, Ex(&END));
 }
@@ -621,8 +621,8 @@ fn into_iter() {
 #[test]
 fn eq() {
     let datas = [
-        (sv::range_wrapper(), sv::range_wrapper().add_end(0), true),
-        (sv::range_wrapper(), sv::range_wrapper().add_end(1), false),
+        (ts::range_wrapper(), ts::range_wrapper().add_end(0), true),
+        (ts::range_wrapper(), ts::range_wrapper().add_end(1), false),
     ];
 
     for (target, other, tobe) in datas {
@@ -817,7 +817,7 @@ fn shl_assign() {
     when_bounds_overloads();
 
     fn when_refs_overloads() {
-        let target = &sv::range_wrapper();
+        let target = &ts::range_wrapper();
         let mut target1 = target.clone();
         let mut target2 = target.clone();
         let rhs = 10;
@@ -859,7 +859,7 @@ fn shr_assign() {
     when_bounds_overloads();
 
     fn when_refs_overloads() {
-        let target = &sv::range_wrapper();
+        let target = &ts::range_wrapper();
         let mut target1 = target.clone();
         let mut target2 = target.clone();
         let rhs = 10;

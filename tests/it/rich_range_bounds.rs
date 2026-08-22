@@ -1,7 +1,6 @@
 use crate::for_test::aliases::*;
 use crate::for_test::consts::*;
 use crate::for_test::macros::*;
-use crate::for_test::samples as sv;
 use crate::for_test::*;
 use rich_range::parts::*;
 use rich_range::prelude::*;
@@ -412,7 +411,7 @@ fn edges() {
 
 #[test]
 fn as_ref() {
-    let target = sv::range_univ();
+    let target = ts::range_univ();
     let result = target.as_ref();
     assert_eq!(result, ru::new(&START..&END));
 }
@@ -600,10 +599,7 @@ fn shl() {
             return;
         }
 
-        let datas = [
-            (r!(---, =00), 10),
-            (r!(=00, ---), 10),
-        ];
+        let datas = [(r!(---, =00), 10), (r!(=00, ---), 10)];
 
         for (target, rhs) in datas {
             let result = test_panic(|| target.shl(rhs));
@@ -1284,7 +1280,7 @@ fn intersects() {
     }
 
     fn when_unmixable() {
-        for (x, y) in sv::unmixables() {
+        for (x, y) in ts::unmixables() {
             let result1 = x.intersects(&y);
             let result2 = y.intersects(&x);
             assert!(!result1);
@@ -1429,7 +1425,7 @@ fn include_xxx() {
     }
 
     fn when_unmixable() {
-        for (x, y) in sv::unmixables() {
+        for (x, y) in ts::unmixables() {
             let result1 = x.includes(&y);
             let result2 = y.included(&x);
             assert!(!result1);
@@ -1495,7 +1491,7 @@ fn adjoins_xxx() {
     }
 
     fn when_unmixable() {
-        for (x, y) in sv::unmixables() {
+        for (x, y) in ts::unmixables() {
             let result1 = x.adjoins_next(&y);
             let result2 = x.adjoins_prev(&y);
             assert!(!result1);
@@ -1561,7 +1557,7 @@ fn touches_xxx() {
     }
 
     fn when_unmixable() {
-        for (x, y) in sv::unmixables() {
+        for (x, y) in ts::unmixables() {
             let result1 = x.touches_next(&y);
             let result2 = x.touches_prev(&y);
             assert!(!result1);
@@ -1637,7 +1633,7 @@ fn rel() {
     }
 
     fn when_unmixable() {
-        for (x, y) in sv::unmixables() {
+        for (x, y) in ts::unmixables() {
             let result = x.rel(&y, PosStyle::Step);
             assert_eq!(result, RangeRel::Undefined);
         }
@@ -1867,7 +1863,7 @@ fn prod() {
     }
 
     fn when_unmixable() {
-        for (x, y) in sv::unmixables() {
+        for (x, y) in ts::unmixables() {
             let result = test_panic(|| x.prod(&y));
             assert!(result.is_panic());
         }
@@ -1958,7 +1954,7 @@ fn enwrap() {
     }
 
     fn when_unmixable() {
-        for (x, y) in sv::unmixables() {
+        for (x, y) in ts::unmixables() {
             let result = test_panic(|| x.enwrap(&y));
             assert!(result.is_panic());
         }
@@ -2059,7 +2055,7 @@ fn union() {
     }
 
     fn when_unmixable() {
-        for (x, y) in sv::unmixables() {
+        for (x, y) in ts::unmixables() {
             let result = test_panic(|| x.union(&y));
             assert!(result.is_panic());
         }
@@ -2238,7 +2234,7 @@ fn diff_xxx() {
     }
 
     fn when_unmixable() {
-        for (x, y) in sv::unmixables() {
+        for (x, y) in ts::unmixables() {
             let result1 = test_panic(|| x.diff(&y));
             let result2 = test_panic(|| x.diff_adv(&y, CursorMode::On));
             assert!(result1.is_panic());
