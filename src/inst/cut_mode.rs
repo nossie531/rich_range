@@ -1,6 +1,7 @@
 //! Provider of [`CutMode`].
 
-use crate::{parts::bound, shorthands::aliases::*};
+use crate::parts::*;
+use crate::shorthands::aliases::*;
 use core::ops::{Bound, RangeBounds};
 
 /// Cut mode.
@@ -51,36 +52,38 @@ pub enum CutMode {
 
 impl CutMode {
     /// Returns bound for start side.
-    pub(crate) fn for_start<R, T>(&self, target: &R, pos: T) -> Bound<T>
+    pub(crate) fn for_start<'a, R, T>(&self, target: &'a R, pos: &'a T) -> Bound<&'a T>
     where
         R: RangeBounds<T>,
+        T: Clone,
     {
         match self {
-            CutMode::FallbackFw => bound(target.start_bound()).map_pos(In, pos),
-            CutMode::FallbackBw => bound(target.start_bound()).map_pos(Ex, pos),
-            CutMode::FallbackIn => bound(target.start_bound()).map_pos(In, pos),
-            CutMode::FallbackEx => bound(target.start_bound()).map_pos(Ex, pos),
-            CutMode::AlwaysFw => In(pos),
-            CutMode::AlwaysBw => Ex(pos),
-            CutMode::AlwaysIn => In(pos),
-            CutMode::AlwaysEx => Ex(pos),
+            Self::FallbackFw => bound(target.start_bound()).map_pos(In, pos),
+            Self::FallbackBw => bound(target.start_bound()).map_pos(Ex, pos),
+            Self::FallbackIn => bound(target.start_bound()).map_pos(In, pos),
+            Self::FallbackEx => bound(target.start_bound()).map_pos(Ex, pos),
+            Self::AlwaysFw => In(pos),
+            Self::AlwaysBw => Ex(pos),
+            Self::AlwaysIn => In(pos),
+            Self::AlwaysEx => Ex(pos),
         }
     }
 
     /// Returns bound for end side.
-    pub(crate) fn for_end<R, T>(&self, target: &R, pos: T) -> Bound<T>
+    pub(crate) fn for_end<'a, R, T>(&self, target: &'a R, pos: &'a T) -> Bound<&'a T>
     where
         R: RangeBounds<T>,
+        T: Clone,
     {
         match self {
-            CutMode::FallbackFw => bound(target.end_bound()).map_pos(Ex, pos),
-            CutMode::FallbackBw => bound(target.end_bound()).map_pos(In, pos),
-            CutMode::FallbackIn => bound(target.end_bound()).map_pos(In, pos),
-            CutMode::FallbackEx => bound(target.end_bound()).map_pos(Ex, pos),
-            CutMode::AlwaysFw => Ex(pos),
-            CutMode::AlwaysBw => In(pos),
-            CutMode::AlwaysIn => In(pos),
-            CutMode::AlwaysEx => Ex(pos),
+            Self::FallbackFw => bound(target.end_bound()).map_pos(Ex, pos),
+            Self::FallbackBw => bound(target.end_bound()).map_pos(In, pos),
+            Self::FallbackIn => bound(target.end_bound()).map_pos(In, pos),
+            Self::FallbackEx => bound(target.end_bound()).map_pos(Ex, pos),
+            Self::AlwaysFw => Ex(pos),
+            Self::AlwaysBw => In(pos),
+            Self::AlwaysIn => In(pos),
+            Self::AlwaysEx => Ex(pos),
         }
     }
 }

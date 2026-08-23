@@ -39,8 +39,8 @@ impl CursorMode {
         T: PartialOrd,
     {
         match self {
-            CursorMode::Off => rw::new(range).into_option().map(|x| x.0),
-            CursorMode::On => Some(range),
+            Self::Off => rw::new(range).into_option().map(|x| x.0),
+            Self::On => Some(range),
         }
     }
 }

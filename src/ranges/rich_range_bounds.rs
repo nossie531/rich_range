@@ -69,8 +69,7 @@ where
         T: PartialOrd,
     {
         match (self.start_bound(), self.end_bound()) {
-            (Ub, _) => false,
-            (_, Ub) => false,
+            (Ub, _) | (_, Ub) => false,
             (In(s), Ex(e)) => s >= e,
             (Ex(s), In(e)) => s >= e,
             (Ex(s), Ex(e)) => s >= e,

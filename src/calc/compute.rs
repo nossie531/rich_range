@@ -548,26 +548,23 @@ where
     T: Clone + PartialOrd,
 {
     let range = &rv::new(range);
+    let (start, end) = range.bounds();
 
     if range.is_broken() {
         return (None, None);
     }
 
-    if bound(range.start_bound()).pos().is_some_and(|s| pos <= s) {
+    if bound(start).pos().is_some_and(|s| pos <= s) {
         return (None, Some(range.to_univ()));
     }
 
-    if bound(range.end_bound()).pos().is_some_and(|e| e <= pos) {
+    if bound(end).pos().is_some_and(|e| e <= pos) {
         return (Some(range.to_univ()), None);
     }
 
-    let fst_stt = range.start_bound().cloned();
-    let fst_end = mode.for_end(range, pos.clone());
-    let snd_stt = mode.for_start(range, pos.clone());
-    let snd_end = range.end_bound().cloned();
-    let fst = RangeUniv::new(fst_stt, fst_end);
-    let snd = RangeUniv::new(snd_stt, snd_end);
-    (Some(fst), Some(snd))
+    let fst = &(start, mode.for_end(range, pos));
+    let snd = &(mode.for_start(range, pos), end);
+    (Some(rv::new(fst).to_univ()), Some(rv::new(snd).to_univ()))
 }
 
 /// Returns the range between two ranges.
