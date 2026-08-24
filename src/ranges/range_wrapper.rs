@@ -1927,6 +1927,7 @@ macro_rules! impl_bitand {
             fn bitand(self, rhs: $($rhsRef)?RangeWrapper<R, T>) -> Self::Output {
                 let rx = util::to_ref!($($lhsRef)?, self);
                 let ry = util::to_ref!($($rhsRef)?, rhs);
+                assert!(calc::is_mixable(rx, ry), "{}", msg::BOUNDS_ORDERED);
                 calc::closed_prod(rx, ry)
             }
         }
@@ -2158,6 +2159,8 @@ macro_rules! impl_bitand_assign {
             )?
             #[inline]
             fn bitand_assign(&mut self, rhs: $($rhsRef)?RangeWrapper<R, T>) {
+                let rhs = util::to_ref!($($rhsRef)?, rhs);
+                assert!(calc::is_mixable(self, rhs), "{}", msg::BOUNDS_ORDERED);
                 *self = calc::closed_prod(self, &rhs);
             }
         }
@@ -2203,6 +2206,8 @@ macro_rules! impl_bitor_assign {
             )?
             #[inline]
             fn bitor_assign(&mut self, rhs: $($rhsRef)?RangeWrapper<R, T>) {
+                let rhs = util::to_ref!($($rhsRef)?, rhs);
+                assert!(calc::is_mixable(self, rhs), "{}", msg::BOUNDS_ORDERED);
                 *self = calc::closed_union(self, &rhs);
             }
         }
@@ -2255,6 +2260,8 @@ macro_rules! impl_bitxor_assign {
             )?
             #[inline]
             fn bitxor_assign(&mut self, rhs: $($rhsRef)?RangeWrapper<R, T>) {
+                let rhs = util::to_ref!($($rhsRef)?, rhs);
+                assert!(calc::is_mixable(self, rhs), "{}", msg::BOUNDS_ORDERED);
                 *self = calc::closed_enwrap(self, &rhs);
             }
         }

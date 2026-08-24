@@ -578,7 +578,7 @@ where
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    assert!(calc::is_mixable(rx, ry));
+    debug_assert!(calc::is_mixable(rx, ry));
     interval_adv(rx, ry, CursorMode::Off)
 }
 
@@ -593,7 +593,7 @@ where
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    assert!(calc::is_mixable(rx, ry));
+    debug_assert!(calc::is_mixable(rx, ry));
 
     let (rx, ry) = (&rv::new(rx), &rv::new(ry));
     let (bx, by) = (rx.bounds(), ry.bounds());
@@ -620,7 +620,7 @@ where
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    assert!(calc::is_mixable(rx, ry));
+    debug_assert!(calc::is_mixable(rx, ry));
 
     // Prepare edges.
     let (rx, ry) = (&rv::new(rx), &rv::new(ry));
@@ -655,7 +655,7 @@ where
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    assert!(calc::is_mixable(rx, ry));
+    debug_assert!(calc::is_mixable(rx, ry));
 
     // Prepare edges.
     let (rx, ry) = (&rv::new(rx), &rv::new(ry));
@@ -687,7 +687,7 @@ where
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    assert!(calc::is_mixable(rx, ry));
+    debug_assert!(calc::is_mixable(rx, ry));
 
     // Prepare edges.
     let (rx, ry) = (&rv::new(rx), &rv::new(ry));
@@ -731,7 +731,7 @@ where
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    assert!(calc::is_mixable(rx, ry));
+    debug_assert!(calc::is_mixable(rx, ry));
     diff_adv(rx, ry, CursorMode::Off)
 }
 
@@ -746,7 +746,7 @@ where
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    assert!(calc::is_mixable(rx, ry));
+    debug_assert!(calc::is_mixable(rx, ry));
 
     // Prepare edges.
     let (rx, ry) = (&rv::new(rx), &rv::new(ry));
@@ -802,6 +802,7 @@ where
     R: RangeSrc<T, Range<T> = R>,
     T: Clone + PartialOrd + HasLimits,
 {
+    debug_assert!(calc::is_mixable(range, value));
     self::prod(range, value)
         .map_or_else(<R as RangeSrc<T>>::new_broken, <R as RangeSrc<T>>::new_from)
         .unwrap()
@@ -844,6 +845,7 @@ where
     R: RangeSrc<T, Range<T> = R>,
     T: Clone + PartialOrd + HasLimits,
 {
+    debug_assert!(calc::is_mixable(range, value));
     self::enwrap(range, value)
         .map_or_else(<R as RangeSrc<T>>::new_broken, <R as RangeSrc<T>>::new_from)
         .unwrap()
