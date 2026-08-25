@@ -20,7 +20,16 @@ pub fn range_univ_flt() -> RangeUniv<f32> {
     RangeUniv::new(In(START_FLT), Ex(END_FLT))
 }
 
-pub fn unmixables() -> impl Iterator<Item = (RangeUniv<f32>, RangeUniv<f32>)> {
+pub fn ranges_unordered() -> impl Iterator<Item = RangeUniv<f32>> {
+    [
+        ru::new(f32::NAN..END_FLT),
+        ru::new(START_FLT..f32::NAN),
+        ru::new(f32::NAN..f32::NAN),
+    ]
+    .into_iter()
+}
+
+pub fn range_pairs_unmixable() -> impl Iterator<Item = (RangeUniv<f32>, RangeUniv<f32>)> {
     [
         (ru::new(f32::NAN..END_FLT), range_univ_flt()),
         (ru::new(START_FLT..f32::NAN), range_univ_flt()),

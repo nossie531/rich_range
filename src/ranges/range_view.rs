@@ -1552,18 +1552,19 @@ where
     #[must_use]
     #[doc_on_only]
     #[doc = doc_rrb::side::interval::top!()]
-    #[doc = doc_rrb::side::interval::sub::panics::all!()]
     #[doc = doc_rrb::side::interval::sub::examples::head!()]
     /// ```
     /// use rich_range::prelude::*;
     ///
     /// let target = rv::new(&(30..60));
-    /// let r1 = target.interval(&rv::new(&(50..70)));
-    /// let r2 = target.interval(&rv::new(&(60..80)));
-    /// let r3 = target.interval(&rv::new(&(70..90)));
-    /// assert_eq!(r1, None);
+    /// let r1 = target.interval(&rv::new(&(10..20)));
+    /// let r2 = target.interval(&rv::new(&(20..30)));
+    /// let r3 = target.interval(&rv::new(&(20..40)));
+    /// let r4 = target.interval(&rv::new(&(70..90)));
+    /// assert_eq!(r1, Some(ru::new(20..30)));
     /// assert_eq!(r2, None);
-    /// assert_eq!(r3, Some(ru::new(60..70)));
+    /// assert_eq!(r3, None);
+    /// assert_eq!(r4, Some(ru::new(60..70)));
     /// ```
     pub fn interval(&self, other: &Self) -> Option<RangeUniv<T>>
     where
@@ -1576,21 +1577,22 @@ where
     #[must_use]
     #[doc_on_only]
     #[doc = doc_rrb::side::interval_adv::top!()]
-    #[doc = doc_rrb::side::interval_adv::sub::panics::all!()]
     #[doc = doc_rrb::side::interval_adv::sub::examples::head!()]
     /// ```
     /// use rich_range::prelude::*;
     /// use rich_range::*;
     ///
     /// let target = rv::new(&(30..60));
-    /// let r1 = target.interval_adv(&rv::new(&(50..70)), CursorMode::Off);
-    /// let r2 = target.interval_adv(&rv::new(&(60..80)), CursorMode::Off);
-    /// let r3 = target.interval_adv(&rv::new(&(60..80)), CursorMode::On);
-    /// let r4 = target.interval_adv(&rv::new(&(70..90)), CursorMode::Off);
-    /// assert_eq!(r1, None);
+    /// let r1 = target.interval_adv(&rv::new(&(10..20)), CursorMode::Off);
+    /// let r2 = target.interval_adv(&rv::new(&(20..30)), CursorMode::Off);
+    /// let r3 = target.interval_adv(&rv::new(&(20..30)), CursorMode::On);
+    /// let r4 = target.interval_adv(&rv::new(&(20..40)), CursorMode::Off);
+    /// let r5 = target.interval_adv(&rv::new(&(70..90)), CursorMode::Off);
+    /// assert_eq!(r1, Some(ru::new(20..30)));
     /// assert_eq!(r2, None);
-    /// assert_eq!(r3, Some(ru::new(60..60)));    
-    /// assert_eq!(r4, Some(ru::new(60..70)));
+    /// assert_eq!(r3, Some(ru::new(30..30)));
+    /// assert_eq!(r4, None);
+    /// assert_eq!(r5, Some(ru::new(60..70)));
     /// ```
     pub fn interval_adv(&self, other: &Self, mode: CursorMode) -> Option<RangeUniv<T>>
     where
@@ -1604,7 +1606,6 @@ where
     #[doc_on_only]
     #[doc = doc_rrb::side::prod::top!()]
     #[doc = doc_rrb::side::prod::sub::notes::all!()]
-    #[doc = doc_rrb::side::prod::sub::panics::all!()]
     #[doc = doc_rrb::side::prod::sub::examples::head!()]
     /// ```
     /// use rich_range::prelude::*;
@@ -1624,7 +1625,6 @@ where
     #[doc_on_only]
     #[doc = doc_rrb::side::enwrap::top!()]
     #[doc = doc_rrb::side::enwrap::sub::notes::all!()]
-    #[doc = doc_rrb::side::enwrap::sub::panics::all!()]
     #[doc = doc_rrb::side::enwrap::sub::examples::head!()]
     /// ```
     /// use rich_range::prelude::*;
@@ -1646,7 +1646,6 @@ where
     #[doc_on_only]
     #[doc = doc_rrb::side::union::top!()]
     #[doc = doc_rrb::side::union::sub::notes::all!()]
-    #[doc = doc_rrb::side::union::sub::panics::all!()]
     #[doc = doc_rrb::side::union::sub::examples::head!()]
     /// ```
     /// use rich_range::prelude::*;
@@ -1667,7 +1666,6 @@ where
     #[must_use]
     #[doc_on_only]
     #[doc = doc_rrb::side::diff::top!()]
-    #[doc = doc_rrb::side::diff::sub::panics::all!()]
     #[doc = doc_rrb::side::diff::sub::examples::head!()]
     /// ```
     /// use rich_range::prelude::*;
@@ -1691,7 +1689,6 @@ where
     #[must_use]
     #[doc_on_only]
     #[doc = doc_rrb::side::diff_adv::top!()]
-    #[doc = doc_rrb::side::diff_adv::sub::panics::all!()]
     #[doc = doc_rrb::side::diff_adv::sub::examples::head!()]
     /// ```
     /// use rich_range::prelude::*;

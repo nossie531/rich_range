@@ -568,36 +568,25 @@ where
 }
 
 /// Returns the range between two ranges.
-///
-/// # Panics
-///
-/// Panics if ranges have unordered position like NaN.
 pub(crate) fn interval<RX, RY, T>(rx: &RX, ry: &RY) -> Option<RangeUniv<T>>
 where
     RX: ?Sized + RangeBounds<T>,
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    debug_assert!(calc::is_mixable(rx, ry));
     interval_adv(rx, ry, CursorMode::Off)
 }
 
 /// Returns the range between two ranges with advanced parameters.
-///
-/// # Panics
-///
-/// Panics if ranges have unordered position like NaN.
 pub(crate) fn interval_adv<RX, RY, T>(rx: &RX, ry: &RY, mode: CursorMode) -> Option<RangeUniv<T>>
 where
     RX: ?Sized + RangeBounds<T>,
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    debug_assert!(calc::is_mixable(rx, ry));
-
     let (rx, ry) = (&rv::new(rx), &rv::new(ry));
     let (bx, by) = (rx.bounds(), ry.bounds());
-    if rx.is_full() || ry.is_full() {
+    if rx.is_full() || ry.is_full() || rx.is_empty() || ry.is_empty() {
         return None;
     }
 
@@ -610,18 +599,12 @@ where
 }
 
 /// Returns the product of two ranges.
-///
-/// # Panics
-///
-/// Panics if ranges have unordered position like NaN.
 pub(crate) fn prod<RX, RY, T>(rx: &RX, ry: &RY) -> Option<RangeUniv<T>>
 where
     RX: ?Sized + RangeBounds<T>,
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    debug_assert!(calc::is_mixable(rx, ry));
-
     // Prepare edges.
     let (rx, ry) = (&rv::new(rx), &rv::new(ry));
     let (ex, ey) = (rx.edges(), ry.edges());
@@ -633,9 +616,9 @@ where
 
     // Guard for both cursor pattern.
     if let (Some(x), Some(y)) = (rx.cursor(), ry.cursor()) {
+        x.eq(y).then_some(())?;
         let rx_win = rx.is_cursor_fwd() || ry.is_cursor_bwd();
-        let (rx, ry) = (rx.to_univ(), ry.to_univ());
-        return x.eq(y).then_some(if rx_win { rx } else { ry });
+        return Some(if rx_win { rx.to_univ() } else { ry.to_univ() });
     }
 
     // Calculate return range.
@@ -645,18 +628,12 @@ where
 }
 
 /// Returns the superset of two ranges.
-///
-/// # Panics
-///
-/// Panics if ranges have unordered position like NaN.
 pub(crate) fn enwrap<RX, RY, T>(rx: &RX, ry: &RY) -> Option<RangeUniv<T>>
 where
     RX: ?Sized + RangeBounds<T>,
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    debug_assert!(calc::is_mixable(rx, ry));
-
     // Prepare edges.
     let (rx, ry) = (&rv::new(rx), &rv::new(ry));
     let (ex, ey) = (rx.edges(), ry.edges());
@@ -677,18 +654,12 @@ where
 }
 
 /// Returns the union of two ranges.
-///
-/// # Panics
-///
-/// Panics if ranges have unordered position like NaN.
 pub(crate) fn union<RX, RY, T>(rx: &RX, ry: &RY) -> (RangeUniv<T>, Option<RangeUniv<T>>)
 where
     RX: ?Sized + RangeBounds<T>,
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    debug_assert!(calc::is_mixable(rx, ry));
-
     // Prepare edges.
     let (rx, ry) = (&rv::new(rx), &rv::new(ry));
     let (ex, ey) = (rx.edges(), ry.edges());
@@ -721,33 +692,22 @@ where
 }
 
 /// Returns the difference of two ranges.
-///
-/// # Panics
-///
-/// Panics if ranges have unordered position like NaN.
 pub(crate) fn diff<RX, RY, T>(rx: &RX, ry: &RY) -> Pair<Option<RangeUniv<T>>>
 where
     RX: ?Sized + RangeBounds<T>,
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    debug_assert!(calc::is_mixable(rx, ry));
     diff_adv(rx, ry, CursorMode::Off)
 }
 
 /// Returns the difference of two ranges with advanced parameters.
-///
-/// # Panics
-///
-/// Panics if ranges have unordered position like NaN.
 pub(crate) fn diff_adv<RX, RY, T>(rx: &RX, ry: &RY, mode: CursorMode) -> Pair<Option<RangeUniv<T>>>
 where
     RX: ?Sized + RangeBounds<T>,
     RY: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    debug_assert!(calc::is_mixable(rx, ry));
-
     // Prepare edges.
     let (rx, ry) = (&rv::new(rx), &rv::new(ry));
     let (ex, ey) = (rx.edges(), ry.edges());
@@ -791,10 +751,7 @@ where
 ///
 /// # Panics
 ///
-/// Panics if any of the following cases occured.
-///
-/// - Ranges have unordered position like NaN.
-/// - [Custom range type][crt] conversion is failed.
+/// Panics if [Custom range type][crt] conversion is failed.
 ///
 /// [crt]: crate::conv::RangeSrc#about-custom-range-type
 pub(crate) fn closed_prod<R, T>(range: &R, value: &R) -> R
@@ -802,7 +759,6 @@ where
     R: RangeSrc<T, Range<T> = R>,
     T: Clone + PartialOrd + HasLimits,
 {
-    debug_assert!(calc::is_mixable(range, value));
     self::prod(range, value)
         .map_or_else(<R as RangeSrc<T>>::new_broken, <R as RangeSrc<T>>::new_from)
         .unwrap()
@@ -812,10 +768,7 @@ where
 ///
 /// # Panics
 ///
-/// Panics if any of the following cases occured.
-///
-/// - Ranges have unordered position like NaN.
-/// - [Custom range type][crt] conversion is failed.
+/// Panics if [Custom range type][crt] conversion is failed.
 ///
 /// [crt]: crate::conv::RangeSrc#about-custom-range-type
 pub(crate) fn closed_union<R, T>(range: &R, value: &R) -> R
@@ -834,10 +787,7 @@ where
 ///
 /// # Panics
 ///
-/// Panics if any of the following cases occured.
-///
-/// - Ranges have unordered position like NaN.
-/// - [Custom range type][crt] conversion is failed.
+/// Panics if [Custom range type][crt] conversion is failed.
 ///
 /// [crt]: crate::conv::RangeSrc#about-custom-range-type
 pub(crate) fn closed_enwrap<R, T>(range: &R, value: &R) -> R
@@ -845,7 +795,6 @@ where
     R: RangeSrc<T, Range<T> = R>,
     T: Clone + PartialOrd + HasLimits,
 {
-    debug_assert!(calc::is_mixable(range, value));
     self::enwrap(range, value)
         .map_or_else(<R as RangeSrc<T>>::new_broken, <R as RangeSrc<T>>::new_from)
         .unwrap()

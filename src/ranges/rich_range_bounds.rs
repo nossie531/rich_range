@@ -70,10 +70,10 @@ where
     {
         match (self.start_bound(), self.end_bound()) {
             (Ub, _) | (_, Ub) => false,
-            (In(s), Ex(e)) => s >= e,
-            (Ex(s), In(e)) => s >= e,
-            (Ex(s), Ex(e)) => s >= e,
-            (In(s), In(e)) => s > e,
+            (In(s), Ex(e)) => !(s < e),
+            (Ex(s), In(e)) => !(s < e),
+            (Ex(s), Ex(e)) => !(s < e),
+            (In(s), In(e)) => !(s <= e),
         }
     }
 
@@ -1730,7 +1730,6 @@ where
     ///
     /// # Notes
     ///
-    /// - If ranges have unordered position like NaN, returns `false`.
     /// - If either of two ranges is [broken empty][eh], returns `false`.
     /// - If either of two ranges is [cursor empty][eh] and included
     ///   in the other, returns `true`.
@@ -2146,10 +2145,6 @@ where
 
     /// Returns the range between two ranges.
     ///
-    /// # Panics
-    ///
-    /// Panics if ranges have unordered position like NaN.
-    ///
     /// # Examples
     ///
     /// ```
@@ -2157,12 +2152,14 @@ where
     /// use rich_range::*;
     ///
     /// let target = ru::new(30..60);
-    /// let r1 = RichRangeBounds::interval(&target, &ru::new(50..70));
-    /// let r2 = RichRangeBounds::interval(&target, &ru::new(60..80));
-    /// let r3 = RichRangeBounds::interval(&target, &ru::new(70..90));
-    /// assert_eq!(r1, None);
+    /// let r1 = RichRangeBounds::interval(&target, &ru::new(10..20));
+    /// let r2 = RichRangeBounds::interval(&target, &ru::new(20..30));
+    /// let r3 = RichRangeBounds::interval(&target, &ru::new(20..40));
+    /// let r4 = RichRangeBounds::interval(&target, &ru::new(70..90));
+    /// assert_eq!(r1, Some(ru::new(20..30)))
     /// assert_eq!(r2, None);
-    /// assert_eq!(r3, Some(ru::new(60..70)));
+    /// assert_eq!(r3, None);
+    /// assert_eq!(r4, Some(ru::new(60..70)));
     /// ```
     #[inline]
     #[must_use]
@@ -2171,16 +2168,11 @@ where
     where
         T: Clone + PartialOrd,
     {
-        assert!(calc::is_mixable(self, other), "{}", msg::BOUNDS_ORDERED);
         let ret = calc::interval(self, other)?;
         Some(<RangeUniv<T> as RangeSrc<T>>::new_from(ret).unwrap())
     }
 
     /// Returns the range between two ranges with advanced parameters.
-    ///
-    /// # Panics
-    ///
-    /// Panics if ranges have unordered position like NaN.
     ///
     /// # Examples
     ///
@@ -2205,7 +2197,6 @@ where
     where
         T: Clone + PartialOrd,
     {
-        assert!(calc::is_mixable(self, other), "{}", msg::BOUNDS_ORDERED);
         let ret = calc::interval_adv(self, other, mode)?;
         Some(<RangeUniv<T> as RangeSrc<T>>::new_from(ret).unwrap())
     }
@@ -2220,10 +2211,6 @@ where
     ///   and one is backward cursor empty, The former takes precedence.
     ///
     /// [eh]: doc_share::Self#empty-handling
-    ///
-    /// # Panics
-    ///
-    /// Panics if ranges have unordered position like NaN.
     ///
     /// # Examples
     ///
@@ -2242,7 +2229,6 @@ where
         Self: RangeSrc<T>,
         T: Clone + PartialOrd,
     {
-        assert!(calc::is_mixable(self, other), "{}", msg::BOUNDS_ORDERED);
         let ret = calc::prod(self, other)?;
         Some(<Self as RangeSrc<T>>::new_from(ret).unwrap())
     }
@@ -2253,10 +2239,6 @@ where
     ///
     /// - Both range is empty, returns [`None`].
     /// - One range is empty, returns the other range.
-    ///
-    /// # Panics
-    ///
-    /// Panics if ranges have unordered position like NaN.
     ///
     /// # Examples
     ///
@@ -2277,7 +2259,6 @@ where
         Self: RangeSrc<T>,
         T: Clone + PartialOrd,
     {
-        assert!(calc::is_mixable(self, other), "{}", msg::BOUNDS_ORDERED);
         let ret = calc::enwrap(self, other)?;
         Some(<Self as RangeSrc<T>>::new_from(ret).unwrap())
     }
@@ -2293,10 +2274,6 @@ where
     ///   [backward cursor empty][eh], the former takes precedence.
     ///
     /// [eh]: doc_share::Self#empty-handling
-    ///
-    /// # Panics
-    ///
-    /// Panics if ranges have unordered position like NaN.
     ///
     /// # Examples
     ///
@@ -2317,7 +2294,6 @@ where
         Self: RangeSrc<T>,
         T: Clone + PartialOrd,
     {
-        assert!(calc::is_mixable(self, other), "{}", msg::BOUNDS_ORDERED);
         let (fst, snd) = calc::union(self, other);
         let fst = <Self as RangeSrc<T>>::new_from(fst).unwrap();
         let snd = snd.map(|snd| <Self as RangeSrc<T>>::new_from(snd).unwrap());
@@ -2329,10 +2305,6 @@ where
     /// This is equivalent to [`diff_adv`] with [`CursorMode::Off`].
     ///
     /// [`diff_adv`]: Self::diff_adv
-    ///
-    /// # Panics
-    ///
-    /// Panics if ranges have unordered position like NaN.
     ///
     /// # Examples
     ///
@@ -2355,17 +2327,12 @@ where
         R: ?Sized + RangeBounds<T>,
         T: Clone + PartialOrd,
     {
-        assert!(calc::is_mixable(self, other), "{}", msg::BOUNDS_ORDERED);
         calc::diff(self, other)
     }
 
     /// Returns the difference of two ranges with advanced parameters.
     ///
     /// [eh]: doc_share::Self#empty-handling
-    ///
-    /// # Panics
-    ///
-    /// Panics if ranges have unordered position like NaN.
     ///
     /// # Examples
     ///
@@ -2390,7 +2357,6 @@ where
         R: ?Sized + RangeBounds<T>,
         T: Clone + PartialOrd,
     {
-        assert!(calc::is_mixable(self, other), "{}", msg::BOUNDS_ORDERED);
         calc::diff_adv(self, other, mode)
     }
 }

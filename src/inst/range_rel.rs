@@ -15,8 +15,8 @@
 /// patterns with overlaps (see original definition).
 ///
 /// Second, [`Undefined`] variant is this crate original. This variant is
-/// used when detecting [broken empty][eh] or unordered values like NaN.
-/// (For [`Undefined`] vs [`Equal`], The former takes precedence.)
+/// used when detecting [broken empty][eh]. (In the case of [`Undefined`]
+/// vs [`Equal`], The former takes precedence.)
 ///
 /// Additionally, The meaning of "Meets" alters by the argument of [`rel`]
 /// with [`PosStyle`] type. If the value is [`Real`], bounds pair must be

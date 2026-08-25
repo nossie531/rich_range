@@ -530,25 +530,29 @@ fn cut_adv() {
 #[test]
 fn interval() {
     let target = rw::new(30..60);
-    let r1 = target.interval(&rw::new(50..70));
-    let r2 = target.interval(&rw::new(60..80));
-    let r3 = target.interval(&rw::new(70..90));
-    assert_eq!(r1, None);
+    let r1 = target.interval(&rw::new(10..20));
+    let r2 = target.interval(&rw::new(20..30));
+    let r3 = target.interval(&rw::new(20..40));
+    let r4 = target.interval(&rw::new(70..90));
+    assert_eq!(r1, Some(ru::new(20..30)));
     assert_eq!(r2, None);
-    assert_eq!(r3, Some(ru::new(60..70)));
+    assert_eq!(r3, None);
+    assert_eq!(r4, Some(ru::new(60..70)));
 }
 
 #[test]
 fn interval_adv() {
     let target = rw::new(30..60);
-    let r1 = target.interval_adv(&rw::new(50..70), CursorMode::Off);
-    let r2 = target.interval_adv(&rw::new(60..80), CursorMode::Off);
-    let r3 = target.interval_adv(&rw::new(60..80), CursorMode::On);
-    let r4 = target.interval_adv(&rw::new(70..90), CursorMode::Off);
-    assert_eq!(r1, None);
+    let r1 = target.interval_adv(&rw::new(10..20), CursorMode::Off);
+    let r2 = target.interval_adv(&rw::new(20..30), CursorMode::Off);
+    let r3 = target.interval_adv(&rw::new(20..30), CursorMode::On);
+    let r4 = target.interval_adv(&rw::new(20..40), CursorMode::Off);
+    let r5 = target.interval_adv(&rw::new(70..90), CursorMode::Off);
+    assert_eq!(r1, Some(ru::new(20..30)));
     assert_eq!(r2, None);
-    assert_eq!(r3, Some(ru::new(60..60)));
-    assert_eq!(r4, Some(ru::new(60..70)));
+    assert_eq!(r3, Some(ru::new(30..30)));
+    assert_eq!(r4, None);
+    assert_eq!(r5, Some(ru::new(60..70)));
 }
 
 #[test]

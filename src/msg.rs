@@ -9,9 +9,6 @@ macro_rules! iter_must_use {
 
 pub(crate) use iter_must_use;
 
-/// Message that expects range bounds to be in oreder.
-pub(crate) const BOUNDS_ORDERED: &str = "Range bounds should be ordered.";
-
 /// Message that expects no overflow.
 pub(crate) const NO_OVF: &str = "Overflow.";
 
