@@ -547,24 +547,23 @@ where
     R: ?Sized + RangeBounds<T>,
     T: Clone + PartialOrd,
 {
-    let range = &rv::new(range);
-    let (start, end) = range.bounds();
+    let range = rv::new(range).to_univ();
 
     if range.is_broken() {
         return (None, None);
     }
 
-    if bound(start).pos().is_some_and(|s| pos <= s) {
-        return (None, Some(range.to_univ()));
+    if bound(range.start_bound()).pos().is_some_and(|s| pos <= s) {
+        return (None, Some(range));
     }
 
-    if bound(end).pos().is_some_and(|e| e <= pos) {
-        return (Some(range.to_univ()), None);
+    if bound(range.end_bound()).pos().is_some_and(|e| e <= pos) {
+        return (Some(range), None);
     }
 
-    let fst = &(start, mode.for_end(range, pos));
-    let snd = &(mode.for_start(range, pos), end);
-    (Some(rv::new(fst).to_univ()), Some(rv::new(snd).to_univ()))
+    let fst = range.with_end_bound(mode.for_end(&range, pos).cloned());
+    let snd = range.with_start_bound(mode.for_start(&range, pos).cloned());
+    (Some(fst), Some(snd))
 }
 
 /// Returns the range between two ranges.
@@ -609,22 +608,23 @@ where
     let (rx, ry) = (&rv::new(rx), &rv::new(ry));
     let (ex, ey) = (rx.edges(), ry.edges());
 
-    // Guard for no intersection.
-    if !rx.intersects(ry) {
-        return None;
-    }
-
     // Guard for both cursor pattern.
-    if let (Some(x), Some(y)) = (rx.cursor(), ry.cursor()) {
-        x.eq(y).then_some(())?;
+    if rx.is_cursor() && rx.cursor() == ry.cursor() {
         let rx_win = rx.is_cursor_fwd() || ry.is_cursor_bwd();
-        return Some(if rx_win { rx.to_univ() } else { ry.to_univ() });
+        return Some(if rx_win { rx.to_univ() } else { ry.to_univ() })
     }
 
     // Calculate return range.
     let s = MixMode::Normal.max_bound(ex.0, ey.0).cloned();
     let e = MixMode::Normal.min_bound(ex.1, ey.1).cloned();
-    Some(RangeUniv::new(s, e))
+    let ret = RangeUniv::new(s, e);
+    
+    // Adjust empty returns.
+    if ret.is_empty() && !rx.intersects(ry) {
+        return None;
+    }
+
+    Some(ret)
 }
 
 /// Returns the superset of two ranges.

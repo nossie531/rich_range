@@ -40,7 +40,7 @@ where
     let (rx, ry) = (rv::new(rx), rv::new(ry));
     let (ex, ey) = (rx.edges(), ry.edges());
     let broken = rx.is_broken() || ry.is_broken();
-    let hit_cur = matches!((rx.cursor(), ry.cursor()), (Some(x), Some(y)) if x == y);
+    let hit_cur = rx.is_cursor() && rx.cursor() == ry.cursor();
     let hit_edge = ex.0 == ey.0 || ex.1 == ey.1;
     let hit_inside = ex.0 <= ey.1 && ex.1 >= ey.0;
     !broken && (hit_cur || hit_edge || hit_inside)
