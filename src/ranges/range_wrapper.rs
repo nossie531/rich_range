@@ -1798,8 +1798,8 @@ where
 
 /// Implement [`Shl`] (with reference or value parameters).
 macro_rules! impl_shl {
-    (($($lhsRef:tt)?) ($($rhsRef:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
-        impl<R, T> Shl<$($rhsRef)?T> for $($lhsRef)?RangeWrapper<R, T>
+    (($($lhsAmp:tt)?) ($($rhsAmp:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
+        impl<R, T> Shl<$($rhsAmp)?T> for $($lhsAmp)?RangeWrapper<R, T>
         where
             R: RangeBounds<T>,
             for<'a> &'a T: Sub<&'a T, Output = T>,
@@ -1831,8 +1831,8 @@ macro_rules! impl_shl {
                 /// See main overload [document](RangeWrapper::shl).
             )?
             #[inline]
-            fn shl(self, rhs: $($rhsRef)?T) -> Self::Output {
-                calc::shl(util::to_ref!($($lhsRef)?, self), rhs)
+            fn shl(self, rhs: $($rhsAmp)?T) -> Self::Output {
+                calc::shl(util::to_ref!($($lhsAmp)?, self), rhs)
             }
         }
     }
@@ -1840,8 +1840,8 @@ macro_rules! impl_shl {
 
 /// Implement [`Shr`] (with reference or value parameters).
 macro_rules! impl_shr {
-    (($($lhsRef:tt)?) ($($rhsRef:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
-        impl<R, T> Shr<$($rhsRef)?T> for $($lhsRef)?RangeWrapper<R, T>
+    (($($lhsAmp:tt)?) ($($rhsAmp:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
+        impl<R, T> Shr<$($rhsAmp)?T> for $($lhsAmp)?RangeWrapper<R, T>
         where
             R: RangeBounds<T>,
             for<'a> &'a T: Add<&'a T, Output = T>,
@@ -1873,8 +1873,8 @@ macro_rules! impl_shr {
                 /// See main overload [document](RangeWrapper::shr).
             )?
             #[inline]
-            fn shr(self, rhs: $($rhsRef)?T) -> Self::Output {
-                calc::shr(util::to_ref!($($lhsRef)?, self), rhs)
+            fn shr(self, rhs: $($rhsAmp)?T) -> Self::Output {
+                calc::shr(util::to_ref!($($lhsAmp)?, self), rhs)
             }
         }
     }
@@ -1882,8 +1882,8 @@ macro_rules! impl_shr {
 
 /// Implement [`BitAnd`] (with reference or value parameters).
 macro_rules! impl_bitand {
-    (($($lhsRef:tt)?) ($($rhsRef:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
-        impl<R, T> BitAnd<$($rhsRef)?RangeWrapper<R, T>> for $($lhsRef)?RangeWrapper<R, T>
+    (($($lhsAmp:tt)?) ($($rhsAmp:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
+        impl<R, T> BitAnd<$($rhsAmp)?RangeWrapper<R, T>> for $($lhsAmp)?RangeWrapper<R, T>
         where
             R: RangeBounds<T>,
             T: Clone + PartialOrd + HasLimits,
@@ -1917,10 +1917,10 @@ macro_rules! impl_bitand {
                 /// See main overload [document](RangeWrapper::bitand).
             )?
             #[inline]
-            fn bitand(self, rhs: $($rhsRef)?RangeWrapper<R, T>) -> Self::Output {
-                let rx = util::to_ref!($($lhsRef)?, self);
-                let ry = util::to_ref!($($rhsRef)?, rhs);
-                calc::closed_prod(rx, ry)
+            fn bitand(self, rhs: $($rhsAmp)?RangeWrapper<R, T>) -> Self::Output {
+                let lhs_ref = util::to_ref!($($lhsAmp)?, self);
+                let rhs_ref = util::to_ref!($($rhsAmp)?, rhs);
+                calc::closed_prod(lhs_ref, rhs_ref)
             }
         }
     }
@@ -1928,8 +1928,8 @@ macro_rules! impl_bitand {
 
 /// Implement [`BitOr`] (with reference or value parameters).
 macro_rules! impl_bitor {
-    (($($lhsRef:tt)?) ($($rhsRef:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
-        impl<R, T> BitOr<$($rhsRef)?RangeWrapper<R, T>> for $($lhsRef)?RangeWrapper<R, T>
+    (($($lhsAmp:tt)?) ($($rhsAmp:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
+        impl<R, T> BitOr<$($rhsAmp)?RangeWrapper<R, T>> for $($lhsAmp)?RangeWrapper<R, T>
         where
             R: RangeBounds<T>,
             T: Clone + PartialOrd,
@@ -1957,10 +1957,10 @@ macro_rules! impl_bitor {
                 /// See main overload [document](RangeWrapper::bitor).
             )?
             #[inline]
-            fn bitor(self, rhs: $($rhsRef)?RangeWrapper<R, T>) -> Self::Output {
-                let rx = util::to_ref!($($lhsRef)?, self);
-                let ry = util::to_ref!($($rhsRef)?, rhs);
-                calc::closed_union(rx, ry)
+            fn bitor(self, rhs: $($rhsAmp)?RangeWrapper<R, T>) -> Self::Output {
+                let lhs_ref = util::to_ref!($($lhsAmp)?, self);
+                let rhs_ref = util::to_ref!($($rhsAmp)?, rhs);
+                calc::closed_union(lhs_ref, rhs_ref)
             }
         }
     }
@@ -1968,8 +1968,8 @@ macro_rules! impl_bitor {
 
 /// Implement [`BitXor`] (with reference or value parameters).
 macro_rules! impl_bitxor {
-    (($($lhsRef:tt)?) ($($rhsRef:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
-        impl<R, T> BitXor<$($rhsRef)?RangeWrapper<R, T>> for $($lhsRef)?RangeWrapper<R, T>
+    (($($lhsAmp:tt)?) ($($rhsAmp:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
+        impl<R, T> BitXor<$($rhsAmp)?RangeWrapper<R, T>> for $($lhsAmp)?RangeWrapper<R, T>
         where
             R: RangeBounds<T>,
             T: Clone + PartialOrd + HasLimits,
@@ -2005,10 +2005,10 @@ macro_rules! impl_bitxor {
                 /// See main overload [document](RangeWrapper::bitxor).
             )?
             #[inline]
-            fn bitxor(self, rhs: $($rhsRef)?RangeWrapper<R, T>) -> Self::Output {
-                let rx = util::to_ref!($($lhsRef)?, self);
-                let ry = util::to_ref!($($rhsRef)?, rhs);
-                calc::closed_enwrap(rx, ry)
+            fn bitxor(self, rhs: $($rhsAmp)?RangeWrapper<R, T>) -> Self::Output {
+                let lhs_ref = util::to_ref!($($lhsAmp)?, self);
+                let rhs_ref = util::to_ref!($($rhsAmp)?, rhs);
+                calc::closed_enwrap(lhs_ref, rhs_ref)
             }
         }
     }
@@ -2016,8 +2016,8 @@ macro_rules! impl_bitxor {
 
 /// Implement [`ShlAssign`] (with reference or value parameters).
 macro_rules! impl_shl_assign {
-    (($($rhsRef:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
-        impl<R, T> ShlAssign<$($rhsRef)?T> for RangeWrapper<R, T>
+    (($($rhsAmp:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
+        impl<R, T> ShlAssign<$($rhsAmp)?T> for RangeWrapper<R, T>
         where
             R: RangeBounds<T>,
             T: Clone,
@@ -2049,7 +2049,7 @@ macro_rules! impl_shl_assign {
                 /// See main overload [document](RangeWrapper::shl_assign).
             )?
             #[inline]
-            fn shl_assign(&mut self, rhs: $($rhsRef)?T) {
+            fn shl_assign(&mut self, rhs: $($rhsAmp)?T) {
                 *self = calc::shl(self, rhs);
             }
         }
@@ -2058,8 +2058,8 @@ macro_rules! impl_shl_assign {
 
 /// Implement [`ShrAssign`] (with reference or value parameters).
 macro_rules! impl_shr_assign {
-    (($($rhsRef:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
-        impl<R, T> ShrAssign<$($rhsRef)?T> for RangeWrapper<R, T>
+    (($($rhsAmp:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
+        impl<R, T> ShrAssign<$($rhsAmp)?T> for RangeWrapper<R, T>
         where
             R: RangeBounds<T>,
             T: Clone,
@@ -2091,7 +2091,7 @@ macro_rules! impl_shr_assign {
                 /// See main overload [document](RangeWrapper::shr_assign).
             )?
             #[inline]
-            fn shr_assign(&mut self, rhs: $($rhsRef)?T) {
+            fn shr_assign(&mut self, rhs: $($rhsAmp)?T) {
                 *self = calc::shr(self, rhs);
             }
         }
@@ -2100,8 +2100,8 @@ macro_rules! impl_shr_assign {
 
 /// Implement [`BitAndAssign`] (with reference or value parameters).
 macro_rules! impl_bitand_assign {
-    (($($rhsRef:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
-        impl<R, T> BitAndAssign<$($rhsRef)?RangeWrapper<R, T>> for RangeWrapper<R, T>
+    (($($rhsAmp:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
+        impl<R, T> BitAndAssign<$($rhsAmp)?RangeWrapper<R, T>> for RangeWrapper<R, T>
         where
             R: RangeBounds<T>,
             T: Clone + PartialOrd + HasLimits,
@@ -2138,9 +2138,9 @@ macro_rules! impl_bitand_assign {
                 /// See main overload [document](RangeWrapper::bitand_assign).
             )?
             #[inline]
-            fn bitand_assign(&mut self, rhs: $($rhsRef)?RangeWrapper<R, T>) {
-                let rhs = util::to_ref!($($rhsRef)?, rhs);
-                *self = calc::closed_prod(self, &rhs);
+            fn bitand_assign(&mut self, rhs: $($rhsAmp)?RangeWrapper<R, T>) {
+                let rhs_ref = util::to_ref!($($rhsAmp)?, rhs);
+                *self = calc::closed_prod(self, &rhs_ref);
             }
         }
     }
@@ -2148,8 +2148,8 @@ macro_rules! impl_bitand_assign {
 
 /// Implement [`BitOrAssign`] (with reference or value parameters).
 macro_rules! impl_bitor_assign {
-    (($($rhsRef:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
-        impl<R, T> BitOrAssign<$($rhsRef)?RangeWrapper<R, T>> for RangeWrapper<R, T>
+    (($($rhsAmp:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
+        impl<R, T> BitOrAssign<$($rhsAmp)?RangeWrapper<R, T>> for RangeWrapper<R, T>
         where
             R: RangeBounds<T>,
             T: Clone + PartialOrd,
@@ -2180,9 +2180,9 @@ macro_rules! impl_bitor_assign {
                 /// See main overload [document](RangeWrapper::bitor_assign).
             )?
             #[inline]
-            fn bitor_assign(&mut self, rhs: $($rhsRef)?RangeWrapper<R, T>) {
-                let rhs = util::to_ref!($($rhsRef)?, rhs);
-                *self = calc::closed_union(self, &rhs);
+            fn bitor_assign(&mut self, rhs: $($rhsAmp)?RangeWrapper<R, T>) {
+                let rhs_ref = util::to_ref!($($rhsAmp)?, rhs);
+                *self = calc::closed_union(self, &rhs_ref);
             }
         }
     }
@@ -2190,8 +2190,8 @@ macro_rules! impl_bitor_assign {
 
 /// Implement [`BitXorAssign`] (with reference or value parameters).
 macro_rules! impl_bitxor_assign {
-    (($($rhsRef:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
-        impl<R, T> BitXorAssign<$($rhsRef)?RangeWrapper<R, T>> for RangeWrapper<R, T>
+    (($($rhsAmp:tt)?) $(, main:$main:meta)? $(, sub:$sub:meta)?) => {
+        impl<R, T> BitXorAssign<$($rhsAmp)?RangeWrapper<R, T>> for RangeWrapper<R, T>
         where
             R: RangeBounds<T>,
             T: Clone + PartialOrd + HasLimits,
@@ -2229,9 +2229,9 @@ macro_rules! impl_bitxor_assign {
                 /// See main overload [document](RangeWrapper::bitxor_assign).
             )?
             #[inline]
-            fn bitxor_assign(&mut self, rhs: $($rhsRef)?RangeWrapper<R, T>) {
-                let rhs = util::to_ref!($($rhsRef)?, rhs);
-                *self = calc::closed_enwrap(self, &rhs);
+            fn bitxor_assign(&mut self, rhs: $($rhsAmp)?RangeWrapper<R, T>) {
+                let rhs_ref = util::to_ref!($($rhsAmp)?, rhs);
+                *self = calc::closed_enwrap(self, &rhs_ref);
             }
         }
     }

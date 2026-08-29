@@ -68,12 +68,12 @@ where
     where
         T: PartialOrd,
     {
-        match (self.start_bound(), self.end_bound()) {
-            (Ub, _) | (_, Ub) => false,
-            (In(s), Ex(e)) => !(s < e),
-            (Ex(s), In(e)) => !(s < e),
-            (Ex(s), Ex(e)) => !(s < e),
-            (In(s), In(e)) => !(s <= e),
+        !match (self.start_bound(), self.end_bound()) {
+            (Ub, _) | (_, Ub) => true,
+            (In(s), Ex(e)) => s < e,
+            (Ex(s), In(e)) => s < e,
+            (Ex(s), Ex(e)) => s < e,
+            (In(s), In(e)) => s <= e,
         }
     }
 
