@@ -611,17 +611,19 @@ where
     // Guard for both cursor pattern.
     if rx.is_cursor() && rx.cursor() == ry.cursor() {
         let rx_win = rx.is_cursor_fwd() || ry.is_cursor_bwd();
-        return Some(if rx_win { rx.to_univ() } else { ry.to_univ() })
+        return Some(if rx_win { rx.to_univ() } else { ry.to_univ() });
     }
 
     // Calculate return range.
     let s = MixMode::Normal.max_bound(ex.0, ey.0).cloned();
     let e = MixMode::Normal.min_bound(ex.1, ey.1).cloned();
     let ret = RangeUniv::new(s, e);
-    
+
     // Adjust empty returns.
-    if ret.is_empty() && !rx.intersects(ry) {
-        return None;
+    if ret.is_empty() {
+        let cx_in_ry = rx.cursor().is_some_and(|c| ry.contains(c));
+        let cy_in_rx = ry.cursor().is_some_and(|c| rx.contains(c));
+        return (cx_in_ry || cy_in_rx).then_some(Some(ret))?;
     }
 
     Some(ret)

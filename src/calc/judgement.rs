@@ -41,9 +41,10 @@ where
     let (ex, ey) = (rx.edges(), ry.edges());
     let broken = rx.is_broken() || ry.is_broken();
     let hit_cur = rx.is_cursor() && rx.cursor() == ry.cursor();
-    let hit_edge = ex.0 == ey.0 || ex.1 == ey.1;
+    let hit_min = ex.0.is_included() && ex.0 == ey.0;
+    let hit_max = ex.1.is_included() && ex.1 == ey.1;
     let hit_inside = ex.0 <= ey.1 && ex.1 >= ey.0;
-    !broken && (hit_cur || hit_edge || hit_inside)
+    !broken && (hit_cur || hit_min || hit_max || hit_inside)
 }
 
 /// Returns `true` if 1st range includes 2nd range.

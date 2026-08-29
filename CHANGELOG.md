@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improve performance
 
+### Fixed
+
+- Range intersection rule ([#3][issue3])
+
 ## [0.4.0] - 2026-08-27
 
 ### Changed
@@ -71,3 +75,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.1.0]: https://github.com/nossie531/rich_range/releases/tag/v0.1.0
 [issue1]: https://github.com/nossie531/rich_range/issues/1
 [issue2]: https://github.com/nossie531/rich_range/issues/2
+[issue3]: https://github.com/nossie531/rich_range/issues/3
